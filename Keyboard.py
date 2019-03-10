@@ -3,12 +3,13 @@ try:
 except ImportError:
     import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 
-import Vector
+import VectorHandler
 import main
 
-class Keyboard:
+class KB:
 
     def __init__(self):
+        self.player = main.player
         self.left = False
         self.right = False
 
@@ -26,6 +27,6 @@ class Keyboard:
 
     def update(self):
         if self.left:
-            self.player.vel.subtract(Vector(PLAYER_SPEED, 0))
+            self.player.vel.subtract(VectorHandler.Vector(main.PLAYER_SPEED, 0))
         if self.right:
-            self.player.vel.add(Vector(PLAYER_SPEED, 0))
+            self.player.vel.add(VectorHandler.Vector(main.PLAYER_SPEED, 0))
