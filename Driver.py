@@ -1,7 +1,11 @@
 import simpleguitk as simplegui
 import math
+import time
 
-pointer = 0
+
+tempa = (0,0)
+tempb = (0,0)
+tempc = (0,0)
 
 class Arrow:
     def __init__(self, pointA, pointB, pointC ):
@@ -10,9 +14,43 @@ class Arrow:
         self.pointB = pointB
         self.pointC = pointC
 
+        self.pointD = (pointA[0], pointA[1]+100)
+        self.pointE = (pointB[0], pointB[1]+100)
+        self.pointF = (pointC[0], pointC[1]+100)
+
+        self.pointG = (pointA[0], pointA[1]+200)
+        self.pointH = (pointB[0], pointB[1]+200)
+        self.pointI = (pointC[0], pointC[1]+200)
+
+
     def draw(self, canvas):
         canvas.draw_polygon(((self.pointA), (self.pointB), (self.pointC)), 2, "Black", "Green")
 
+    def update(self):
+        global tempa, tempb, tempc
+
+        if self.state == 1:
+            tempa = self.pointA
+            self.pointA = self.pointD
+            self.pointD = tempa
+
+            tempb = self.pointB
+            self.pointB = self.pointE
+            self.pointE = tempb
+
+            tempc = self.pointC
+            self.pointC = self.pointF
+            self.pointF = tempc
+
+        if self.state == 2:
+            self.pointA = self.pointG
+            self.pointB = self.pointH
+            self.pointC = self.pointI
+
+        if self.state > 2:
+            self.pointA = tempa
+            self.pointB = tempb
+            self.pointC = tempc
 
 class Keyboard:
     def __init__(self):
@@ -21,6 +59,7 @@ class Keyboard:
     def keyDown(self, key):
         if key == simplegui.KEY_MAP['down']:
             self.down = True
+            print("Key is down")
 
     def keyUp(self, key):
         if key == simplegui.KEY_MAP['down']:
@@ -34,13 +73,12 @@ class Interaction:
 
     def update(self):
         if self.keyboard.down:
-            self.arrow.pointA[1] += 100
-            self.arrow.pointB[1] += 100
-            self.arrow.pointC[1] += 100
+            print("Keyboard down")
+            self.arrow.state+=1
+            time.sleep(1.2)
 
 
-#loading the music in
-
+#
 # loading background images and button shiz
 genricbackground_image = simplegui.load_image("http://funkyimg.com/i/2Segu.png")
 homemenubackground_image = simplegui.load_image("http://funkyimg.com/i/2SeFG.png")
@@ -75,9 +113,7 @@ inter = Interaction(pointer, kbd)
 
 #code for drawing onto canvas
 def draw(canvas):
-    """
-    Draw handler for simple animation using 2D sprite sheet
-    """
+
     #DRAW IN THE BUTTONS and the MENU SCREEN
     canvas.draw_image(homemenubackground_image, BACKGROUND_CENTER, BACKGROUND_SIZE, BACKGROUND_CENTER, BACKGROUND_SIZE)
     canvas.draw_image(startgamebutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER, BUTTON_WIDTH)
@@ -86,22 +122,22 @@ def draw(canvas):
     #canvas.draw_image(menuarrow, ARROW_CENTER, ARROW_WIDTH , ARROW_START, ARROW_WIDTH )
 
     inter.update()
+    pointer.update()
     pointer.draw(canvas)
-
 
 # create frame and size frame based on 240x296 pixel sprite
 frame = simplegui.create_frame("This Game Has Bugs!", BACKGROUND_SIZE[0], BACKGROUND_SIZE[1])
 
 # set draw handler and canvas background using custom HTML color
 frame.set_draw_handler(draw)
-
 frame.set_canvas_background("White")
-
+frame.set_keydown_handler(kbd.keyDown)
+frame.set_keyup_handler(kbd.keyUp)
 '''
 THIS CODE BELOW ACTUALLY FUCKING WORKS IN CODESKULPTOR BUT NOT IN PYCHARM, FUCK
 '''
-music = simplegui.load_sound("https://commondatastorage.googleapis.com/cs1830/Beachfront%20Celebration%20(1).mp3")
-music.play()
+#music = simplegui.load_sound("https://commondatastorage.googleapis.com/cs1830/Beachfront%20Celebration%20(1).mp3")
+#music.play()
 
 # initialize counter for animation and start frame
 counter = 0
