@@ -2,10 +2,11 @@ import simpleguitk as simplegui
 import math
 import time
 
-
 tempa = (0,0)
 tempb = (0,0)
 tempc = (0,0)
+
+buttonState = 0
 
 class Arrow:
     def __init__(self, pointA, pointB, pointC ):
@@ -42,28 +43,46 @@ class Arrow:
             self.pointC = self.pointF
             self.pointF = tempc
 
-        if self.state == 2:
+        elif self.state == 2:
             self.pointA = self.pointG
             self.pointB = self.pointH
             self.pointC = self.pointI
 
-        if self.state > 2:
+        elif self.state > 2:
             self.pointA = tempa
             self.pointB = tempb
             self.pointC = tempc
+            self.state = 0
 
 class Keyboard:
     def __init__(self):
         self.down = False
+        self.up = False
 
     def keyDown(self, key):
-        if key == simplegui.KEY_MAP['down']:
+        if key == simplegui.KEY_MAP['down'] or key == simplegui.KEY_MAP['s']:
             self.down = True
-            print("Key is down")
+
+        if key == simplegui.KEY_MAP['up'] or key == simplegui.KEY_MAP['w']:
+            self.up = True
 
     def keyUp(self, key):
-        if key == simplegui.KEY_MAP['down']:
+        global buttonState
+
+        if key == simplegui.KEY_MAP['down'] or key == simplegui.KEY_MAP['s']:
             self.down = False
+            buttonState+=1
+            if buttonState>2:
+                buttonState = 0
+            print(buttonState)
+
+        if key == simplegui.KEY_MAP['up']or key == simplegui.KEY_MAP['w']:
+            self.up = False
+            buttonState-=1
+            if buttonState<0:
+                buttonState = 2
+            print(buttonState)
+
 
 
 class Interaction:
@@ -72,10 +91,9 @@ class Interaction:
         self.keyboard = keyboard
 
     def update(self):
-        if self.keyboard.down:
-            print("Keyboard down")
+        if self.keyboard.down == False:
             self.arrow.state+=1
-            time.sleep(1.2)
+
 
 
 #
