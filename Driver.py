@@ -9,7 +9,7 @@ music = simplegui.load_sound("https://commondatastorage.googleapis.com/cs1830/Be
 music.set_volume(0.3)
 
 buttonState = 0
-easterEggCounter = 100
+easterEggCounter = 0
 
 buttonSoundSplash = simplegui.load_sound("https://commondatastorage.googleapis.com/cs1830/439746__inspectorj__soprano-recorder-staccato-c.wav")
 
