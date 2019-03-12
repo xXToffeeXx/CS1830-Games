@@ -9,6 +9,8 @@ music = simplegui.load_sound("https://commondatastorage.googleapis.com/cs1830/Be
 music.set_volume(0.3)
 
 buttonState = 0
+easterEggCounter = 100
+
 buttonSoundSplash = simplegui.load_sound("https://commondatastorage.googleapis.com/cs1830/439746__inspectorj__soprano-recorder-staccato-c.wav")
 
 buttonOnPress = simplegui.load_sound("https://commondatastorage.googleapis.com/cs1830/243020__plasterbrain__game-start.ogg")
@@ -32,13 +34,15 @@ class Keyboard:
 
     def keyUp(self, key):
         global buttonState
-
+        global easterEggCounter
         if key == simplegui.KEY_MAP['down'] or key == simplegui.KEY_MAP['s']:
             self.down = False
             buttonState+=1
             if buttonState>3:
                 buttonState = 0
             print(buttonState)
+            easterEggCounter+=1
+            print(easterEggCounter)
             buttonSoundSplash.play()
             time.sleep(0.1)
 
@@ -49,6 +53,7 @@ class Keyboard:
                 buttonState = 3
             print(buttonState)
             buttonSoundSplash.play()
+            easterEggCounter =0
             time.sleep(0.1)
 
         if key == simplegui.KEY_MAP['space'] or key == simplegui.KEY_MAP['e']:
@@ -56,18 +61,34 @@ class Keyboard:
                 print(gameButtonhandler())
                 music.pause()
                 buttonOnPress.play()
+                if easterEggCounter == 100:
+                    music.pause()
+                    easterEggSong = simplegui.load_sound("https://commondatastorage.googleapis.com/cs1830/Spazzmatica%20Polka.mp3")
+                    easterEggSong.play()
             if buttonState == 1:
                 print(multigameButtonhandler())
                 music.pause()
                 buttonOnPress.play()
+                if easterEggCounter == 100:
+                    music.pause()
+                    easterEggSong = simplegui.load_sound("https://commondatastorage.googleapis.com/cs1830/Spazzmatica%20Polka.mp3")
+                    easterEggSong.play()
             if buttonState == 2:
                 print(optionsHandler())
                 music.pause()
                 buttonOnPress.play()
+                if easterEggCounter == 100:
+                    music.pause()
+                    easterEggSong = simplegui.load_sound("https://commondatastorage.googleapis.com/cs1830/Spazzmatica%20Polka.mp3")
+                    easterEggSong.play()
             if buttonState == 3:
                 print(extrasHandler())
                 music.pause()        
-                buttonOnPress.play() 
+                buttonOnPress.play()
+                if easterEggCounter == 100:                                                                                        
+                    music.pause()                                                                                                  
+                    easterEggSong = simplegui.load_sound("https://commondatastorage.googleapis.com/cs1830/Spazzmatica%20Polka.mp3")
+                    easterEggSong.play()                                                                                           
 
 # loading background images and button shiz
 genricbackground_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/GameBackground.png")
