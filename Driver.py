@@ -11,6 +11,9 @@ music.set_volume(0.3)
 buttonState = 0
 buttonSoundSplash = simplegui.load_sound("https://commondatastorage.googleapis.com/cs1830/439746__inspectorj__soprano-recorder-staccato-c.wav")
 
+buttonOnPress = simplegui.load_sound("https://commondatastorage.googleapis.com/cs1830/243020__plasterbrain__game-start.ogg")
+buttonOnPress.set_volume(0.6)
+
 class Keyboard:
     def __init__(self):
         self.down = False
@@ -51,12 +54,20 @@ class Keyboard:
         if key == simplegui.KEY_MAP['space'] or key == simplegui.KEY_MAP['e']:
             if buttonState == 0:
                 print(gameButtonhandler())
+                music.pause()
+                buttonOnPress.play()
             if buttonState == 1:
                 print(multigameButtonhandler())
+                music.pause()
+                buttonOnPress.play()
             if buttonState == 2:
                 print(optionsHandler())
+                music.pause()
+                buttonOnPress.play()
             if buttonState == 3:
                 print(extrasHandler())
+                music.pause()        
+                buttonOnPress.play() 
 
 # loading background images and button shiz
 genricbackground_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/GameBackground.png")
