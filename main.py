@@ -12,6 +12,8 @@ WIN_HEIGHT = 600
 PLAYER_SPEED = 5
 counter = 0
 
+spaceship = simplegui.load_image('CS1830-Spaceship.png')
+
 class Player:
     def __init__(self, pos):
         self.pos = pos
@@ -19,7 +21,8 @@ class Player:
         self.radius = 30
 
     def draw(self, canvas):
-        canvas.draw_circle(self.pos.getP(), self.radius, 1, 'White', 'White')
+        #canvas.draw_circle(self.pos.getP(), self.radius, 1, 'White', 'White')
+        canvas.draw_image(spaceship, (self.pos.getP()), (32, 32), (100, 100))
 
     def move(self):
         self.pos.add(self.vel)
