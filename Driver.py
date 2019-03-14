@@ -4,6 +4,18 @@ import time
 import random
 import sys
 
+'''
+OKAY SO BASICALLY:
+1. BOOLEANS TO DETERMINE WHICH SCREEN THE GAME SHOULD BE SHOWING
+2. ASSIGN BOOLEANS IN METHODS CALLED BY PRESS OF SPACE OR e
+3. THIS CHANGES WHAT IS DRAWN IN DRAW()
+'''
+mainMenu = True
+gamePlay = False
+multiGamePlay = False
+options = False
+extras = False
+
 '''                                                                                   
 THIS CODE BELOW ACTUALLY FUCKING WORKS IN CODESKULPTOR BUT NOT IN PYCHARM, FUCK       
 '''
@@ -56,7 +68,6 @@ class Keyboard:
     def keyUp(self, key):
         global buttonState
         global easterEggCounter
-
 
         if key == simplegui.KEY_MAP['down'] or key == simplegui.KEY_MAP['s']:
             self.down = False
@@ -169,96 +180,191 @@ RAIN_CENTERONE = [300, 350]
 RAIN_CENTERTW0 = [350, 675]
 RAIN_CENTERTHREE = [400, 1050]
 
+
+def volumeHandler(decider, volume):
+    if decider == True:
+        volume+=0.1
+        if volume > 1:
+            volume = 1
+    elif decider == False:
+        volume-=0.1
+        if volume < 0:
+            volume = 0
+    return volume
+
+
 '''
 BUTTONHANDLERS ACTIVATED WHEN SPACEBAR OR e IS PRESSED ON GAMESTATE
 '''
 def gameButtonhandler():
-
+    global mainMenu
+    global gamePlay 
     #TODO write the code for opening game and switching to a screen for gameplay
     print("Game open button pressed.")
+    mainMenu = False
+    gamePlay = True
 
 def multigameButtonhandler():
+    global mainMenu
+    global multiGamePlay
 
     #TODO write the code for opening game and switching to a screen for multiplayer gameplay
     print("Game open for multiplayer button pressed.")
+    mainMenu = False
+    multiGamePlay = True
 
 def optionsHandler():
+    global mainMenu
+    global options
 
     #TODO write the code for opening game and switching to a screen for options
     print("Options screen opened.")
+    mainMenu = False
+    options = True
 
 def extrasHandler():
+    global mainMenu
+    global extras
+
     #TODO write the code for opening game and switching to a screen for options
     print("Extras screen opened.")
+    mainMenu = False
+    extras = True
 
 #code for drawing onto canvas
 def draw(canvas):
-    #DRAW IN THE BUTTONS and the MENU SCREEN
-    if rainOrNo <= 1:
-        canvas.draw_image(homemenubackground_image, BACKGROUND_CENTER, BACKGROUND_SIZE, BACKGROUND_CENTER, BACKGROUND_SIZE)
-    elif rainOrNo == 2:
-        canvas.draw_image(homebackground_raining, BACKGROUND_CENTER, BACKGROUND_SIZE, BACKGROUND_CENTER, BACKGROUND_SIZE)
+    global counter, countera, counterb
+    if mainMenu:
+        #DRAW IN THE BUTTONS and the MENU SCREEN
+        if rainOrNo <= 1:
+            canvas.draw_image(homemenubackground_image, BACKGROUND_CENTER, BACKGROUND_SIZE, BACKGROUND_CENTER, BACKGROUND_SIZE)
+        elif rainOrNo == 2:
+            canvas.draw_image(homebackground_raining, BACKGROUND_CENTER, BACKGROUND_SIZE, BACKGROUND_CENTER, BACKGROUND_SIZE)
+            '''
+            Sprite Work in the menus for some rain!
+            '''
+            rain_index = [counter % RAIN_DIM[0], counter // RAIN_DIM[0]]
+            canvas.draw_image(rain,
+                              [RAIN_CENTER[0] + rain_index[0] * RAIN_SIZE[0],
+                               RAIN_CENTER[1] + rain_index[1] * RAIN_SIZE[1]],
+                               RAIN_SIZE, RAIN_CENTER, RAIN_SIZE)
+            counter = (counter + 1) % (RAIN_DIM[0] * RAIN_DIM[1])
 
-        global counter, countera, counterb
-        '''
-        Sprite Work in the menus for some rain!
-        '''
-        rain_index = [counter % RAIN_DIM[0], counter // RAIN_DIM[0]]
-        canvas.draw_image(rain,
-                          [RAIN_CENTER[0] + rain_index[0] * RAIN_SIZE[0],
-                           RAIN_CENTER[1] + rain_index[1] * RAIN_SIZE[1]],
-                           RAIN_SIZE, RAIN_CENTER, RAIN_SIZE)
-        counter = (counter + 1) % (RAIN_DIM[0] * RAIN_DIM[1])
+            rain_index2 = [countera % RAIN_DIM[0], countera // RAIN_DIM[0]]
+            canvas.draw_image(rain2,
+                              [RAIN_CENTER[0] + rain_index2[0] * RAIN_SIZE[0],
+                               RAIN_CENTER[1] + rain_index2[1] * RAIN_SIZE[1]],
+                               RAIN_SIZE, RAIN_CENTERTW0, RAIN_SIZE)
+            countera = (countera + 1) % (RAIN_DIM[0] * RAIN_DIM[1])
 
-        rain_index2 = [countera % RAIN_DIM[0], countera // RAIN_DIM[0]]
-        canvas.draw_image(rain2,
-                          [RAIN_CENTER[0] + rain_index2[0] * RAIN_SIZE[0],
-                           RAIN_CENTER[1] + rain_index2[1] * RAIN_SIZE[1]],
-                           RAIN_SIZE, RAIN_CENTERTW0, RAIN_SIZE)
-        countera = (countera + 1) % (RAIN_DIM[0] * RAIN_DIM[1])
+            rain_index3 = [counterb % RAIN_DIM[0], counterb // RAIN_DIM[0]]
+            canvas.draw_image(rain3,
+                              [RAIN_CENTER [0] + rain_index3[0] * RAIN_SIZE[0],
+                               RAIN_CENTER [1] + rain_index3[1] * RAIN_SIZE[1]],
+                               RAIN_SIZE, RAIN_CENTERTHREE, RAIN_SIZE)
+            counterb = (counterb + 1) % (RAIN_DIM[0] * RAIN_DIM[1])
+            '''CODE FOR RAIN ENDS HERE, SPRITE SHEET AND THE SORT'''
 
-        rain_index3 = [counterb % RAIN_DIM[0], counterb // RAIN_DIM[0]]
-        canvas.draw_image(rain3,
-                          [RAIN_CENTER [0] + rain_index3[0] * RAIN_SIZE[0],
-                           RAIN_CENTER [1] + rain_index3[1] * RAIN_SIZE[1]],
-                           RAIN_SIZE, RAIN_CENTERTHREE, RAIN_SIZE)
-        counterb = (counterb + 1) % (RAIN_DIM[0] * RAIN_DIM[1])
-        '''CODE FOR RAIN ENDS HERE, SPRITE SHEET AND THE SORT'''
 
-    if buttonState == 0:
-        canvas.draw_image(startgamebutton_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER, BUTTON_WIDTH)
-        canvas.draw_image(twoplayerbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER, BUTTON_WIDTH)
-        canvas.draw_image(optionsbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER, BUTTON_WIDTH)
-        canvas.draw_image(extrasbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONFOUR_CENTER, BUTTON_WIDTH)
-        canvas.draw_image(exitbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONFIVE_CENTER, BUTTON_WIDTH)
+        if buttonState == 0:
+            canvas.draw_image(startgamebutton_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(twoplayerbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(optionsbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(extrasbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONFOUR_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(exitbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONFIVE_CENTER, BUTTON_WIDTH)
 
-    if buttonState == 1:
-        canvas.draw_image(startgamebutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER, BUTTON_WIDTH)
-        canvas.draw_image(twoplayerbutton_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER, BUTTON_WIDTH)
-        canvas.draw_image(optionsbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER, BUTTON_WIDTH)
-        canvas.draw_image(extrasbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONFOUR_CENTER, BUTTON_WIDTH)
-        canvas.draw_image(exitbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONFIVE_CENTER, BUTTON_WIDTH)
+        if buttonState == 1:
+            canvas.draw_image(startgamebutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(twoplayerbutton_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(optionsbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(extrasbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONFOUR_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(exitbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONFIVE_CENTER, BUTTON_WIDTH)
 
-    if buttonState == 2:
-        canvas.draw_image(startgamebutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER, BUTTON_WIDTH)
-        canvas.draw_image(twoplayerbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER, BUTTON_WIDTH)
-        canvas.draw_image(optionsbutton_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER, BUTTON_WIDTH)
-        canvas.draw_image(extrasbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONFOUR_CENTER, BUTTON_WIDTH)
-        canvas.draw_image(exitbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONFIVE_CENTER, BUTTON_WIDTH)
+        if buttonState == 2:
+            canvas.draw_image(startgamebutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(twoplayerbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(optionsbutton_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(extrasbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONFOUR_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(exitbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONFIVE_CENTER, BUTTON_WIDTH)
 
-    if buttonState == 3:
-        canvas.draw_image(startgamebutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER, BUTTON_WIDTH)
-        canvas.draw_image(twoplayerbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER, BUTTON_WIDTH)
-        canvas.draw_image(optionsbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER, BUTTON_WIDTH)
-        canvas.draw_image(extrasbutton_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONFOUR_CENTER, BUTTON_WIDTH)
-        canvas.draw_image(exitbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONFIVE_CENTER, BUTTON_WIDTH)
+        if buttonState == 3:
+            canvas.draw_image(startgamebutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(twoplayerbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(optionsbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(extrasbutton_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONFOUR_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(exitbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONFIVE_CENTER, BUTTON_WIDTH)
 
-    if buttonState == 4:
-        canvas.draw_image(startgamebutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER, BUTTON_WIDTH)
-        canvas.draw_image(twoplayerbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER, BUTTON_WIDTH)
-        canvas.draw_image(optionsbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER, BUTTON_WIDTH)
-        canvas.draw_image(extrasbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONFOUR_CENTER, BUTTON_WIDTH)
-        canvas.draw_image(exitbutton_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONFIVE_CENTER, BUTTON_WIDTH)
+        if buttonState == 4:
+            canvas.draw_image(startgamebutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(twoplayerbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(optionsbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(extrasbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONFOUR_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(exitbutton_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONFIVE_CENTER, BUTTON_WIDTH)
+
+    elif options:
+        #DRAW IN THE BUTTONS and the MENU SCREEN
+        if rainOrNo <= 1:
+            canvas.draw_image(genricbackground_image, BACKGROUND_CENTER, BACKGROUND_SIZE, BACKGROUND_CENTER, BACKGROUND_SIZE)
+        elif rainOrNo == 2:
+            canvas.draw_image(genericbackground_raining, BACKGROUND_CENTER, BACKGROUND_SIZE, BACKGROUND_CENTER, BACKGROUND_SIZE)
+            '''
+            Sprite Work in the menus for some rain!
+            '''
+            rain_index = [counter % RAIN_DIM[0], counter // RAIN_DIM[0]]
+            canvas.draw_image(rain,
+                              [RAIN_CENTER[0] + rain_index[0] * RAIN_SIZE[0],
+                               RAIN_CENTER[1] + rain_index[1] * RAIN_SIZE[1]],
+                               RAIN_SIZE, RAIN_CENTER, RAIN_SIZE)
+            counter = (counter + 1) % (RAIN_DIM[0] * RAIN_DIM[1])
+
+            rain_index2 = [countera % RAIN_DIM[0], countera // RAIN_DIM[0]]
+            canvas.draw_image(rain2,
+                              [RAIN_CENTER[0] + rain_index2[0] * RAIN_SIZE[0],
+                               RAIN_CENTER[1] + rain_index2[1] * RAIN_SIZE[1]],
+                               RAIN_SIZE, RAIN_CENTERTW0, RAIN_SIZE)
+            countera = (countera + 1) % (RAIN_DIM[0] * RAIN_DIM[1])
+
+            rain_index3 = [counterb % RAIN_DIM[0], counterb // RAIN_DIM[0]]
+            canvas.draw_image(rain3,
+                              [RAIN_CENTER [0] + rain_index3[0] * RAIN_SIZE[0],
+                               RAIN_CENTER [1] + rain_index3[1] * RAIN_SIZE[1]],
+                               RAIN_SIZE, RAIN_CENTERTHREE, RAIN_SIZE)
+            counterb = (counterb + 1) % (RAIN_DIM[0] * RAIN_DIM[1])
+            '''CODE FOR RAIN ENDS HERE, SPRITE SHEET AND THE SORT'''
+
+    elif extras:
+        # DRAW IN THE BUTTONS and the MENU SCREEN
+        if rainOrNo <= 1:
+            canvas.draw_image(genricbackground_image, BACKGROUND_CENTER, BACKGROUND_SIZE, BACKGROUND_CENTER,
+                              BACKGROUND_SIZE)
+        elif rainOrNo == 2:
+            canvas.draw_image(genericbackground_raining, BACKGROUND_CENTER, BACKGROUND_SIZE, BACKGROUND_CENTER,
+                              BACKGROUND_SIZE)
+            '''
+            Sprite Work in the menus for some rain!
+            '''
+            rain_index = [counter % RAIN_DIM[0], counter // RAIN_DIM[0]]
+            canvas.draw_image(rain,
+                              [RAIN_CENTER[0] + rain_index[0] * RAIN_SIZE[0],
+                               RAIN_CENTER[1] + rain_index[1] * RAIN_SIZE[1]],
+                              RAIN_SIZE, RAIN_CENTER, RAIN_SIZE)
+            counter = (counter + 1) % (RAIN_DIM[0] * RAIN_DIM[1])
+
+            rain_index2 = [countera % RAIN_DIM[0], countera // RAIN_DIM[0]]
+            canvas.draw_image(rain2,
+                              [RAIN_CENTER[0] + rain_index2[0] * RAIN_SIZE[0],
+                               RAIN_CENTER[1] + rain_index2[1] * RAIN_SIZE[1]],
+                              RAIN_SIZE, RAIN_CENTERTW0, RAIN_SIZE)
+            countera = (countera + 1) % (RAIN_DIM[0] * RAIN_DIM[1])
+
+            rain_index3 = [counterb % RAIN_DIM[0], counterb // RAIN_DIM[0]]
+            canvas.draw_image(rain3,
+                              [RAIN_CENTER[0] + rain_index3[0] * RAIN_SIZE[0],
+                               RAIN_CENTER[1] + rain_index3[1] * RAIN_SIZE[1]],
+                              RAIN_SIZE, RAIN_CENTERTHREE, RAIN_SIZE)
+            counterb = (counterb + 1) % (RAIN_DIM[0] * RAIN_DIM[1])
+            '''CODE FOR RAIN ENDS HERE, SPRITE SHEET AND THE SORT'''
+
 
 # create frame
 frame = simplegui.create_frame("This Game Has Bugs!", BACKGROUND_SIZE[0], BACKGROUND_SIZE[1])
