@@ -16,6 +16,9 @@ multiGamePlay = False
 options = False
 extras = False
 
+
+gameVolume = 0.5
+
 '''                                                                                   
 THIS CODE BELOW ACTUALLY FUCKING WORKS IN CODESKULPTOR BUT NOT IN PYCHARM, FUCK       
 '''
@@ -30,24 +33,27 @@ WEIGHTED HEAVILY IN FAVOUR OF SUMMER BACKGROUND BUT RAIN APPEARS ABOUT 1/3
 '''
 rainOrNo = random.randint(0,2)
 
-if rainOrNo <= 1:   #SUMMER
+if rainOrNo <= 1: #SUMMER
     music = simplegui.load_sound\
         ("https://commondatastorage.googleapis.com/cs1830/Beachfront%20Celebration%20(1).mp3")
-    music.set_volume(0.3)
-else:                #RAINFOREST
+    music.set_volume(gameVolume)
+
+
+
+else: #RAINFOREST
     music = simplegui.load_sound\
         ("https://commondatastorage.googleapis.com/cs1830/462774__lg__20180616-tropical-rain-thailand-02.wav")
-    music.set_volume(0.3)
+    music.set_volume(gameVolume)
 
 buttonSoundSplash = simplegui.load_sound\
     ("https://commondatastorage.googleapis.com/cs1830/439746__inspectorj__soprano-recorder-staccato-c.wav")
 
 buttonOnPress = simplegui.load_sound\
     ("https://commondatastorage.googleapis.com/cs1830/243020__plasterbrain__game-start.ogg")
-buttonOnPress.set_volume(0.6)
+buttonOnPress.set_volume(gameVolume+0.1)
 
-ambient = simplegui.load_sound("https://commondatastorage.googleapis.com/cs1830/Forest%20at%20dawn.wav")
-ambient.set_volume(0.2)
+#ambient = simplegui.load_sound("https://commondatastorage.googleapis.com/cs1830/Forest%20at%20dawn.wav")
+#ambient.set_volume(gameVolume-0.1)
 
 class Keyboard:
     def __init__(self):
@@ -68,6 +74,7 @@ class Keyboard:
     def keyUp(self, key):
         global buttonState
         global easterEggCounter
+        global rainOrNo
 
         if key == simplegui.KEY_MAP['down'] or key == simplegui.KEY_MAP['s']:
             self.down = False
@@ -93,26 +100,31 @@ class Keyboard:
         if key == simplegui.KEY_MAP['space'] or key == simplegui.KEY_MAP['e']:
             if buttonState == 0:
                 print(gameButtonhandler())
-                music.pause()
+                if rainOrNo <=1:
+                    music.pause()
                 buttonOnPress.play()
                 easterEgg()
             if buttonState == 1:
                 print(multigameButtonhandler())
-                music.pause()
+                if rainOrNo <= 1:
+                    music.pause()
                 buttonOnPress.play()
                 easterEgg()
             if buttonState == 2:
                 print(optionsHandler())
-                music.pause()
+                if rainOrNo <= 1:
+                    music.pause()
                 buttonOnPress.play()
                 easterEgg()
             if buttonState == 3:
                 print(extrasHandler())
-                music.pause()
+                if rainOrNo <= 1:
+                    music.pause()
                 buttonOnPress.play()
                 easterEgg()
             if buttonState == MENU_OPTIONS:
-                music.pause()
+                if rainOrNo <= 1:
+                    music.pause()
                 buttonOnPress.play()
                 sys.exit()
 
@@ -121,6 +133,7 @@ def easterEgg():
         music.pause()
         print("You found an Easter Egg!")
         easterEggSong = simplegui.load_sound("https://commondatastorage.googleapis.com/cs1830/Spazzmatica%20Polka.mp3")
+        easterEggSong.set_volume(gameVolume)
         easterEggSong.play()
     else:
         pass
@@ -181,6 +194,7 @@ RAIN_CENTERTW0 = [350, 675]
 RAIN_CENTERTHREE = [400, 1050]
 
 
+
 def volumeHandler(decider, volume):
     if decider == True:
         volume+=0.1
@@ -204,6 +218,7 @@ def gameButtonhandler():
     mainMenu = False
     gamePlay = True
 
+
 def multigameButtonhandler():
     global mainMenu
     global multiGamePlay
@@ -221,15 +236,44 @@ def optionsHandler():
     print("Options screen opened.")
     mainMenu = False
     options = True
+    global buttonState
+    global rainOrNo
+
+
+    # RESET BUTTON STATE
+    buttonState = 0
+    if rainOrNo == 2:
+        pass
+    elif rainOrNo <= 1:
+        ambientMusic = simplegui.load_sound\
+            ("https://commondatastorage.googleapis.com/cs1830/Angels%20We%20Have%20Heard%20(piano).mp3")
+        ambientMusic.set_volume(gameVolume)
+
+        music.pause()
+        ambientMusic.play()
 
 def extrasHandler():
     global mainMenu
     global extras
+    global buttonState
+    global rainOrNo
 
     #TODO write the code for opening game and switching to a screen for options
     print("Extras screen opened.")
     mainMenu = False
     extras = True
+
+    # RESET BUTTON STATE
+    buttonState = 0
+    if rainOrNo == 2:
+        pass
+    elif rainOrNo <= 1:
+        extrasAmbience = simplegui.load_sound\
+            ("https://storage.googleapis.com/cs1830/The%20Show%20Must%20Be%20Go.mp3")
+        extrasAmbience.set_volume(gameVolume)
+        music.pause()
+        music.rewind()
+        extrasAmbience.play()
 
 #code for drawing onto canvas
 def draw(canvas):
@@ -304,9 +348,12 @@ def draw(canvas):
     elif options:
         #DRAW IN THE BUTTONS and the MENU SCREEN
         if rainOrNo <= 1:
-            canvas.draw_image(genricbackground_image, BACKGROUND_CENTER, BACKGROUND_SIZE, BACKGROUND_CENTER, BACKGROUND_SIZE)
+            canvas.draw_image(genricbackground_image, BACKGROUND_CENTER, BACKGROUND_SIZE, BACKGROUND_CENTER,
+                              BACKGROUND_SIZE)
+
         elif rainOrNo == 2:
-            canvas.draw_image(genericbackground_raining, BACKGROUND_CENTER, BACKGROUND_SIZE, BACKGROUND_CENTER, BACKGROUND_SIZE)
+            canvas.draw_image(genericbackground_raining, BACKGROUND_CENTER, BACKGROUND_SIZE, BACKGROUND_CENTER,
+                              BACKGROUND_SIZE)
             '''
             Sprite Work in the menus for some rain!
             '''
@@ -337,6 +384,8 @@ def draw(canvas):
         if rainOrNo <= 1:
             canvas.draw_image(genricbackground_image, BACKGROUND_CENTER, BACKGROUND_SIZE, BACKGROUND_CENTER,
                               BACKGROUND_SIZE)
+
+
         elif rainOrNo == 2:
             canvas.draw_image(genericbackground_raining, BACKGROUND_CENTER, BACKGROUND_SIZE, BACKGROUND_CENTER,
                               BACKGROUND_SIZE)
@@ -383,3 +432,4 @@ counterb = 3
 
 frame.start()
 music.play()
+
