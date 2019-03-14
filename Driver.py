@@ -4,6 +4,8 @@ import time
 import random
 import sys
 
+
+#TODO Refactor my shit ass spaghetti code
 '''
 OKAY SO BASICALLY:
 1. BOOLEANS TO DETERMINE WHICH SCREEN THE GAME SHOULD BE SHOWING
@@ -16,6 +18,8 @@ multiGamePlay = False
 options = False
 extras = False
 
+weGoingRight = False
+weGoingLeft = False
 
 gameVolume = 0.5
 
@@ -32,6 +36,15 @@ CODE BELOW USED TO DETERMINE THE BACKGROUND FOR THE HOME SCREEN
 WEIGHTED HEAVILY IN FAVOUR OF SUMMER BACKGROUND BUT RAIN APPEARS ABOUT 1/3
 '''
 rainOrNo = random.randint(0,2)
+
+extrasAmbience = simplegui.load_sound\
+            ("https://storage.googleapis.com/cs1830/The%20Show%20Must%20Be%20Go.mp3")
+extrasAmbience.set_volume(gameVolume)
+
+ambientMusic = simplegui.load_sound \
+    ("https://commondatastorage.googleapis.com/cs1830/Angels%20We%20Have%20Heard%20(piano).mp3")
+ambientMusic.set_volume(gameVolume)
+
 
 if rainOrNo <= 1: #SUMMER
     music = simplegui.load_sound\
@@ -72,61 +85,114 @@ class Keyboard:
              self.enter = True
 
     def keyUp(self, key):
-        global buttonState
-        global easterEggCounter
-        global rainOrNo
+        global buttonState,easterEggCounter,rainOrNo\
+        ,gameVolume,weGoingRight,weGoingLeft
 
-        if key == simplegui.KEY_MAP['down'] or key == simplegui.KEY_MAP['s']:
-            self.down = False
-            buttonState+=1
-            if buttonState>4:
-                buttonState = 0
-            print(buttonState)
-            easterEggCounter+=1
-            print(easterEggCounter)
-            buttonSoundSplash.play()
-            time.sleep(0.1)
+        #KEYMAP FOR MAIN MENU
+        if mainMenu:
+            if key == simplegui.KEY_MAP['down'] or key == simplegui.KEY_MAP['s']:
+                self.down = False
+                buttonState+=1
+                if buttonState>4:
+                    buttonState = 0
+                print(buttonState)
+                easterEggCounter+=1
+                print(easterEggCounter)
+                buttonSoundSplash.play()
+                time.sleep(0.1)
 
-        if key == simplegui.KEY_MAP['up']or key == simplegui.KEY_MAP['w']:
-            self.up = False
-            buttonState-=1
-            if buttonState<0:
-                buttonState = 4
-            print(buttonState)
-            buttonSoundSplash.play()
-            easterEggCounter =0
-            time.sleep(0.1)
+            if key == simplegui.KEY_MAP['up']or key == simplegui.KEY_MAP['w']:
+                self.up = False
+                buttonState-=1
+                if buttonState<0:
+                    buttonState = 4
+                print(buttonState)
+                buttonSoundSplash.play()
+                easterEggCounter =0
+                time.sleep(0.1)
 
-        if key == simplegui.KEY_MAP['space'] or key == simplegui.KEY_MAP['e']:
-            if buttonState == 0:
-                print(gameButtonhandler())
-                if rainOrNo <=1:
-                    music.pause()
-                buttonOnPress.play()
-                easterEgg()
-            if buttonState == 1:
-                print(multigameButtonhandler())
-                if rainOrNo <= 1:
-                    music.pause()
-                buttonOnPress.play()
-                easterEgg()
-            if buttonState == 2:
-                print(optionsHandler())
-                if rainOrNo <= 1:
-                    music.pause()
-                buttonOnPress.play()
-                easterEgg()
-            if buttonState == 3:
-                print(extrasHandler())
-                if rainOrNo <= 1:
-                    music.pause()
-                buttonOnPress.play()
-                easterEgg()
-            if buttonState == MENU_OPTIONS:
-                if rainOrNo <= 1:
-                    music.pause()
-                buttonOnPress.play()
-                sys.exit()
+            if key == simplegui.KEY_MAP['space'] or key == simplegui.KEY_MAP['e']:
+                if buttonState == 0:
+                    print(gameButtonhandler())
+                    if rainOrNo <=1:
+                        music.pause()
+                    buttonOnPress.play()
+                    easterEgg()
+                if buttonState == 1:
+                    print(multigameButtonhandler())
+                    if rainOrNo <= 1:
+                        music.pause()
+                    buttonOnPress.play()
+                    easterEgg()
+                if buttonState == 2:
+                    print(optionsHandler())
+                    if rainOrNo <= 1:
+                        music.pause()
+                    buttonOnPress.play()
+                    easterEgg()
+                if buttonState == 3:
+                    print(extrasHandler())
+                    if rainOrNo <= 1:
+                        music.pause()
+                    buttonOnPress.play()
+                    easterEgg()
+                if buttonState == MENU_OPTIONS:
+                    if rainOrNo <= 1:
+                        music.pause()
+                    buttonOnPress.play()
+                    sys.exit()
+        #KEYMAP FOR OPTIONS
+        elif options:
+            if key == simplegui.KEY_MAP['down'] or key == simplegui.KEY_MAP['s']:
+                self.down = False
+                buttonState+=1
+                if buttonState>2:
+                    buttonState = 0
+                print(buttonState)
+                buttonSoundSplash.play()
+                time.sleep(0.1)
+
+            if key == simplegui.KEY_MAP['up']or key == simplegui.KEY_MAP['w']:
+                self.up = False
+                buttonState-=1
+                if buttonState<0:
+                    buttonState = 2
+                print(buttonState)
+                buttonSoundSplash.play()
+                time.sleep(0.1)
+
+            if key == simplegui.KEY_MAP['space'] or key == simplegui.KEY_MAP['e']:
+                if buttonState == 0:
+                    print("Volume")
+                    buttonOnPress.play()
+                if buttonState == 1:
+                    print("Other option")
+                    buttonOnPress.play()
+                if buttonState == 2:
+                    if rainOrNo <= 1:
+                        ambientMusic.pause()
+                        ambientMusic.rewind()
+                    print(mainMenuHandlerFromOptions())
+                    buttonOnPress.play()
+
+            if key == simplegui.KEY_MAP['right'] or key == simplegui.KEY_MAP['d']:
+                if buttonState == 0:
+                    gameVolume+=0.1
+                    if gameVolume >=1:
+                        gameVolume = 1
+                    print("Game volume is now: ", gameVolume)
+                    weGoingLeft = False
+                    weGoingRight = True
+
+
+            if key == simplegui.KEY_MAP['left'] or key == simplegui.KEY_MAP['a']:
+                if buttonState == 0:
+                    gameVolume-=0.1
+                    if gameVolume <= 0:
+                        gameVolume = 0
+                    print("Game volume is now: ", gameVolume)
+                    weGoingRight = False
+                    weGoingLeft = True
 
 def easterEgg():
     if easterEggCounter == 100:
@@ -143,28 +209,41 @@ LOADING IN ALL ASSETS STORED ON GOOGLE CLOUD SERVICES
 '''
 genricbackground_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/GameBackground.png")
 homemenubackground_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/GameBackgroundMenu.png")
+genericbackground_raining = simplegui.load_image\
+    ("https://commondatastorage.googleapis.com/cs1830/GameBackgroundRaining.png")
+homebackground_raining = simplegui.load_image\
+    ("https://commondatastorage.googleapis.com/cs1830/GameBackgroundMenuRaining.png")
 
-genericbackground_raining = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/GameBackgroundRaining.png")
-homebackground_raining = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/GameBackgroundMenuRaining.png")
-
-
+#IMPORTING HOME MENU BUTTONS
 startgamebutton_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/StartGame.png")
 optionsbutton_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/Options.png")
 twoplayerbutton_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/Multiplayer.png")
 extrasbutton_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/Extras.png")
 exitbutton_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/Exit.png")
 
-
-startgamebutton_image_selected = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/StartGameSelected.png")
-optionsbutton_image_selected = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/OptionsSelected.png")
-twoplayerbutton_image_selected = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/MultiplayerSelected.png")
+#IMPORTING SELECTED HOME MENU BUTTONS
+startgamebutton_image_selected = simplegui.load_image\
+    ("https://commondatastorage.googleapis.com/cs1830/StartGameSelected.png")
+optionsbutton_image_selected = simplegui.load_image\
+    ("https://commondatastorage.googleapis.com/cs1830/OptionsSelected.png")
+twoplayerbutton_image_selected = simplegui.load_image\
+    ("https://commondatastorage.googleapis.com/cs1830/MultiplayerSelected.png")
 extrasbutton_image_selected = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/ExtrasSelected.png")
 exitbutton_image_selected = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/ExitSelected.png")
 
-
+#IMPORTING THE RAIN SPRITESHEETS
 rain = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/ezgif.com-gif-maker.png")
-rain3 = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/ezgif.com-gif-maker.png")
 rain2 = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/ezgif.com-gif-maker.png")
+rain3 = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/ezgif.com-gif-maker.png")
+
+#IMPORTING OPTIONS SCREEN BUTTONS
+soundFX_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/SoundFX.png")
+leftArrow_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/ArrowLeft.png")
+rightArrow_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/ArrowRight.png")
+
+soundFX_image_selected = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/SoundFXSelected.png")
+leftArrow_image_selected = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/ArrowLeft.png")
+rightArrow_image_selected = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/ArrowRight.png")
 
 '''
 ASSIGNING ALL CONSTANTS FOR VALUES USED IN CANVAS DRAWING
@@ -188,11 +267,14 @@ GENBUTTON_CENTER = [200, 75]
 RAIN_CENTER = [500, 225]
 RAIN_SIZE = [1000, 450]
 RAIN_DIM = [8,1]
-
 RAIN_CENTERONE = [300, 350]
 RAIN_CENTERTW0 = [350, 675]
 RAIN_CENTERTHREE = [400, 1050]
 
+ARROW_WIDTH = [150,150]
+ARROW_LEFT_CENTER = [505, 430]
+ARROW_RIGHT_CENTER = [655, 430]
+GENARROW_CENTER = [75,75]
 
 
 def volumeHandler(decider, volume):
@@ -205,51 +287,40 @@ def volumeHandler(decider, volume):
         if volume < 0:
             volume = 0
     return volume
-
-
 '''
 BUTTONHANDLERS ACTIVATED WHEN SPACEBAR OR e IS PRESSED ON GAMESTATE
 '''
 def gameButtonhandler():
     global mainMenu
     global gamePlay 
-    #TODO write the code for opening game and switching to a screen for gameplay
+
     print("Game open button pressed.")
     mainMenu = False
     gamePlay = True
-
 
 def multigameButtonhandler():
     global mainMenu
     global multiGamePlay
 
-    #TODO write the code for opening game and switching to a screen for multiplayer gameplay
+
     print("Game open for multiplayer button pressed.")
     mainMenu = False
     multiGamePlay = True
 
 def optionsHandler():
-    global mainMenu
-    global options
+    global mainMenu, buttonState, rainOrNo \
+    ,options, ambientMusic
 
-    #TODO write the code for opening game and switching to a screen for options
     print("Options screen opened.")
     mainMenu = False
     options = True
-    global buttonState
-    global rainOrNo
-
-
     # RESET BUTTON STATE
     buttonState = 0
     if rainOrNo == 2:
         pass
     elif rainOrNo <= 1:
-        ambientMusic = simplegui.load_sound\
-            ("https://commondatastorage.googleapis.com/cs1830/Angels%20We%20Have%20Heard%20(piano).mp3")
-        ambientMusic.set_volume(gameVolume)
-
         music.pause()
+        music.rewind()
         ambientMusic.play()
 
 def extrasHandler():
@@ -257,6 +328,7 @@ def extrasHandler():
     global extras
     global buttonState
     global rainOrNo
+    global extrasAmbience
 
     #TODO write the code for opening game and switching to a screen for options
     print("Extras screen opened.")
@@ -268,12 +340,25 @@ def extrasHandler():
     if rainOrNo == 2:
         pass
     elif rainOrNo <= 1:
-        extrasAmbience = simplegui.load_sound\
-            ("https://storage.googleapis.com/cs1830/The%20Show%20Must%20Be%20Go.mp3")
-        extrasAmbience.set_volume(gameVolume)
         music.pause()
         music.rewind()
         extrasAmbience.play()
+
+def mainMenuHandlerFromOptions():
+    global mainMenu ,buttonState ,rainOrNo\
+    ,options ,ambientMusic
+
+
+    print("Main Menu opened")
+
+    options = False
+    mainMenu = True
+
+    buttonState = 0
+    if rainOrNo == 2:
+        pass
+    elif rainOrNo <= 1:
+        music.play()
 
 #code for drawing onto canvas
 def draw(canvas):
@@ -308,7 +393,6 @@ def draw(canvas):
                                RAIN_SIZE, RAIN_CENTERTHREE, RAIN_SIZE)
             counterb = (counterb + 1) % (RAIN_DIM[0] * RAIN_DIM[1])
             '''CODE FOR RAIN ENDS HERE, SPRITE SHEET AND THE SORT'''
-
 
         if buttonState == 0:
             canvas.draw_image(startgamebutton_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER, BUTTON_WIDTH)
@@ -378,13 +462,46 @@ def draw(canvas):
                                RAIN_SIZE, RAIN_CENTERTHREE, RAIN_SIZE)
             counterb = (counterb + 1) % (RAIN_DIM[0] * RAIN_DIM[1])
             '''CODE FOR RAIN ENDS HERE, SPRITE SHEET AND THE SORT'''
+        if buttonState == 0:
+
+            canvas.draw_image(soundFX_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER,
+                              BUTTON_WIDTH)
+            if weGoingLeft == False and weGoingRight == False:
+                canvas.draw_image(leftArrow_image, GENARROW_CENTER, ARROW_WIDTH, ARROW_LEFT_CENTER,
+                              ARROW_WIDTH)
+                canvas.draw_image(rightArrow_image, GENARROW_CENTER, ARROW_WIDTH, ARROW_RIGHT_CENTER,
+                                  ARROW_WIDTH)
+            elif weGoingLeft and weGoingRight == False:
+                canvas.draw_image(leftArrow_image_selected, GENARROW_CENTER, ARROW_WIDTH, ARROW_LEFT_CENTER,
+                                  ARROW_WIDTH)
+                canvas.draw_image(rightArrow_image, GENARROW_CENTER, ARROW_WIDTH, ARROW_RIGHT_CENTER,
+                                  ARROW_WIDTH)
+            else:
+                canvas.draw_image(leftArrow_image, GENARROW_CENTER, ARROW_WIDTH, ARROW_LEFT_CENTER,
+                                  ARROW_WIDTH)
+                canvas.draw_image(rightArrow_image_selected, GENARROW_CENTER, ARROW_WIDTH, ARROW_RIGHT_CENTER,
+                                  ARROW_WIDTH)
+
+            canvas.draw_image(twoplayerbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(exitbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER, BUTTON_WIDTH)
+
+        if buttonState == 1:
+            canvas.draw_image(soundFX_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(twoplayerbutton_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER,
+                              BUTTON_WIDTH)
+            canvas.draw_image(exitbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER, BUTTON_WIDTH)
+
+        if buttonState == 2:
+            canvas.draw_image(soundFX_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(twoplayerbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(exitbutton_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER,
+                              BUTTON_WIDTH)
 
     elif extras:
         # DRAW IN THE BUTTONS and the MENU SCREEN
         if rainOrNo <= 1:
             canvas.draw_image(genricbackground_image, BACKGROUND_CENTER, BACKGROUND_SIZE, BACKGROUND_CENTER,
                               BACKGROUND_SIZE)
-
 
         elif rainOrNo == 2:
             canvas.draw_image(genericbackground_raining, BACKGROUND_CENTER, BACKGROUND_SIZE, BACKGROUND_CENTER,
