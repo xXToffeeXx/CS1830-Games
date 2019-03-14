@@ -1,5 +1,5 @@
 # CS1830-Games
-# Callum branch
+## Callum's branch
 
 Main is the main file currently focusing on Enemies both as a single unit and as a group (as well as all main functions and SimpleGUI frame stuff goes).
 
