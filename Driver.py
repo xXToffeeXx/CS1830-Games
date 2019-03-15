@@ -12,6 +12,10 @@ OKAY SO BASICALLY:
 2. ASSIGN BOOLEANS IN METHODS CALLED BY PRESS OF SPACE OR e
 3. THIS CHANGES WHAT IS DRAWN IN DRAW()
 '''
+
+'''
+Booleans determine which buttons are selected
+'''
 mainMenu = True
 gamePlay = False
 multiGamePlay = False
@@ -22,6 +26,18 @@ weGoingRight = False
 weGoingLeft = False
 
 gameVolume = 0.5
+normalisedVolume = gameVolume*10
+
+inversion = False
+
+'''
+Below determines key mappings
+'''
+wasdRight = "d"
+wasdLeft = "a"
+
+keybRight = "right"
+keybLeft = "left"
 
 '''                                                                                   
 THIS CODE BELOW ACTUALLY FUCKING WORKS IN CODESKULPTOR BUT NOT IN PYCHARM, FUCK       
@@ -85,8 +101,9 @@ class Keyboard:
              self.enter = True
 
     def keyUp(self, key):
-        global buttonState,easterEggCounter,rainOrNo\
-        ,gameVolume,weGoingRight,weGoingLeft
+        global buttonState,easterEggCounter,rainOrNo,\
+        gameVolume,weGoingRight,weGoingLeft,\
+        keybLeft,keybRight, wasdLeft, wasdRight, inversion
 
         #KEYMAP FOR MAIN MENU
         if mainMenu:
@@ -166,7 +183,22 @@ class Keyboard:
                     print("Volume")
                     buttonOnPress.play()
                 if buttonState == 1:
-                    print("Other option")
+                    print("Invert Horizontal")
+                    tempwasd = wasdLeft
+                    tempkeyb = keybLeft
+
+                    wasdLeft = wasdRight
+                    keybLeft = keybRight
+
+                    wasdRight = tempwasd
+                    keybRight = tempkeyb
+
+                    if inversion:
+                        inversion = False
+                    else:
+                        inversion = True
+                    print("Left movements now dictated by: ", wasdLeft, " and ", keybLeft)
+
                     buttonOnPress.play()
                 if buttonState == 2:
                     if rainOrNo <= 1:
@@ -175,24 +207,20 @@ class Keyboard:
                     print(mainMenuHandlerFromOptions())
                     buttonOnPress.play()
 
-            if key == simplegui.KEY_MAP['right'] or key == simplegui.KEY_MAP['d']:
-                if buttonState == 0:
-                    gameVolume+=0.1
-                    if gameVolume >=1:
-                        gameVolume = 1
-                    print("Game volume is now: ", gameVolume)
+            if key == simplegui.KEY_MAP[wasdRight] or key == simplegui.KEY_MAP[keybRight]:
+
+                if buttonState==0:
+                    gameVolume = volumeHandler(1, gameVolume)
                     weGoingLeft = False
                     weGoingRight = True
-
-
-            if key == simplegui.KEY_MAP['left'] or key == simplegui.KEY_MAP['a']:
-                if buttonState == 0:
-                    gameVolume-=0.1
-                    if gameVolume <= 0:
-                        gameVolume = 0
                     print("Game volume is now: ", gameVolume)
-                    weGoingRight = False
+
+            if key == simplegui.KEY_MAP[wasdLeft] or key == simplegui.KEY_MAP[keybLeft]:
+                if buttonState==0:
+                    gameVolume = volumeHandler(2, gameVolume)
                     weGoingLeft = True
+                    weGoingRight = False
+                    print("Game volume is now: ", gameVolume)
 
 def easterEgg():
     if easterEggCounter == 100:
@@ -240,10 +268,19 @@ rain3 = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/ez
 soundFX_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/SoundFX.png")
 leftArrow_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/ArrowLeft.png")
 rightArrow_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/ArrowRight.png")
+BacktoMenu_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/BackToMenu.png")
+invertlr_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/InvertHorizontal.png")
 
-soundFX_image_selected = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/SoundFXSelected.png")
-leftArrow_image_selected = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/ArrowLeft.png")
-rightArrow_image_selected = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/ArrowRight.png")
+soundFX_image_selected = simplegui.load_image\
+    ("https://commondatastorage.googleapis.com/cs1830/SoundFXSelected.png")
+leftArrow_image_selected = simplegui.load_image\
+    ("https://commondatastorage.googleapis.com/cs1830/ArrowLeftSelected.png")
+rightArrow_image_selected = simplegui.load_image\
+    ("https://commondatastorage.googleapis.com/cs1830/ArrowRightSelected.png")
+BacktoMenu_image_selected = simplegui.load_image\
+    ("https://commondatastorage.googleapis.com/cs1830/BackToMenuSelected.png")
+invertlr_image_selected = simplegui.load_image\
+    ("https://commondatastorage.googleapis.com/cs1830/InvertHorizontalSelected.png")
 
 '''
 ASSIGNING ALL CONSTANTS FOR VALUES USED IN CANVAS DRAWING
@@ -271,22 +308,24 @@ RAIN_CENTERONE = [300, 350]
 RAIN_CENTERTW0 = [350, 675]
 RAIN_CENTERTHREE = [400, 1050]
 
-ARROW_WIDTH = [150,150]
+ARROW_WIDTH = [125,125]
 ARROW_LEFT_CENTER = [505, 430]
-ARROW_RIGHT_CENTER = [655, 430]
-GENARROW_CENTER = [75,75]
+ARROW_RIGHT_CENTER = [625, 430]
+GENARROW_CENTER = [67.5,67.5]
 
+NUMBER_CENTER = [600, 430]
+ONOFF_CENTER = [600, 530]
 
-def volumeHandler(decider, volume):
-    if decider == True:
-        volume+=0.1
-        if volume > 1:
-            volume = 1
-    elif decider == False:
-        volume-=0.1
-        if volume < 0:
-            volume = 0
-    return volume
+def volumeHandler(decider, gameVolume):
+    if decider == 1:
+        gameVolume+=0.1
+        if gameVolume > 1.0:
+            gameVolume = 1.0
+    elif decider == 2:
+        gameVolume-=0.1
+        if gameVolume < 0.0:
+            gameVolume = 0.0
+    return gameVolume
 '''
 BUTTONHANDLERS ACTIVATED WHEN SPACEBAR OR e IS PRESSED ON GAMESTATE
 '''
@@ -360,6 +399,8 @@ def mainMenuHandlerFromOptions():
     elif rainOrNo <= 1:
         music.play()
 
+
+
 #code for drawing onto canvas
 def draw(canvas):
     global counter, countera, counterb
@@ -394,6 +435,7 @@ def draw(canvas):
             counterb = (counterb + 1) % (RAIN_DIM[0] * RAIN_DIM[1])
             '''CODE FOR RAIN ENDS HERE, SPRITE SHEET AND THE SORT'''
 
+        '''MAIN MENU DRAWING--------------------------------------------------------------------------------------------------'''
         if buttonState == 0:
             canvas.draw_image(startgamebutton_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER, BUTTON_WIDTH)
             canvas.draw_image(twoplayerbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER, BUTTON_WIDTH)
@@ -428,6 +470,8 @@ def draw(canvas):
             canvas.draw_image(optionsbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER, BUTTON_WIDTH)
             canvas.draw_image(extrasbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONFOUR_CENTER, BUTTON_WIDTH)
             canvas.draw_image(exitbutton_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONFIVE_CENTER, BUTTON_WIDTH)
+        '''MAIN MENU DRAWING DONE---------------------------------------------------------------------------------------------'''
+
 
     elif options:
         #DRAW IN THE BUTTONS and the MENU SCREEN
@@ -462,16 +506,19 @@ def draw(canvas):
                                RAIN_SIZE, RAIN_CENTERTHREE, RAIN_SIZE)
             counterb = (counterb + 1) % (RAIN_DIM[0] * RAIN_DIM[1])
             '''CODE FOR RAIN ENDS HERE, SPRITE SHEET AND THE SORT'''
+
+            '''DRAWING IN THE OPTIONS MENU ----------------------------'''
         if buttonState == 0:
 
             canvas.draw_image(soundFX_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER,
                               BUTTON_WIDTH)
+
             if weGoingLeft == False and weGoingRight == False:
                 canvas.draw_image(leftArrow_image, GENARROW_CENTER, ARROW_WIDTH, ARROW_LEFT_CENTER,
                               ARROW_WIDTH)
                 canvas.draw_image(rightArrow_image, GENARROW_CENTER, ARROW_WIDTH, ARROW_RIGHT_CENTER,
                                   ARROW_WIDTH)
-            elif weGoingLeft and weGoingRight == False:
+            elif weGoingLeft == True and weGoingRight == False:
                 canvas.draw_image(leftArrow_image_selected, GENARROW_CENTER, ARROW_WIDTH, ARROW_LEFT_CENTER,
                                   ARROW_WIDTH)
                 canvas.draw_image(rightArrow_image, GENARROW_CENTER, ARROW_WIDTH, ARROW_RIGHT_CENTER,
@@ -482,19 +529,37 @@ def draw(canvas):
                 canvas.draw_image(rightArrow_image_selected, GENARROW_CENTER, ARROW_WIDTH, ARROW_RIGHT_CENTER,
                                   ARROW_WIDTH)
 
-            canvas.draw_image(twoplayerbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER, BUTTON_WIDTH)
-            canvas.draw_image(exitbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER, BUTTON_WIDTH)
+            normalisedVolume = gameVolume*10
+            n = int(normalisedVolume)
+            num = str(n)
+            image = ("https://commondatastorage.googleapis.com/cs1830/Numbers/"+num+".png")
+            num_image = simplegui.load_image(image)
+            canvas.draw_image(num_image, GENBUTTON_CENTER, BUTTON_WIDTH, NUMBER_CENTER,
+                                  BUTTON_WIDTH)
+
+            canvas.draw_image(invertlr_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(BacktoMenu_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER, BUTTON_WIDTH)
 
         if buttonState == 1:
             canvas.draw_image(soundFX_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER, BUTTON_WIDTH)
-            canvas.draw_image(twoplayerbutton_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER,
+            canvas.draw_image(invertlr_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER,
                               BUTTON_WIDTH)
-            canvas.draw_image(exitbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER, BUTTON_WIDTH)
+            if inversion:
+                onImage = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/Numbers/ON.png")
+                canvas.draw_image(onImage, GENBUTTON_CENTER, BUTTON_WIDTH, ONOFF_CENTER,
+                                  BUTTON_WIDTH)
+
+            else:
+                offImage = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/Numbers/OFF.png")
+                canvas.draw_image(offImage, GENBUTTON_CENTER, BUTTON_WIDTH, ONOFF_CENTER,
+                                  BUTTON_WIDTH)
+
+            canvas.draw_image(BacktoMenu_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER, BUTTON_WIDTH)
 
         if buttonState == 2:
             canvas.draw_image(soundFX_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER, BUTTON_WIDTH)
-            canvas.draw_image(twoplayerbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER, BUTTON_WIDTH)
-            canvas.draw_image(exitbutton_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER,
+            canvas.draw_image(invertlr_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(BacktoMenu_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER,
                               BUTTON_WIDTH)
 
     elif extras:
