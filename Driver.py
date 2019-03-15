@@ -242,6 +242,10 @@ class Keyboard:
             if key == simplegui.KEY_MAP['space'] or key == simplegui.KEY_MAP['e']:
                 if buttonState == 0:
                     print("Music player")
+
+                if buttonState == 1:
+                    print("Credits")
+
                 if buttonState == 2:
                     if rainOrNo <= 1:
                         extrasAmbience.pause()
@@ -322,7 +326,15 @@ numbersList = [(simplegui.load_image("https://commondatastorage.googleapis.com/c
                (simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/Numbers/10.png"))
                ]
 
+#IMPORTING ITEMS FOR THE EXTRAS SCREEN
+credits_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/Credits.png")
 
+credits_image_selected = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/CreditsSelected.png")
+
+
+#IMPORTING TITLES
+optionstitle_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/OptionsTITLE.png")
+extrastitle_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/ExtrasTITLE.png")
 '''
 ASSIGNING ALL CONSTANTS FOR VALUES USED IN CANVAS DRAWING
 '''
@@ -340,6 +352,8 @@ BUTTONTHREE_CENTER = [295,630]
 BUTTONFOUR_CENTER = [295, 730]
 BUTTONFIVE_CENTER = [295, 830]
 GENBUTTON_CENTER = [200, 75]
+
+TITLE_CENTER = [350, 230]
 
 #Size for Rain GIF
 RAIN_CENTER = [500, 225]
@@ -379,7 +393,7 @@ BUTTONHANDLERS ACTIVATED WHEN SPACEBAR OR e IS PRESSED ON GAMESTATE
 
 def gameButtonhandler():
     global mainMenu
-    global gamePlay 
+    global gamePlay
 
     print("Game open button pressed.")
     mainMenu = False
@@ -587,6 +601,9 @@ def draw(canvas):
             '''CODE FOR RAIN ENDS HERE, SPRITE SHEET AND THE SORT'''
 
             '''DRAWING IN THE OPTIONS MENU ----------------------------'''
+        canvas.draw_image(optionstitle_image, GENBUTTON_CENTER, BUTTON_WIDTH, TITLE_CENTER,
+                          BUTTON_WIDTH)
+
         if buttonState == 0:
 
             canvas.draw_image(soundFX_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER,
@@ -652,22 +669,24 @@ def draw(canvas):
             counterb = (counterb + 1) % (RAIN_DIM[0] * RAIN_DIM[1])
             '''CODE FOR RAIN ENDS HERE, SPRITE SHEET AND THE SORT'''
 
-        if buttonState == 0:
+        canvas.draw_image(extrastitle_image, GENBUTTON_CENTER, BUTTON_WIDTH, TITLE_CENTER,
+                          BUTTON_WIDTH)
 
+        if buttonState == 0:
             canvas.draw_image(soundFX_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER,
                               BUTTON_WIDTH)
-            canvas.draw_image(invertlr_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(credits_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER, BUTTON_WIDTH)
             canvas.draw_image(BacktoMenu_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER, BUTTON_WIDTH)
 
         if buttonState == 1:
             canvas.draw_image(soundFX_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER, BUTTON_WIDTH)
-            canvas.draw_image(invertlr_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER,
+            canvas.draw_image(credits_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER,
                               BUTTON_WIDTH)
             canvas.draw_image(BacktoMenu_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER, BUTTON_WIDTH)
 
         if buttonState == 2:
             canvas.draw_image(soundFX_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER, BUTTON_WIDTH)
-            canvas.draw_image(invertlr_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(credits_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER, BUTTON_WIDTH)
             canvas.draw_image(BacktoMenu_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER,
                               BUTTON_WIDTH)
 
