@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/Driver.py" line="238" mnemonic="2" />
+    <bookmark url="file://$PROJECT_DIR$/Driver.py" line="225" mnemonic="2" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4b21a36d-17da-47e3-ae44-a61d849f176e" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Driver.py" beforeDir="false" afterPath="$PROJECT_DIR$/Driver.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -21,26 +22,18 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Driver.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="8585">
-              <caret line="616" lean-forward="true" selection-end-line="617" />
+            <state relative-caret-position="98">
+              <caret line="497" column="43" selection-start-line="497" selection-start-column="43" selection-end-line="497" selection-end-column="43" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
                 <element signature="e#2750#4704#0" />
+                <element signature="e#6863#7171#0" />
                 <element signature="e#11445#11562#0" />
                 <element signature="e#11598#11741#0" />
                 <element signature="e#11769#12090#0" />
                 <element signature="e#12117#12554#0" />
                 <element signature="e#12594#12834#0" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Licenses.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="18" column="43" selection-start-line="18" selection-start-column="43" selection-end-line="18" selection-end-column="43" />
             </state>
           </provider>
         </entry>
@@ -80,6 +73,12 @@
       <find>currentVol</find>
       <find>volumeHan</find>
       <find>left</find>
+      <find>key</find>
+      <find>print(&quot;</find>
+      <find>volumeHa</find>
+      <find>leftArrow</find>
+      <find>weGoingLeft</find>
+      <find>weGoing</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -194,7 +193,7 @@
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.23154363" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23154363" />
       <window_info id="Structure" order="1" weight="0.24966443" />
       <window_info id="Favorites" order="2" weight="0.3295302" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -205,7 +204,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32719547" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.3286119" />
-      <window_info anchor="bottom" id="Terminal" order="8" visible="true" weight="0.32577905" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.32577905" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50201344" side_tool="true" weight="0.30028328" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.32719547" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -273,11 +272,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Driver.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8585">
-          <caret line="616" lean-forward="true" selection-end-line="617" />
+        <state relative-caret-position="98">
+          <caret line="497" column="43" selection-start-line="497" selection-start-column="43" selection-end-line="497" selection-end-column="43" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
             <element signature="e#2750#4704#0" />
+            <element signature="e#6863#7171#0" />
             <element signature="e#11445#11562#0" />
             <element signature="e#11598#11741#0" />
             <element signature="e#11769#12090#0" />

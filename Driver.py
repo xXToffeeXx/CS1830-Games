@@ -22,10 +22,7 @@ multiGamePlay = False
 options = False
 extras = False
 
-weGoingRight = False
-weGoingLeft = False
-
-gameVolume = 0.50
+gameVolume = 0.8
 
 inversion = False
 
@@ -66,8 +63,6 @@ if rainOrNo <= 1: #SUMMER
         ("https://commondatastorage.googleapis.com/cs1830/Beachfront%20Celebration%20(1).mp3")
     music.set_volume(gameVolume)
 
-
-
 else: #RAINFOREST
     music = simplegui.load_sound\
         ("https://commondatastorage.googleapis.com/cs1830/462774__lg__20180616-tropical-rain-thailand-02.wav")
@@ -80,8 +75,6 @@ buttonOnPress = simplegui.load_sound\
     ("https://commondatastorage.googleapis.com/cs1830/243020__plasterbrain__game-start.ogg")
 buttonOnPress.set_volume(gameVolume+0.1)
 
-#ambient = simplegui.load_sound("https://commondatastorage.googleapis.com/cs1830/Forest%20at%20dawn.wav")
-#ambient.set_volume(gameVolume-0.1)
 
 class Keyboard:
     def __init__(self):
@@ -101,8 +94,7 @@ class Keyboard:
 
     def keyUp(self, key):
         global buttonState,easterEggCounter,rainOrNo,\
-        gameVolume, weGoingRight,weGoingLeft, normalisedVolume,\
-        keybLeft, keybRight, wasdLeft, wasdRight, inversion
+        gameVolume, normalisedVolume, keybLeft, keybRight, wasdLeft, wasdRight, inversion
 
         #KEYMAP FOR MAIN MENU
         if mainMenu:
@@ -210,16 +202,12 @@ class Keyboard:
 
                 if buttonState==0:
                     gameVolume = volumeHandler(1, gameVolume)
-                    weGoingLeft = False
-                    weGoingRight = True
                     print("Game volume is now: ", (int)(gameVolume * 10))
 
             if key == simplegui.KEY_MAP[wasdLeft] or key == simplegui.KEY_MAP[keybLeft]:
                 if buttonState==0:
                     gameVolume = volumeHandler(2, gameVolume)
                     print("Game volume is now: ", (int)(gameVolume * 10))
-                    weGoingLeft = True
-                    weGoingRight = False
 
 def easterEgg():
     if easterEggCounter == 100:
@@ -265,17 +253,12 @@ rain3 = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/ez
 
 #IMPORTING OPTIONS SCREEN BUTTONS
 soundFX_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/SoundFX.png")
-leftArrow_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/ArrowLeft.png")
-rightArrow_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/ArrowRight.png")
 BacktoMenu_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/BackToMenu.png")
 invertlr_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/InvertHorizontal.png")
 
+#IMPORTING SELECTED BUTTONS FOR OPTIONS SCREEN
 soundFX_image_selected = simplegui.load_image\
     ("https://commondatastorage.googleapis.com/cs1830/SoundFXSelected.png")
-leftArrow_image_selected = simplegui.load_image\
-    ("https://commondatastorage.googleapis.com/cs1830/ArrowLeftSelected.png")
-rightArrow_image_selected = simplegui.load_image\
-    ("https://commondatastorage.googleapis.com/cs1830/ArrowRightSelected.png")
 BacktoMenu_image_selected = simplegui.load_image\
     ("https://commondatastorage.googleapis.com/cs1830/BackToMenuSelected.png")
 invertlr_image_selected = simplegui.load_image\
@@ -307,10 +290,10 @@ RAIN_CENTERONE = [300, 350]
 RAIN_CENTERTW0 = [350, 675]
 RAIN_CENTERTHREE = [400, 1050]
 
-ARROW_WIDTH = [125,125]
+ARROW_WIDTH = [150,150]
 ARROW_LEFT_CENTER = [505, 430]
 ARROW_RIGHT_CENTER = [625, 430]
-GENARROW_CENTER = [67.5,67.5]
+GENARROW_CENTER = [75, 75]
 
 NUMBER_CENTER = [600, 430]
 ONOFF_CENTER = [600, 530]
@@ -513,23 +496,6 @@ def draw(canvas):
 
             canvas.draw_image(soundFX_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER,
                               BUTTON_WIDTH)
-
-            if weGoingLeft == False and weGoingRight == False:
-                canvas.draw_image(leftArrow_image, GENARROW_CENTER, ARROW_WIDTH, ARROW_LEFT_CENTER,
-                              ARROW_WIDTH)
-                canvas.draw_image(rightArrow_image, GENARROW_CENTER, ARROW_WIDTH, ARROW_RIGHT_CENTER,
-                                  ARROW_WIDTH)
-            elif weGoingLeft == True and weGoingRight == False:
-                canvas.draw_image(leftArrow_image_selected, GENARROW_CENTER, ARROW_WIDTH, ARROW_LEFT_CENTER,
-                                  ARROW_WIDTH)
-                canvas.draw_image(rightArrow_image, GENARROW_CENTER, ARROW_WIDTH, ARROW_RIGHT_CENTER,
-                                  ARROW_WIDTH)
-            else:
-                canvas.draw_image(leftArrow_image, GENARROW_CENTER, ARROW_WIDTH, ARROW_LEFT_CENTER,
-                                  ARROW_WIDTH)
-                canvas.draw_image(rightArrow_image_selected, GENARROW_CENTER, ARROW_WIDTH, ARROW_RIGHT_CENTER,
-                                  ARROW_WIDTH)
-
             n = (int)(gameVolume * 10)
             num = str(n)
             image = ("https://commondatastorage.googleapis.com/cs1830/Numbers/"+num+".png")
