@@ -328,13 +328,17 @@ numbersList = [(simplegui.load_image("https://commondatastorage.googleapis.com/c
 
 #IMPORTING ITEMS FOR THE EXTRAS SCREEN
 credits_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/Credits.png")
+cyclemusic_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/CycleMusic.png")
 
 credits_image_selected = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/CreditsSelected.png")
-
+cyclemusic_image_selected = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/CycleMusicSelected.png")
 
 #IMPORTING TITLES
 optionstitle_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/OptionsTITLE.png")
 extrastitle_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/ExtrasTITLE.png")
+
+
+
 '''
 ASSIGNING ALL CONSTANTS FOR VALUES USED IN CANVAS DRAWING
 '''
@@ -673,19 +677,19 @@ def draw(canvas):
                           BUTTON_WIDTH)
 
         if buttonState == 0:
-            canvas.draw_image(soundFX_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER,
+            canvas.draw_image(cyclemusic_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER,
                               BUTTON_WIDTH)
             canvas.draw_image(credits_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER, BUTTON_WIDTH)
             canvas.draw_image(BacktoMenu_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER, BUTTON_WIDTH)
 
         if buttonState == 1:
-            canvas.draw_image(soundFX_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(cyclemusic_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER, BUTTON_WIDTH)
             canvas.draw_image(credits_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER,
                               BUTTON_WIDTH)
             canvas.draw_image(BacktoMenu_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER, BUTTON_WIDTH)
 
         if buttonState == 2:
-            canvas.draw_image(soundFX_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(cyclemusic_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER, BUTTON_WIDTH)
             canvas.draw_image(credits_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER, BUTTON_WIDTH)
             canvas.draw_image(BacktoMenu_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER,
                               BUTTON_WIDTH)
