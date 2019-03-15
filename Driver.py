@@ -1,4 +1,8 @@
-import simpleguitk as simplegui
+try:
+    import simplegui
+except ImportError:
+    import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
+
 import math
 import time
 import random
@@ -264,6 +268,23 @@ BacktoMenu_image_selected = simplegui.load_image\
 invertlr_image_selected = simplegui.load_image\
     ("https://commondatastorage.googleapis.com/cs1830/InvertHorizontalSelected.png")
 
+onImage = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/Numbers/ON.png")
+offImage = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/Numbers/OFF.png")
+
+numbersList = [(simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/Numbers/0.png")),
+               (simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/Numbers/1.png")),
+               (simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/Numbers/2.png")),
+               (simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/Numbers/3.png")),
+               (simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/Numbers/4.png")),
+               (simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/Numbers/5.png")),
+               (simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/Numbers/6.png")),
+               (simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/Numbers/7.png")),
+               (simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/Numbers/8.png")),
+               (simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/Numbers/9.png")),
+               (simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/Numbers/10.png"))
+               ]
+
+
 '''
 ASSIGNING ALL CONSTANTS FOR VALUES USED IN CANVAS DRAWING
 '''
@@ -458,6 +479,7 @@ def draw(canvas):
 
 
     elif options:
+        global numbersList
         #DRAW IN THE BUTTONS and the MENU SCREEN
         if rainOrNo <= 1:
             canvas.draw_image(genricbackground_image, BACKGROUND_CENTER, BACKGROUND_SIZE, BACKGROUND_CENTER,
@@ -497,10 +519,7 @@ def draw(canvas):
             canvas.draw_image(soundFX_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER,
                               BUTTON_WIDTH)
             n = (int)(gameVolume * 10)
-            num = str(n)
-            image = ("https://commondatastorage.googleapis.com/cs1830/Numbers/"+num+".png")
-            num_image = simplegui.load_image(image)
-            canvas.draw_image(num_image, GENBUTTON_CENTER, BUTTON_WIDTH, NUMBER_CENTER,
+            canvas.draw_image(numbersList[n], GENBUTTON_CENTER, BUTTON_WIDTH, NUMBER_CENTER,
                                   BUTTON_WIDTH)
 
             canvas.draw_image(invertlr_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER, BUTTON_WIDTH)
@@ -511,12 +530,10 @@ def draw(canvas):
             canvas.draw_image(invertlr_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER,
                               BUTTON_WIDTH)
             if inversion:
-                onImage = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/Numbers/ON.png")
                 canvas.draw_image(onImage, GENBUTTON_CENTER, BUTTON_WIDTH, ONOFF_CENTER,
                                   BUTTON_WIDTH)
 
             else:
-                offImage = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/Numbers/OFF.png")
                 canvas.draw_image(offImage, GENBUTTON_CENTER, BUTTON_WIDTH, ONOFF_CENTER,
                                   BUTTON_WIDTH)
 
