@@ -178,7 +178,6 @@ class Keyboard:
             if key == simplegui.KEY_MAP['space'] or key == simplegui.KEY_MAP['e']:
                 if buttonState == 0:
                     print("Volume")
-                    buttonOnPress.play()
                 if buttonState == 1:
                     print("Invert Horizontal")
                     tempwasd = wasdLeft
@@ -209,7 +208,7 @@ class Keyboard:
                 if buttonState==0:
                     gameVolume = volumeHandler(1, gameVolume)
                     print("Game volume is now: ", (int)(gameVolume * 10))
-
+                    buttonSoundSplash.play()
                 music.set_volume(gameVolume), ambientMusic.set_volume(gameVolume), extrasAmbience.set_volume(gameVolume),
                 buttonSoundSplash.set_volume(gameVolume ), buttonOnPress.set_volume(gameVolume )
 
@@ -217,10 +216,38 @@ class Keyboard:
                 if buttonState==0:
                     gameVolume = volumeHandler(2, gameVolume)
                     print("Game volume is now: ", (int)(gameVolume * 10))
-
+                    buttonSoundSplash.play()
                 music.set_volume(gameVolume), ambientMusic.set_volume(gameVolume), extrasAmbience.set_volume(gameVolume),
                 buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
 
+        elif extras:
+            if key == simplegui.KEY_MAP['down'] or key == simplegui.KEY_MAP['s']:
+                self.down = False
+                buttonState+=1
+                if buttonState>2:
+                    buttonState = 0
+                print(buttonState)
+                buttonSoundSplash.play()
+                time.sleep(0.1)
+
+            if key == simplegui.KEY_MAP['up']or key == simplegui.KEY_MAP['w']:
+                self.up = False
+                buttonState-=1
+                if buttonState<0:
+                    buttonState = 2
+                print(buttonState)
+                buttonSoundSplash.play()
+                time.sleep(0.1)
+
+            if key == simplegui.KEY_MAP['space'] or key == simplegui.KEY_MAP['e']:
+                if buttonState == 0:
+                    print("Music player")
+                if buttonState == 2:
+                    if rainOrNo <= 1:
+                        extrasAmbience.pause()
+                        extrasAmbience.rewind()
+                    print(mainMenuHandlerFromExtras())
+                    buttonOnPress.play()
 
 def easterEgg():
     if easterEggCounter == 100:
@@ -435,6 +462,24 @@ def mainMenuHandlerFromOptions():
     music.set_volume(gameVolume), ambientMusic.set_volume(gameVolume), extrasAmbience.set_volume(gameVolume),
     buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
 
+def mainMenuHandlerFromExtras():
+    global mainMenu, buttonState, rainOrNo \
+        , extras, ambientMusic
+
+    print("Main Menu opened")
+
+    extras = False
+    mainMenu = True
+
+    buttonState = 0
+    if rainOrNo == 2:
+        pass
+    elif rainOrNo <= 1:
+        music.play()
+
+    music.set_volume(gameVolume), ambientMusic.set_volume(gameVolume), extrasAmbience.set_volume(gameVolume),
+    buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
+
 #code for drawing onto canvas
 def draw(canvas):
     global counter, countera, counterb
@@ -505,7 +550,6 @@ def draw(canvas):
             canvas.draw_image(extrasbutton_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONFOUR_CENTER, BUTTON_WIDTH)
             canvas.draw_image(exitbutton_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONFIVE_CENTER, BUTTON_WIDTH)
         '''MAIN MENU DRAWING DONE---------------------------------------------------------------------------------------------'''
-
 
     elif options:
         global numbersList
@@ -608,6 +652,24 @@ def draw(canvas):
             counterb = (counterb + 1) % (RAIN_DIM[0] * RAIN_DIM[1])
             '''CODE FOR RAIN ENDS HERE, SPRITE SHEET AND THE SORT'''
 
+        if buttonState == 0:
+
+            canvas.draw_image(soundFX_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER,
+                              BUTTON_WIDTH)
+            canvas.draw_image(invertlr_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(BacktoMenu_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER, BUTTON_WIDTH)
+
+        if buttonState == 1:
+            canvas.draw_image(soundFX_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(invertlr_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER,
+                              BUTTON_WIDTH)
+            canvas.draw_image(BacktoMenu_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER, BUTTON_WIDTH)
+
+        if buttonState == 2:
+            canvas.draw_image(soundFX_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONONE_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(invertlr_image, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTWO_CENTER, BUTTON_WIDTH)
+            canvas.draw_image(BacktoMenu_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER,
+                              BUTTON_WIDTH)
 
 # create frame
 frame = simplegui.create_frame("This Game Has Bugs!", BACKGROUND_SIZE[0], BACKGROUND_SIZE[1])
