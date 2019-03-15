@@ -25,8 +25,7 @@ extras = False
 weGoingRight = False
 weGoingLeft = False
 
-gameVolume = 0.5
-normalisedVolume = gameVolume*10
+gameVolume = 0.50
 
 inversion = False
 
@@ -102,8 +101,8 @@ class Keyboard:
 
     def keyUp(self, key):
         global buttonState,easterEggCounter,rainOrNo,\
-        gameVolume,weGoingRight,weGoingLeft,\
-        keybLeft,keybRight, wasdLeft, wasdRight, inversion
+        gameVolume, weGoingRight,weGoingLeft, normalisedVolume,\
+        keybLeft, keybRight, wasdLeft, wasdRight, inversion
 
         #KEYMAP FOR MAIN MENU
         if mainMenu:
@@ -213,14 +212,14 @@ class Keyboard:
                     gameVolume = volumeHandler(1, gameVolume)
                     weGoingLeft = False
                     weGoingRight = True
-                    print("Game volume is now: ", gameVolume)
+                    print("Game volume is now: ", (int)(gameVolume * 10))
 
             if key == simplegui.KEY_MAP[wasdLeft] or key == simplegui.KEY_MAP[keybLeft]:
                 if buttonState==0:
                     gameVolume = volumeHandler(2, gameVolume)
+                    print("Game volume is now: ", (int)(gameVolume * 10))
                     weGoingLeft = True
                     weGoingRight = False
-                    print("Game volume is now: ", gameVolume)
 
 def easterEgg():
     if easterEggCounter == 100:
@@ -317,18 +316,22 @@ NUMBER_CENTER = [600, 430]
 ONOFF_CENTER = [600, 530]
 
 def volumeHandler(decider, gameVolume):
+    temp = gameVolume
     if decider == 1:
-        gameVolume+=0.1
+        gameVolume += 0.1
         if gameVolume > 1.0:
             gameVolume = 1.0
     elif decider == 2:
-        gameVolume-=0.1
+        gameVolume -= 0.1
         if gameVolume < 0.0:
             gameVolume = 0.0
+
     return gameVolume
+
 '''
 BUTTONHANDLERS ACTIVATED WHEN SPACEBAR OR e IS PRESSED ON GAMESTATE
 '''
+
 def gameButtonhandler():
     global mainMenu
     global gamePlay 
@@ -398,8 +401,6 @@ def mainMenuHandlerFromOptions():
         pass
     elif rainOrNo <= 1:
         music.play()
-
-
 
 #code for drawing onto canvas
 def draw(canvas):
@@ -529,8 +530,7 @@ def draw(canvas):
                 canvas.draw_image(rightArrow_image_selected, GENARROW_CENTER, ARROW_WIDTH, ARROW_RIGHT_CENTER,
                                   ARROW_WIDTH)
 
-            normalisedVolume = gameVolume*10
-            n = int(normalisedVolume)
+            n = (int)(gameVolume * 10)
             num = str(n)
             image = ("https://commondatastorage.googleapis.com/cs1830/Numbers/"+num+".png")
             num_image = simplegui.load_image(image)
@@ -614,4 +614,3 @@ counterb = 3
 
 frame.start()
 music.play()
-
