@@ -61,6 +61,7 @@ ambientMusic = simplegui.load_sound \
     ("https://commondatastorage.googleapis.com/cs1830/Angels%20We%20Have%20Heard%20(piano).mp3")
 ambientMusic.set_volume(gameVolume)
 
+music = simplegui.load_sound("")
 
 if rainOrNo <= 1: #SUMMER
     music = simplegui.load_sound\
@@ -74,10 +75,11 @@ else: #RAINFOREST
 
 buttonSoundSplash = simplegui.load_sound\
     ("https://commondatastorage.googleapis.com/cs1830/439746__inspectorj__soprano-recorder-staccato-c.wav")
+buttonSoundSplash.set_volume(gameVolume)
 
 buttonOnPress = simplegui.load_sound\
     ("https://commondatastorage.googleapis.com/cs1830/243020__plasterbrain__game-start.ogg")
-buttonOnPress.set_volume(gameVolume+0.1)
+buttonOnPress.set_volume(gameVolume)
 
 
 class Keyboard:
@@ -208,10 +210,17 @@ class Keyboard:
                     gameVolume = volumeHandler(1, gameVolume)
                     print("Game volume is now: ", (int)(gameVolume * 10))
 
+                music.set_volume(gameVolume), ambientMusic.set_volume(gameVolume), extrasAmbience.set_volume(gameVolume),
+                buttonSoundSplash.set_volume(gameVolume ), buttonOnPress.set_volume(gameVolume )
+
             if key == simplegui.KEY_MAP[wasdLeft] or key == simplegui.KEY_MAP[keybLeft]:
                 if buttonState==0:
                     gameVolume = volumeHandler(2, gameVolume)
                     print("Game volume is now: ", (int)(gameVolume * 10))
+
+                music.set_volume(gameVolume), ambientMusic.set_volume(gameVolume), extrasAmbience.set_volume(gameVolume),
+                buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
+
 
 def easterEgg():
     if easterEggCounter == 100:
@@ -254,6 +263,8 @@ exitbutton_image_selected = simplegui.load_image("https://commondatastorage.goog
 rain = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/ezgif.com-gif-maker.png")
 rain2 = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/ezgif.com-gif-maker.png")
 rain3 = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/ezgif.com-gif-maker.png")
+
+shimmerGIF = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/shimmerGIF.png")
 
 #IMPORTING OPTIONS SCREEN BUTTONS
 soundFX_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/SoundFX.png")
@@ -319,15 +330,18 @@ GENARROW_CENTER = [75, 75]
 NUMBER_CENTER = [600, 430]
 ONOFF_CENTER = [600, 530]
 
+
 def volumeHandler(decider, gameVolume):
     temp = gameVolume
     if decider == 1:
-        gameVolume += 0.1
-        if gameVolume > 1.0:
+        temp = gameVolume+0.1
+        if temp > 1.0:
             gameVolume = 1.0
+        else:
+            gameVolume+=0.1
     elif decider == 2:
         gameVolume -= 0.1
-        if gameVolume < 0.0:
+        if temp < 0.0:
             gameVolume = 0.0
 
     return gameVolume
@@ -344,6 +358,9 @@ def gameButtonhandler():
     mainMenu = False
     gamePlay = True
 
+    music.set_volume(gameVolume), ambientMusic.set_volume(gameVolume), extrasAmbience.set_volume(gameVolume),
+    buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
+
 def multigameButtonhandler():
     global mainMenu
     global multiGamePlay
@@ -352,6 +369,9 @@ def multigameButtonhandler():
     print("Game open for multiplayer button pressed.")
     mainMenu = False
     multiGamePlay = True
+
+    music.set_volume(gameVolume), ambientMusic.set_volume(gameVolume), extrasAmbience.set_volume(gameVolume),
+    buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
 
 def optionsHandler():
     global mainMenu, buttonState, rainOrNo \
@@ -368,6 +388,9 @@ def optionsHandler():
         music.pause()
         music.rewind()
         ambientMusic.play()
+
+    music.set_volume(gameVolume), ambientMusic.set_volume(gameVolume), extrasAmbience.set_volume(gameVolume),
+    buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
 
 def extrasHandler():
     global mainMenu
@@ -390,6 +413,9 @@ def extrasHandler():
         music.rewind()
         extrasAmbience.play()
 
+    music.set_volume(gameVolume), ambientMusic.set_volume(gameVolume), extrasAmbience.set_volume(gameVolume),
+    buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
+
 def mainMenuHandlerFromOptions():
     global mainMenu ,buttonState ,rainOrNo\
     ,options ,ambientMusic
@@ -405,6 +431,9 @@ def mainMenuHandlerFromOptions():
         pass
     elif rainOrNo <= 1:
         music.play()
+
+    music.set_volume(gameVolume), ambientMusic.set_volume(gameVolume), extrasAmbience.set_volume(gameVolume),
+    buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
 
 #code for drawing onto canvas
 def draw(canvas):
