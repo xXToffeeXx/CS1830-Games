@@ -27,6 +27,7 @@ options = False
 extras = False
 
 gameVolume = 0.8
+musicDecider = 0
 
 inversion = False
 
@@ -35,7 +36,6 @@ Below determines key mappings
 '''
 wasdRight = "d"
 wasdLeft = "a"
-
 keybRight = "right"
 keybLeft = "left"
 
@@ -57,9 +57,9 @@ extrasAmbience = simplegui.load_sound\
             ("https://storage.googleapis.com/cs1830/The%20Show%20Must%20Be%20Go.mp3")
 extrasAmbience.set_volume(gameVolume)
 
-ambientMusic = simplegui.load_sound \
+optionsAmbience = simplegui.load_sound \
     ("https://commondatastorage.googleapis.com/cs1830/Angels%20We%20Have%20Heard%20(piano).mp3")
-ambientMusic.set_volume(gameVolume)
+optionsAmbience.set_volume(gameVolume)
 
 music = simplegui.load_sound("")
 
@@ -81,6 +81,8 @@ buttonOnPress = simplegui.load_sound\
     ("https://commondatastorage.googleapis.com/cs1830/243020__plasterbrain__game-start.ogg")
 buttonOnPress.set_volume(gameVolume)
 
+musicLibrary = [music, optionsAmbience, extrasAmbience]
+
 
 class Keyboard:
     def __init__(self):
@@ -99,8 +101,8 @@ class Keyboard:
              self.enter = True
 
     def keyUp(self, key):
-        global buttonState,easterEggCounter,rainOrNo,\
-        gameVolume, normalisedVolume, keybLeft, keybRight, wasdLeft, wasdRight, inversion
+        global buttonState,easterEggCounter,rainOrNo, musicDecider,\
+        gameVolume, keybLeft, keybRight, wasdLeft, wasdRight, inversion
 
         #KEYMAP FOR MAIN MENU
         if mainMenu:
@@ -133,7 +135,7 @@ class Keyboard:
                 if buttonState == 0:
                     print(gameButtonhandler())
                     if rainOrNo <=1:
-                        music.pause()
+                        musicLibrary[0].pause()
                     buttonOnPress.pause()
                     buttonOnPress.rewind()
                     buttonOnPress.play()
@@ -141,7 +143,7 @@ class Keyboard:
                 if buttonState == 1:
                     print(multigameButtonhandler())
                     if rainOrNo <= 1:
-                        music.pause()
+                        musicLibrary[0].pause()
                     buttonOnPress.pause()
                     buttonOnPress.rewind()
                     buttonOnPress.play()
@@ -149,7 +151,7 @@ class Keyboard:
                 if buttonState == 2:
                     print(optionsHandler())
                     if rainOrNo <= 1:
-                        music.pause()
+                        musicLibrary[0].pause()
                     buttonOnPress.pause()
                     buttonOnPress.rewind()
                     buttonOnPress.play()
@@ -157,14 +159,14 @@ class Keyboard:
                 if buttonState == 3:
                     print(extrasHandler())
                     if rainOrNo <= 1:
-                        music.pause()
+                        musicLibrary[0].pause()
                     buttonOnPress.pause()
                     buttonOnPress.rewind()
                     buttonOnPress.play()
                     easterEgg()
                 if buttonState == MENU_OPTIONS:
                     if rainOrNo <= 1:
-                        music.pause()
+                        musicLibrary[0].pause()
 
                     buttonOnPress.pause()
                     buttonOnPress.rewind()
@@ -218,8 +220,8 @@ class Keyboard:
                     buttonOnPress.play()
                 if buttonState == 2:
                     if rainOrNo <= 1:
-                        ambientMusic.pause()
-                        ambientMusic.rewind()
+                        musicLibrary[1].pause()
+                        musicLibrary[1].rewind()
                     print(mainMenuHandlerFromOptions())
                     buttonOnPress.pause()
                     buttonOnPress.rewind()
@@ -233,7 +235,7 @@ class Keyboard:
                     buttonSoundSplash.pause()
                     buttonSoundSplash.rewind()
                     buttonSoundSplash.play()
-                music.set_volume(gameVolume), ambientMusic.set_volume(gameVolume), extrasAmbience.set_volume(gameVolume),
+                musicLibrary[0].set_volume(gameVolume), musicLibrary[1].set_volume(gameVolume), musicLibrary[2].set_volume(gameVolume),
                 buttonSoundSplash.set_volume(gameVolume ), buttonOnPress.set_volume(gameVolume )
 
             if key == simplegui.KEY_MAP[wasdLeft] or key == simplegui.KEY_MAP[keybLeft]:
@@ -245,10 +247,10 @@ class Keyboard:
                     buttonSoundSplash.play()
 
                 if gameVolume >= 0.0:
-                    music.set_volume(gameVolume), ambientMusic.set_volume(gameVolume), extrasAmbience.set_volume(gameVolume),
+                    musicLibrary[0].set_volume(gameVolume), musicLibrary[1].set_volume(gameVolume), musicLibrary[2].set_volume(gameVolume),
                     buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
                 elif gameVolume< 0.0:
-                    music.set_volume(0.0), ambientMusic.set_volume(0.0), extrasAmbience.set_volume(
+                    musicLibrary[0].set_volume(0.0), musicLibrary[1].set_volume(0.0), musicLibrary[2].set_volume(
                         0.0),
                     buttonSoundSplash.set_volume(0.0), buttonOnPress.set_volume(0.0)
                     gameVolume = 0.0
@@ -278,15 +280,29 @@ class Keyboard:
 
             if key == simplegui.KEY_MAP['space'] or key == simplegui.KEY_MAP['e']:
                 if buttonState == 0:
-                    print("Music player")
+                    musicLibrary[0].pause()
+                    musicLibrary[0].rewind()
+                    musicLibrary[1].pause()
+                    musicLibrary[1].rewind()
+                    musicLibrary[2].pause()
+                    musicLibrary[2].rewind()
+                    if musicDecider >= len(musicLibrary)-1:
+                        musicDecider = 0
+                    else:
+                        musicDecider += 1
+                    #LIST INDEX OUT OF RANGE
+                    musicLibrary[musicDecider].play()
 
                 if buttonState == 1:
                     print("Credits")
+                    musicLibrary[0].pause()
+                    musicLibrary[1].pause()
+                    musicLibrary[2].play()
 
                 if buttonState == 2:
                     if rainOrNo <= 1:
-                        extrasAmbience.pause()
-                        extrasAmbience.rewind()
+                        musicLibrary[2].pause()
+                        musicLibrary[2].rewind()
                     print(mainMenuHandlerFromExtras())
                 buttonOnPress.pause()
                 buttonOnPress.rewind()
@@ -294,7 +310,7 @@ class Keyboard:
 
 def easterEgg():
     if easterEggCounter == 100:
-        music.pause()
+        musicLibrary[0].pause()
         print("You found an Easter Egg!")
         easterEggSong = simplegui.load_sound("https://commondatastorage.googleapis.com/cs1830/Spazzmatica%20Polka.mp3")
         easterEggSong.set_volume(gameVolume)
@@ -442,7 +458,7 @@ def gameButtonhandler():
     mainMenu = False
     gamePlay = True
 
-    music.set_volume(gameVolume), ambientMusic.set_volume(gameVolume), extrasAmbience.set_volume(gameVolume),
+    musicLibrary[0].set_volume(gameVolume), musicLibrary[1].set_volume(gameVolume), musicLibrary[2].set_volume(gameVolume),
     buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
 
 def multigameButtonhandler():
@@ -454,12 +470,11 @@ def multigameButtonhandler():
     mainMenu = False
     multiGamePlay = True
 
-    music.set_volume(gameVolume), ambientMusic.set_volume(gameVolume), extrasAmbience.set_volume(gameVolume),
+    musicLibrary[0].set_volume(gameVolume), musicLibrary[1].set_volume(gameVolume), musicLibrary[2].set_volume(gameVolume),
     buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
 
 def optionsHandler():
-    global mainMenu, buttonState, rainOrNo \
-    ,options, ambientMusic
+    global mainMenu, buttonState, rainOrNo, options
 
     print("Options screen opened.")
     mainMenu = False
@@ -469,11 +484,11 @@ def optionsHandler():
     if rainOrNo == 2:
         pass
     elif rainOrNo <= 1:
-        music.pause()
-        music.rewind()
-        ambientMusic.play()
+        musicLibrary[0].pause()
+        musicLibrary[0].rewind()
+        musicLibrary[1].play()
 
-    music.set_volume(gameVolume), ambientMusic.set_volume(gameVolume), extrasAmbience.set_volume(gameVolume),
+    musicLibrary[0].set_volume(gameVolume), musicLibrary[1].set_volume(gameVolume), musicLibrary[2].set_volume(gameVolume),
     buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
 
 def extrasHandler():
@@ -481,7 +496,6 @@ def extrasHandler():
     global extras
     global buttonState
     global rainOrNo
-    global extrasAmbience
 
     #TODO write the code for opening game and switching to a screen for options
     print("Extras screen opened.")
@@ -493,16 +507,16 @@ def extrasHandler():
     if rainOrNo == 2:
         pass
     elif rainOrNo <= 1:
-        music.pause()
-        music.rewind()
-        extrasAmbience.play()
+        musicLibrary[0].pause()
+        musicLibrary[0].rewind()
+        musicLibrary[2].play()
 
-    music.set_volume(gameVolume), ambientMusic.set_volume(gameVolume), extrasAmbience.set_volume(gameVolume),
+    musicLibrary[0].set_volume(gameVolume), musicLibrary[1].set_volume(gameVolume), musicLibrary[2].set_volume(gameVolume),
     buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
 
 def mainMenuHandlerFromOptions():
     global mainMenu ,buttonState ,rainOrNo\
-    ,options ,ambientMusic
+    ,options
 
 
     print("Main Menu opened")
@@ -514,14 +528,14 @@ def mainMenuHandlerFromOptions():
     if rainOrNo == 2:
         pass
     elif rainOrNo <= 1:
-        music.play()
+        musicLibrary[0].play()
 
-    music.set_volume(gameVolume), ambientMusic.set_volume(gameVolume), extrasAmbience.set_volume(gameVolume),
+    musicLibrary[0].set_volume(gameVolume), musicLibrary[1].set_volume(gameVolume), musicLibrary[2].set_volume(gameVolume),
     buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
 
 def mainMenuHandlerFromExtras():
     global mainMenu, buttonState, rainOrNo \
-        , extras, ambientMusic
+        ,extras
 
     print("Main Menu opened")
 
@@ -532,9 +546,9 @@ def mainMenuHandlerFromExtras():
     if rainOrNo == 2:
         pass
     elif rainOrNo <= 1:
-        music.play()
+        musicLibrary[0].play()
 
-    music.set_volume(gameVolume), ambientMusic.set_volume(gameVolume), extrasAmbience.set_volume(gameVolume),
+    musicLibrary[0].set_volume(gameVolume), musicLibrary[1].set_volume(gameVolume), musicLibrary[2].set_volume(gameVolume),
     buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
 
 #code for drawing onto canvas
@@ -749,4 +763,4 @@ countera = 2
 counterb = 3
 
 frame.start()
-music.play()
+musicLibrary[0].play()

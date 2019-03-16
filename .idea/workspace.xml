@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/Driver.py" line="308" mnemonic="2" />
+    <bookmark url="file://$PROJECT_DIR$/Driver.py" line="326" mnemonic="2" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4b21a36d-17da-47e3-ae44-a61d849f176e" name="Default Changelist" comment="bo">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Driver.py" beforeDir="false" afterPath="$PROJECT_DIR$/Driver.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -22,11 +21,12 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Driver.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="312">
-              <caret line="253" column="36" selection-start-line="253" selection-start-column="36" selection-end-line="253" selection-end-column="36" />
+            <state relative-caret-position="272">
+              <caret line="300" column="43" selection-start-line="300" selection-start-column="43" selection-end-line="300" selection-end-column="43" />
               <folding>
                 <element signature="e#109#120#0" expanded="true" />
-                <element signature="e#2940#4894#0" />
+                <element signature="e#3062#5662#0" />
+                <element signature="e#5665#9286#0" />
               </folding>
             </state>
           </provider>
@@ -43,14 +43,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>music</find>
-      <find>optionsHandler</find>
-      <find>ambientMusic.pla</find>
-      <find>butt</find>
-      <find>buttonOnPre</find>
-      <find>right</find>
-      <find>keyb</find>
-      <find>keyboard</find>
       <find>volume</find>
       <find>elif o</find>
       <find>keybo</find>
@@ -73,6 +65,14 @@
       <find>multiG</find>
       <find>buttonSoundSpla</find>
       <find>buttonOnPress</find>
+      <find>ambientMusic</find>
+      <find>music</find>
+      <find>optionsAmbience</find>
+      <find>extrasAmbience</find>
+      <find>def</find>
+      <find>[0]</find>
+      <find>[2]</find>
+      <find>extrasA</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -192,16 +192,16 @@
       <window_info id="Structure" order="1" weight="0.24966443" />
       <window_info id="Favorites" order="2" weight="0.3295302" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3286119" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49798658" weight="0.30028328" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49932885" weight="0.398017" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32719547" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.3286119" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.32577905" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.32577905" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50201344" side_tool="true" weight="0.30028328" />
-      <window_info anchor="bottom" id="Python Console" order="10" weight="0.32719547" />
+      <window_info active="true" anchor="bottom" id="Python Console" order="10" visible="true" weight="0.32719547" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -284,11 +284,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Driver.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="312">
-          <caret line="253" column="36" selection-start-line="253" selection-start-column="36" selection-end-line="253" selection-end-column="36" />
+        <state relative-caret-position="272">
+          <caret line="300" column="43" selection-start-line="300" selection-start-column="43" selection-end-line="300" selection-end-column="43" />
           <folding>
             <element signature="e#109#120#0" expanded="true" />
-            <element signature="e#2940#4894#0" />
+            <element signature="e#3062#5662#0" />
+            <element signature="e#5665#9286#0" />
           </folding>
         </state>
       </provider>
