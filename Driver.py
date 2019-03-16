@@ -134,29 +134,40 @@ class Keyboard:
                     print(gameButtonhandler())
                     if rainOrNo <=1:
                         music.pause()
+                    buttonOnPress.pause()
+                    buttonOnPress.rewind()
                     buttonOnPress.play()
                     easterEgg()
                 if buttonState == 1:
                     print(multigameButtonhandler())
                     if rainOrNo <= 1:
                         music.pause()
+                    buttonOnPress.pause()
+                    buttonOnPress.rewind()
                     buttonOnPress.play()
                     easterEgg()
                 if buttonState == 2:
                     print(optionsHandler())
                     if rainOrNo <= 1:
                         music.pause()
+                    buttonOnPress.pause()
+                    buttonOnPress.rewind()
                     buttonOnPress.play()
                     easterEgg()
                 if buttonState == 3:
                     print(extrasHandler())
                     if rainOrNo <= 1:
                         music.pause()
+                    buttonOnPress.pause()
+                    buttonOnPress.rewind()
                     buttonOnPress.play()
                     easterEgg()
                 if buttonState == MENU_OPTIONS:
                     if rainOrNo <= 1:
                         music.pause()
+
+                    buttonOnPress.pause()
+                    buttonOnPress.rewind()
                     buttonOnPress.play()
                     sys.exit()
         #KEYMAP FOR OPTIONS
@@ -202,13 +213,16 @@ class Keyboard:
                     else:
                         inversion = True
                     print("Left movements now dictated by: ", wasdLeft, " and ", keybLeft)
-
+                    buttonOnPress.pause()
+                    buttonOnPress.rewind()
                     buttonOnPress.play()
                 if buttonState == 2:
                     if rainOrNo <= 1:
                         ambientMusic.pause()
                         ambientMusic.rewind()
                     print(mainMenuHandlerFromOptions())
+                    buttonOnPress.pause()
+                    buttonOnPress.rewind()
                     buttonOnPress.play()
 
             if key == simplegui.KEY_MAP[wasdRight] or key == simplegui.KEY_MAP[keybRight]:
@@ -216,6 +230,8 @@ class Keyboard:
                 if buttonState==0:
                     gameVolume = volumeHandler(1, gameVolume)
                     print("Game volume is now: ", (int)(gameVolume * 10))
+                    buttonSoundSplash.pause()
+                    buttonSoundSplash.rewind()
                     buttonSoundSplash.play()
                 music.set_volume(gameVolume), ambientMusic.set_volume(gameVolume), extrasAmbience.set_volume(gameVolume),
                 buttonSoundSplash.set_volume(gameVolume ), buttonOnPress.set_volume(gameVolume )
@@ -224,9 +240,18 @@ class Keyboard:
                 if buttonState==0:
                     gameVolume = volumeHandler(2, gameVolume)
                     print("Game volume is now: ", (int)(gameVolume * 10))
+                    buttonSoundSplash.pause()
+                    buttonSoundSplash.rewind()
                     buttonSoundSplash.play()
-                music.set_volume(gameVolume), ambientMusic.set_volume(gameVolume), extrasAmbience.set_volume(gameVolume),
-                buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
+
+                if gameVolume >= 0.0:
+                    music.set_volume(gameVolume), ambientMusic.set_volume(gameVolume), extrasAmbience.set_volume(gameVolume),
+                    buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
+                elif gameVolume< 0.0:
+                    music.set_volume(0.0), ambientMusic.set_volume(0.0), extrasAmbience.set_volume(
+                        0.0),
+                    buttonSoundSplash.set_volume(0.0), buttonOnPress.set_volume(0.0)
+                    gameVolume = 0.0
 
         elif extras:
             if key == simplegui.KEY_MAP['down'] or key == simplegui.KEY_MAP['s']:
@@ -263,7 +288,9 @@ class Keyboard:
                         extrasAmbience.pause()
                         extrasAmbience.rewind()
                     print(mainMenuHandlerFromExtras())
-                    buttonOnPress.play()
+                buttonOnPress.pause()
+                buttonOnPress.rewind()
+                buttonOnPress.play()
 
 def easterEgg():
     if easterEggCounter == 100:
