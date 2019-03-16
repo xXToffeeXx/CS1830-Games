@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/Driver.py" line="269" mnemonic="2" />
+    <bookmark url="file://$PROJECT_DIR$/Driver.py" line="281" mnemonic="2" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4b21a36d-17da-47e3-ae44-a61d849f176e" name="Default Changelist" comment="bo">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Driver.py" beforeDir="false" afterPath="$PROJECT_DIR$/Driver.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -21,12 +22,10 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Driver.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="329">
-              <caret line="691" column="46" selection-start-line="691" selection-start-column="46" selection-end-line="691" selection-end-column="46" />
+            <state relative-caret-position="219">
+              <caret line="181" column="42" selection-start-line="181" selection-start-column="42" selection-end-line="181" selection-end-column="42" />
               <folding>
                 <element signature="e#109#120#0" expanded="true" />
-                <element signature="e#2940#4894#0" />
-                <element signature="e#4957#7668#0" />
               </folding>
             </state>
           </provider>
@@ -43,7 +42,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>music.pau</find>
       <find>music</find>
       <find>optionsHandler</find>
       <find>buttonOnPress</find>
@@ -73,6 +71,7 @@
       <find>buttonSoundSplash</find>
       <find>elif extras</find>
       <find>multiG</find>
+      <find>buttonSoundSpla</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -188,7 +187,7 @@
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23154363" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23489933" />
       <window_info id="Structure" order="1" weight="0.24966443" />
       <window_info id="Favorites" order="2" weight="0.3295302" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -284,12 +283,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Driver.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="329">
-          <caret line="691" column="46" selection-start-line="691" selection-start-column="46" selection-end-line="691" selection-end-column="46" />
+        <state relative-caret-position="219">
+          <caret line="181" column="42" selection-start-line="181" selection-start-column="42" selection-end-line="181" selection-end-column="42" />
           <folding>
             <element signature="e#109#120#0" expanded="true" />
-            <element signature="e#2940#4894#0" />
-            <element signature="e#4957#7668#0" />
           </folding>
         </state>
       </provider>

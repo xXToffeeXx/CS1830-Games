@@ -112,6 +112,8 @@ class Keyboard:
                 print(buttonState)
                 easterEggCounter+=1
                 print(easterEggCounter)
+                buttonSoundSplash.pause()
+                buttonSoundSplash.rewind()
                 buttonSoundSplash.play()
                 time.sleep(0.1)
 
@@ -121,6 +123,8 @@ class Keyboard:
                 if buttonState<0:
                     buttonState = 4
                 print(buttonState)
+                buttonSoundSplash.pause()
+                buttonSoundSplash.rewind()
                 buttonSoundSplash.play()
                 easterEggCounter =0
                 time.sleep(0.1)
@@ -163,6 +167,8 @@ class Keyboard:
                 if buttonState>2:
                     buttonState = 0
                 print(buttonState)
+                buttonSoundSplash.pause()
+                buttonSoundSplash.rewind()
                 buttonSoundSplash.play()
                 time.sleep(0.1)
 
@@ -172,6 +178,8 @@ class Keyboard:
                 if buttonState<0:
                     buttonState = 2
                 print(buttonState)
+                buttonSoundSplash.pause()
+                buttonSoundSplash.rewind()
                 buttonSoundSplash.play()
                 time.sleep(0.1)
 
@@ -227,6 +235,8 @@ class Keyboard:
                 if buttonState>2:
                     buttonState = 0
                 print(buttonState)
+                buttonSoundSplash.pause()
+                buttonSoundSplash.rewind()
                 buttonSoundSplash.play()
                 time.sleep(0.1)
 
@@ -236,6 +246,8 @@ class Keyboard:
                 if buttonState<0:
                     buttonState = 2
                 print(buttonState)
+                buttonSoundSplash.pause()
+                buttonSoundSplash.rewind()
                 buttonSoundSplash.play()
                 time.sleep(0.1)
 
