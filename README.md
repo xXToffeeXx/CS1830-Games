@@ -7,5 +7,5 @@ Welcome to our project for the CS1830 Games Design module entitled:
 As of the most recent push to master, an up to date CodeSkulptor link to the
 game can be found here:
 
-                https://py3.codeskulptor.org/#user303_sg6HKoQLSo_0.py
+                https://py3.codeskulptor.org/#user303_iKWz3Cf1ny_0.py
                 
