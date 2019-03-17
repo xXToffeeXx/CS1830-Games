@@ -3,12 +3,11 @@ try:
 except ImportError:
     import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 
+from cts import *
 from VectorHandler import Vector
 
 spaceship = simplegui.load_image("https://imgur.com/gudzU5Z.png")
 
-WIN_WIDTH = 800
-WIN_HEIGHT = 600
 PLAYER_SPEED = 0.9
 PLAYER_IMG_SIZE = (100, 100)
 PLAYER_IMG_CENTER = (50, 50)
@@ -24,7 +23,7 @@ class Player:
     def draw(self, canvas):
         #if Keyboard.left:
          #   canvas.draw_circle(self.pos.getP(), self.radius, 1, 'White', 'White')
-        canvas.draw_image(spaceship, PLAYER_IMG_CENTER, PLAYER_IMG_SIZE , self.pos.getP(), PLAYER_IMG_SIZE , PLAYER_IMG_ROTATION)
+        canvas.draw_image(spaceship, PLAYER_IMG_CENTER, PLAYER_IMG_SIZE, self.pos.getP(), PLAYER_IMG_SIZE , PLAYER_IMG_ROTATION)
 
     def move(self):
         self.pos.add(self.vel)

@@ -1,6 +1,5 @@
 import math
 
-
 # The Vector class
 class Vector:
 

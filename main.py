@@ -16,26 +16,38 @@ try:
 except ImportError:
     import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 
+import cts
 from VectorHandler import Vector
 from PlayerHandler import *
 from FrameRate import FPS
-import time
+import math, random
 
 # CONSTANTS
-WIN_WIDTH = 800
-WIN_HEIGHT = 600
-PLAYER_SPEED = 0.9
 ENEMY_SPEED = 10
+ENEMY_JUMPS = 16
 counter = 0
+bullets = []
+row = 3
+col = 6
 
-ENEMY_IMG_SIZE = (48, 48)
-ENEMY_IMG_CENTER = (24, 24)
+EIX = 48
+EIY = EIX
+ENEMY_IMG_SIZE = (EIX, EIY)
+ENEMY_IMG_CENTER = (EIX / 2, EIY / 2)
 ENEMY_IMG_ROTATION = 0
-ENEMY_MAX_MOVES = 22
+
+BULLET_SPEED = 15
+
+ENEMY_MAX_MOVES = ((WIN_WIDTH / ENEMY_JUMPS) / 2)
+if ENEMY_MAX_MOVES > int(ENEMY_MAX_MOVES):
+    ENEMY_MAX_MOVES = math.ceil(ENEMY_MAX_MOVES * 1.1)
+else:
+    ENEMY_MAX_MOVES = int(ENEMY_MAX_MOVES)
+# EMM allows for scaling for both a change in the window width, or a change in the number of jumps we want.
 
 e_x = 85
-ENEMY_START_X = 60
-ENEMY_START_Y = 70
+ENEMY_START_X = WIN_WIDTH / 10
+ENEMY_START_Y = WIN_HEIGHT / 10
 ENEMIES_GAP = 50
 
 enemy = simplegui.load_image("https://imgur.com/fI8cyfM.png")
@@ -45,24 +57,22 @@ class Enemy:
     def __init__(self, pos):
         self.pos = pos
         self.vel = Vector(0, 0)
-        self.radius = 15
         self.mRight = True
         self.down = False
 
     def draw(self, canvas):
-        #canvas.draw_circle(self.pos.getP(), self.radius, 1, 'white', 'white')
         canvas.draw_image(enemy, ENEMY_IMG_CENTER, ENEMY_IMG_SIZE, self.pos.getP(), ENEMY_IMG_SIZE, ENEMY_IMG_ROTATION)
 
     def move(self):
         if self.mRight:
-            self.pos.add(Vector(20, 0))
+            self.pos.add(Vector(ENEMY_JUMPS, 0))
         elif not self.mRight:
-            self.pos.subtract(Vector(20, 0))
+            self.pos.subtract(Vector(ENEMY_JUMPS, 0))
         if self.down:
-            self.moveDown()
+            self.move_down()
             self.down = False
 
-    def moveDown(self):
+    def move_down(self):
         self.pos.y += 25
         if self.mRight:
             self.pos.x += -15
@@ -71,16 +81,28 @@ class Enemy:
             self.pos.x += 15
             self.mRight = True
 
+    def shoot(self):
+        if (random.randint(1, (row * col))) < ((row + col) / 6):
+            bullet = Bullet(Vector(self.pos.x, self.pos.y), BULLET_SPEED, 'Red')
+            bullets.append(bullet)
+
     def animate(self, canvas):
         self.draw(canvas)
         self.move()
 
 
-class Enemies:
-    def __init__(self, rows, cols):
-        self.rows = rows
-        self.cols = cols
+class Bullet:
+    def __init__(self, pos, speed, colour):
+        self.pos = pos
+        self.speed = speed
+        self.color = colour
+        self.vel = Vector(0, 0)
 
+    def draw(self, canvas):
+        canvas.draw_line((self.pos.x, self.pos.y), (self.pos.x, self.pos.y + 10), 3, 'Red')
+
+    def move(self):
+        self.pos.y += self.speed
 
 eList = []
 x = e_x
@@ -96,14 +118,6 @@ def make_enemies():
             eList.append(en)
 
 
-'''for n in range(6):
-    x = x + 50
-    y = 100
-    posi = Vector(x,y)
-    e = Enemy(posi)
-    enemies.append(e)'''
-
-
 def move_objects():
     global counter, t
 
@@ -114,8 +128,11 @@ def move_objects():
         for enemy in eList:
             enemy.move()
             if counter % (ENEMY_SPEED * ENEMY_MAX_MOVES) == 0:
-                enemy.moveDown()
+                enemy.move_down()
+            enemy.shoot()
 
+    for bullet in bullets:
+        bullet.move()
 
 #print(enemies)
 def draw(canvas):
@@ -123,7 +140,9 @@ def draw(canvas):
     keyboard.update()
     for enemy in eList:
         enemy.draw(canvas)
-        #enemy.move()
+
+    for bullet in bullets:
+        bullet.draw(canvas)
     fps.draw_fct(canvas)
 
 
