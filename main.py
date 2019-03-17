@@ -50,7 +50,7 @@ t = 0
 counter = 0
 bullets = []
 rows = 3
-columns = 10
+columns = 6
 BULLET_SPEED = 15
 
 
