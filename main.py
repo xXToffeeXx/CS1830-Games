@@ -26,7 +26,7 @@ ENEMY_SPEED = 10
 ENEMY_JUMP = 16
 # Dist for enemies to 'hop' left/right (rather than a smooth animation, in keeping with classic S.I)
 # JUMP does affect enemy speed at the moment, will need to be changed later.
-EIX = 48
+EIX = 24
 EIY = EIX
 ENEMY_IMG_SIZE = (EIX, EIY)
 ENEMY_IMG_CENTER = (EIX / 2, EIY / 2)
@@ -34,7 +34,13 @@ ENEMY_START_X = WIN_WIDTH / 10
 ENEMY_START_Y = WIN_HEIGHT / 10
 ENEMIES_GAP = 50
 
-enemy = simplegui.load_image("https://imgur.com/fI8cyfM.png")
+BULLET_IMG_SIZE = (16, 16)
+BULLET_IMG_CENTER = (8, 8)
+
+#enemy = simplegui.load_image("https://imgur.com/fI8cyfM.png")
+enemy = simplegui.load_image("https://i.imgur.com/2e24IN1.png")
+bullet = simplegui.load_image("https://i.imgur.com/9t4g4Ey.png")
+spritesheet = simplegui.load_image("https://i.imgur.com/MnPWsv8.png")
 
 ENEMY_MAX_MOVES = ((WIN_WIDTH / ENEMY_JUMP) / 2)
 if ENEMY_MAX_MOVES > int(ENEMY_MAX_MOVES):
@@ -43,26 +49,75 @@ else:
     ENEMY_MAX_MOVES = int(ENEMY_MAX_MOVES)
 # EMM allows for scaling for both a change in the window width, or a change in the number of jumps we want.
 
-
 # OTHER #
 eList = []
 t = 0
 counter = 0
+counter2 = 0
 bullets = []
 rows = 3
-columns = 10
+columns = 6
 BULLET_SPEED = 15
+sCount = 1
 
 
 class Enemy:
     def __init__(self, pos):
+        self.image = simplegui.load_image("https://i.imgur.com/MnPWsv8.png")
+        self.width = 208
+        self.height = 26
         self.pos = pos
         self.vel = Vector(0, 0)
         self.mRight = True
         self.down = False
+        self.sCount = 0
+        self.frameSize = [26, 26]
+        self.frameCenter = [13, 13]
 
     def draw(self, canvas):
-        canvas.draw_image(enemy, ENEMY_IMG_CENTER, ENEMY_IMG_SIZE, self.pos.getP(), ENEMY_IMG_SIZE, 0)
+
+        canvas.draw_image(self.image, (self.frameCenter[0], self.frameCenter[1]),
+                          (self.frameSize[0], self.frameSize[1]), self.pos.getP(),
+                          (self.frameSize[0], self.frameSize[1]), 0)
+
+        '''self.frameCenter[0] += 13
+        self.frameSize[0] += 26
+        sCount += 1
+        if sCount == (rows * columns):
+            self.frameCenter[0] = 13
+            self.frameSize[0] = 26
+            sCount = 1'''
+
+    '''def draw2(self, canvas):
+        canvas.draw_image(self.image, (self.frameCenter[0] + 13, self.frameCenter[1]),
+                          (self.frameSize[0] + 26, self.frameSize[1]), self.pos.getP(),
+                          (self.frameSize[0] + 26, self.frameSize[1]), 0)'''
+
+    '''def cur_sprite(self, canvas):
+        global sCount
+        print(sCount)
+        if sCount <= (rows * columns):
+            canvas.draw_image(self.image, (self.frameCenter[0], self.frameCenter[1]),
+                              (self.frameSize[0], self.frameSize[1]), self.pos.getP(),
+                              (self.frameSize[0], self.frameSize[1]), 0)
+
+            print("center:", self.frameCenter[0])
+            print("size:", self.frameSize[0])
+
+            self.frameCenter[0] += 13
+            self.frameSize[0] += 26
+            sCount += 1
+        else:
+            #canvas.draw_image(self.image, (self.frameCenter[0], self.frameCenter[1]),
+             #                 (self.frameSize[0], self.frameSize[1]), self.pos.getP(),
+              #                (self.frameSize[0], self.frameSize[1]), 0)
+            self.frameCenter[0] = 0
+            self.frameSize[0] = 0
+            sCount = 1'''
+
+    def kill(self):
+        if (random.randint(1, (1000))) == 13:
+            eList.remove(self)
 
     def move(self):
         if self.mRight:
@@ -103,7 +158,8 @@ class Bullet:
         # self.vel = Vector(0, 0)
 
     def draw(self, canvas):
-        canvas.draw_line((self.pos.x, self.pos.y), (self.pos.x, self.pos.y + 10), 3, 'Red')
+        #canvas.draw_line((self.pos.x, self.pos.y), (self.pos.x, self.pos.y + 10), 3, 'Red')
+        canvas.draw_image(bullet, BULLET_IMG_CENTER, BULLET_IMG_SIZE, self.pos.getP(), BULLET_IMG_SIZE, 0)
 
     def move(self):
         self.pos.y += self.speed
@@ -140,11 +196,15 @@ def move_objects():
 def draw(canvas):
     player.animate(canvas)
     keyboard.update()
+
     for enemy in eList:
         enemy.draw(canvas)
+        # enemy.kill()
+        # Kill currently in testing. Need to work with collisions from player bullets.
 
     for bullet in bullets:
         bullet.draw(canvas)
+
     fps.draw_fct(canvas)
 
 
