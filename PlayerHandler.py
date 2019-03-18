@@ -60,21 +60,26 @@ class Keyboard:
         self.player = player
         self.left = False
         self.right = False
+        self.p = False
+        self.q = False
 
     def keydown(self, key):
         if key == simplegui.KEY_MAP["left"]:
             self.left = True
         elif key == simplegui.KEY_MAP["right"]:
             self.right = True
-        #if key == simplegui.KEY_MAP["p"]:
-        #    timer.stop()
-        #    frame.stop()
+        if key == simplegui.KEY_MAP["p"]:
+            self.p = True
+        if key == simplegui.KEY_MAP["q"]:
+            self.q = True
 
     def keyup(self, key):
         if key == simplegui.KEY_MAP["left"]:
             self.left = False
         elif key == simplegui.KEY_MAP["right"]:
             self.right = False
+        if key == simplegui.KEY_MAP["p"]:
+            self.p = False
 
     def update(self):
         if self.left:

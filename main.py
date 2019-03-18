@@ -40,7 +40,7 @@ BULLET_IMG_CENTER = (8, 8)
 #enemy = simplegui.load_image("https://imgur.com/fI8cyfM.png")
 enemy = simplegui.load_image("https://i.imgur.com/2e24IN1.png")
 bullet = simplegui.load_image("https://i.imgur.com/9t4g4Ey.png")
-spritesheet = simplegui.load_image("https://i.imgur.com/MnPWsv8.png")
+spritesheet = simplegui.load_image("https://i.imgur.com/glDuLYi.png")
 
 ENEMY_MAX_MOVES = ((WIN_WIDTH / ENEMY_JUMP) / 2)
 if ENEMY_MAX_MOVES > int(ENEMY_MAX_MOVES):
@@ -74,11 +74,24 @@ class Enemy:
         self.frameSize = [26, 26]
         self.frameCenter = [13, 13]
 
-    def draw(self, canvas):
+    def draw(self, canvas, iteration):
 
         canvas.draw_image(self.image, (self.frameCenter[0], self.frameCenter[1]),
                           (self.frameSize[0], self.frameSize[1]), self.pos.getP(),
-                          (self.frameSize[0], self.frameSize[1]), 0)
+                            (self.frameSize[0], self.frameSize[1]), 0)
+
+        '''if sCount == 1:
+            self.frameSize = [26, 26]
+            self.frameCenter = [13, 13]
+        else:
+            self.frameSize = [26 * iteration, 26]
+            self.frameCenter = [13 * iteration, 13]
+
+        print (self.frameSize)
+
+        canvas.draw_image(spritesheet, (self.frameCenter),
+                         (self.frameSize), self.pos.getP(),
+                         (self.frameSize), 0)'''
 
         '''self.frameCenter[0] += 13
         self.frameSize[0] += 26
@@ -116,7 +129,7 @@ class Enemy:
             sCount = 1'''
 
     def kill(self):
-        if (random.randint(1, (1000))) == 13:
+        if (random.randint(1, (500))) == 13:
             eList.remove(self)
 
     def move(self):
@@ -192,15 +205,33 @@ def move_objects():
     for bullet in bullets:
         bullet.move()
 
+    if keyboard.p:
+        for enemy in eList:
+            enemy.kill()
+
+    if keyboard.q:
+        timer.stop()
+        fps.stop()
+        frame.stop()
+
 
 def draw(canvas):
+    global sCount
     player.animate(canvas)
     keyboard.update()
 
     for enemy in eList:
-        enemy.draw(canvas)
+        enemy.draw(canvas, sCount)
         # enemy.kill()
         # Kill currently in testing. Need to work with collisions from player bullets.
+
+    sCount += 1
+    if (sCount % 9 == 0):
+        sCount = 1
+    #print(sCount)
+    #else:
+     #   sCount += 1
+      #  print(sCount)
 
     for bullet in bullets:
         bullet.draw(canvas)
