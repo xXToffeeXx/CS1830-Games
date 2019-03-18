@@ -585,6 +585,11 @@ def gameButtonhandler():
     mainMenu = False
     gamePlay = True
 
+    musicLibrary[0].pause(), musicLibrary[0].rewind()
+    musicLibrary[1].pause(), musicLibrary[1].rewind()
+    musicLibrary[2].pause(), musicLibrary[2].rewind()
+
+
     musicLibrary[0].set_volume(gameVolume), musicLibrary[1].set_volume(gameVolume), musicLibrary[2].set_volume(gameVolume),
     buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
 
