@@ -10,3 +10,5 @@ cts is a file I am using for when I need constants in a number of different file
 FrameRate contains a SimpleGUI lib program to calculate and display ongoing FPS during the game, useful for testing.
 
 VectorHandler just contains the default Vector class.
+
+Sprite is a class to (hopefully) handle sprites and spritesheets. Still a WIP.
