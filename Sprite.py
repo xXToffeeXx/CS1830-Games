@@ -47,15 +47,16 @@ class Sprite:
 
 
 # Function to create the frame
-def frame():
-    frame = simplegui.create_frame("Walking", 500, 400)
-    frame.set_canvas_background('#0000ff')
-    frame.set_draw_handler(loop)
-    return frame
+#def frame():
+ #   frame = simplegui.create_frame("Walking", 500, 400)
+
+  #  frame.set_canvas_background('#0000ff')
+   # frame.set_draw_handler(loop)
+    #return frame
 
 
 # Constants
-CANVAS_SIZE = [500, 400]
+CANVAS_SIZE = [800, 600]
 CANVAS_CENTER = [CANVAS_SIZE[0] / 2, CANVAS_SIZE[1] / 2]
 
 # Global variables
@@ -75,16 +76,16 @@ sprites = [sprite1, sprite2]
 
 
 # Game loop
-def loop(canvas):
+#def loop(canvas):
     # Update the time
-    global time
-    time = time + 1
-    print("Time =", time)
+ #   global time
+  #  time = time + 1
+   # print("Time =", time)
 
     # Draw the sprites on the canvas
-    for sprite in sprites:
-        sprite.frameJump(time)
-        sprite.draw(canvas)
+    #for sprite in sprites:
+     #   sprite.frameJump(time)
+      #  sprite.draw(canvas)
 
 
 ###################################
@@ -93,5 +94,5 @@ def loop(canvas):
 
 
 # Start the animation
-frame().start()
+#frame().start()
 

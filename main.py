@@ -19,6 +19,7 @@ import cts
 from VectorHandler import Vector
 from PlayerHandler import *
 from FrameRate import FPS
+from Sprite import Sprite
 import math, random
 
 # ENEMY CONSTANTS #
@@ -55,6 +56,7 @@ t = 0
 counter = 0
 counter2 = 0
 bullets = []
+sprites = []
 rows = 3
 columns = 6
 BULLET_SPEED = 15
@@ -74,11 +76,14 @@ class Enemy:
         self.frameSize = [26, 26]
         self.frameCenter = [13, 13]
 
-    def draw(self, canvas, iteration):
+    def draw(self, canvas):
+
+        #for sprite in sprites:
+        #    sprite.draw(canvas)
 
         canvas.draw_image(self.image, (self.frameCenter[0], self.frameCenter[1]),
-                          (self.frameSize[0], self.frameSize[1]), self.pos.getP(),
-                            (self.frameSize[0], self.frameSize[1]), 0)
+                         (self.frameSize[0], self.frameSize[1]), self.pos.getP(),
+                         (self.frameSize[0], self.frameSize[1]), 0)
 
         '''if sCount == 1:
             self.frameSize = [26, 26]
@@ -127,6 +132,13 @@ class Enemy:
             self.frameCenter[0] = 0
             self.frameSize[0] = 0
             sCount = 1'''
+
+    def make_sprites(self):
+        for row in range(rows):
+            for col in range(columns):
+                sprite = Sprite([self.pos.x, self.pos.y], 1, 1)
+                sprites.append(sprite)
+
 
     def kill(self):
         if (random.randint(1, (500))) == 13:
@@ -179,6 +191,7 @@ class Bullet:
 
 
 def make_enemies():
+
     for row in range(rows):
         for col in range(columns):
             posv = Vector(ENEMY_START_X + (col * ENEMIES_GAP), ENEMY_START_Y + (row * ENEMIES_GAP))
@@ -219,9 +232,10 @@ def draw(canvas):
     global sCount
     player.animate(canvas)
     keyboard.update()
+    #s.make_sprites()
 
     for enemy in eList:
-        enemy.draw(canvas, sCount)
+        enemy.draw(canvas)
         # enemy.kill()
         # Kill currently in testing. Need to work with collisions from player bullets.
 
@@ -241,6 +255,9 @@ def draw(canvas):
 
 make_enemies()
 fps = FPS()
+#s = Sprite()
+
+#sprite1 = Sprite([WIN_WIDTH/2, (WIN_HEIGHT / 2) / 2], 1.5, 0.6)
 
 # Frame creation
 frame = simplegui.create_frame("Main", WIN_WIDTH, WIN_HEIGHT)
