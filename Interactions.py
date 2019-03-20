@@ -8,13 +8,15 @@ class Interaction:
         self.eList = eList
 
     def update(self):
+            global KILLED
             for bullet in BULLETS:
                 for enemy in self.eList:
-                    if bullet.pos == enemy.pos:
-                        self.eList.remove(enemy)  # remove or lower health?
-                        BULLETS.remove(bullet)
-                        #increase score
-                        KILLED = KILLED + 1 ###
+                    if bullet.pos.y > enemy.pos.y - 26 and bullet.pos.y < enemy.pos.y:
+                        if bullet.pos.x > enemy.pos.x and bullet.pos.x < enemy.pos.x + 26:
+                            self.eList.remove(enemy)  # remove or lower health?
+                            BULLETS.remove(bullet)
+                            #increase score
+                            KILLED = KILLED + 1
 
             for bullet in E_BULLETS:
                 if bullet.pos.y > playerOne.pos.y - 60:
