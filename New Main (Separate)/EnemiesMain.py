@@ -17,9 +17,10 @@ ENEMY_GAP = 40  # Pixel distance between each enemy sprite
 rows = 3  # Number of enemy rows to spawn
 columns = 6  # Number of enemy columns to spawn
 counter = 0  # Time counter
-BULLET_SPEED = 2
+BULLET_SPEED = 2  # Bullet distance coverage
 BULLETS = []
 
+# Calculate number of moves enemies should make before moving down the screen
 ENEMY_MAX_MOVES = ((CANVAS_WIDTH / ENEMY_JUMP) / 2)
 if ENEMY_MAX_MOVES > int(ENEMY_MAX_MOVES):
     ENEMY_MAX_MOVES = math.ceil(ENEMY_MAX_MOVES * 1.1)
@@ -45,7 +46,7 @@ class Sprite:
 class Enemy(Sprite):
     def __init__(self, pos):
         self.pos = pos
-        super(Enemy,self).__init__('https://i.imgur.com/2e24IN1.png', 26, 26, self.pos)
+        super(Enemy, self).__init__('https://i.imgur.com/2e24IN1.png', 26, 26, self.pos)
         self.right = True
         self.downright = 0
         self.downleft = ENEMY_MAX_MOVES
@@ -55,7 +56,7 @@ class Enemy(Sprite):
 
         if self.right:
             self.pos.add(Vector(ENEMY_JUMP, 0))
-            self.downright = self.downright + 1
+            self.downright += 1
 
             if self.downright == ENEMY_MAX_MOVES:
                 self.move_down()
@@ -78,8 +79,8 @@ class Enemy(Sprite):
             self.right = True
 
     def shoot(self):
-        #if (random.randint(1, CANVAS_WIDTH + CANVAS_HEIGHT)) == 1:
-        if (random.randint(1, (rows * columns))) < ((rows + columns) / 6):
+        #if (random.randint(1, (rows * columns))) < ((rows + columns) / 6):
+        if (random.randint(1, 750)) == 1:
             b = Vector(self.pos.x, self.pos.y)
             BULLETS.append(Bullet(b))
 
@@ -113,7 +114,7 @@ def draw(canvas):
         enemy.draw(canvas)
         if counter % (100 - ENEMY_SPEED) == 0:
             enemy.update()
-            enemy.shoot()
+        enemy.shoot()
 
     for bullet in BULLETS:
         bullet.draw(canvas)
