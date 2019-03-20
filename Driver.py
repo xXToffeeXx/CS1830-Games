@@ -20,6 +20,8 @@ OKAY SO BASICALLY:
 '''
 Booleans determine which buttons are selected
 '''
+
+
 mainMenu = True
 gamePlay = False
 multiGamePlay = False
@@ -294,6 +296,7 @@ class Keyboard:
                         musicDecider += 1
                     #LIST INDEX OUT OF RANGE
                     musicLibrary[musicDecider].play()
+                    print("Song number ", musicDecider ," is being played.")
 
                 if buttonState == 1:
                     print("Credits")
@@ -517,7 +520,9 @@ cyclemusic_image_selected = simplegui.load_image("https://commondatastorage.goog
 optionstitle_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/OptionsTITLE.png")
 extrastitle_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/ExtrasTITLE.png")
 
-
+loadingGIF = [simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/LoadingOne.png"),
+              simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/LoadingTwo.png"),
+              simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/LoadingThree.png")]
 
 '''
 ASSIGNING ALL CONSTANTS FOR VALUES USED IN CANVAS DRAWING
@@ -685,7 +690,9 @@ def mainMenuHandlerFromExtras():
 
 #code for drawing onto canvas
 def draw(canvas):
-    global counter, countera, counterb
+    global counter, countera, counterb, mainMenu, assetLoading
+    #TODO LOADING SCREEN DON'T FORGET
+
     if mainMenu:
         #DRAW IN THE BUTTONS and the MENU SCREEN
         if rainOrNo <= 1:
@@ -905,7 +912,7 @@ frame = simplegui.create_frame("This Game Has Bugs!", BACKGROUND_SIZE[0], BACKGR
 kbd = Keyboard()
 # set draw handler and canvas background using custom HTML color
 frame.set_draw_handler(draw)
-frame.set_canvas_background("White")
+frame.set_canvas_background("Black")
 frame.set_keydown_handler(kbd.keyDown)
 frame.set_keyup_handler(kbd.keyUp)
 
