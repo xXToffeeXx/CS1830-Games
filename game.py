@@ -18,7 +18,7 @@ BULLETS = []
 
 ### ENEMY CONSTANTS ###
 ENEMIES = []
-ENEMY_SPEED = 20
+ENEMY_SPEED = 30
 ENEMY_GAP = 40
 ENEMY_JUMP = 30
 ESX = 50
@@ -164,7 +164,7 @@ class Enemy(Sprite):
                 self.downleft = ENEMY_MAX_MOVES
 
     def move_down(self):
-        self.pos.y += 25
+        self.pos.y += 35
         if self.right:
             self.pos.x += -25
             self.right = False
@@ -195,11 +195,22 @@ class EnemyBullet(Sprite):
         if self.pos.y > CANVAS_HEIGHT - 10:
             E_BULLETS.remove(self)
 
+class Info:
+    def __init__(self):
+        self.pos = 0
+
+    def draw(self, canvas):
+        canvas.draw_line((0, 10), (CANVAS_HEIGHT, 10), 30, 'Black')
+        canvas.draw_text("Score:", (35, 17), 20, 'White', 'sans-serif')
+        canvas.draw_text("Lives:", (CANVAS_WIDTH - 90, 17), 20, 'White', 'sans-serif')
+        canvas.draw_image(simplegui.load_image('https://imgur.com/cm7EMiu.png'), (8, 8), (16, 16), (CANVAS_WIDTH - 35, 14), (24, 24))
+
 #class Game:
 
 playerOne = Player()
 playerTwo = Player()
 controls = Controls(playerOne, playerTwo)
+info = Info()
 
 def make_enemies():
     for row in range(E_ROWS):
@@ -230,7 +241,12 @@ def draw(canvas):
         bullet.draw(canvas)
         bullet.move()
 
+    info.draw(canvas)
+
+
 make_enemies()
+
+print(ENEMY_MAX_MOVES)
 
 frame = simplegui.create_frame('Interactions', CANVAS_WIDTH, CANVAS_HEIGHT)
 frame.set_canvas_background('#2C6A6A')
