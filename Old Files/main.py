@@ -15,8 +15,6 @@ except ImportError:
     import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 
 # IMPORTS #
-import cts
-from VectorHandler import Vector
 from PlayerHandler import *
 from FrameRate import FPS
 from Sprite import Sprite
@@ -256,6 +254,7 @@ def draw(canvas):
 make_enemies()
 fps = FPS()
 #s = Sprite()
+print(ENEMY_MAX_MOVES)
 
 #sprite1 = Sprite([WIN_WIDTH/2, (WIN_HEIGHT / 2) / 2], 1.5, 0.6)
 
