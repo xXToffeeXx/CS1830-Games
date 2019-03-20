@@ -202,8 +202,15 @@ class Info:
     def draw(self, canvas):
         canvas.draw_line((0, 10), (CANVAS_HEIGHT, 10), 30, 'Black')
         canvas.draw_text("Score:", (35, 17), 20, 'White', 'sans-serif')
-        canvas.draw_text("Lives:", (CANVAS_WIDTH - 90, 17), 20, 'White', 'sans-serif')
-        canvas.draw_image(simplegui.load_image('https://imgur.com/cm7EMiu.png'), (8, 8), (16, 16), (CANVAS_WIDTH - 35, 14), (24, 24))
+
+        canvas.draw_text("P1 Lives:", (CANVAS_WIDTH - 255, 18), 20, 'White', 'sans-serif')
+        canvas.draw_image(simplegui.load_image('https://imgur.com/cm7EMiu.png'), (8, 8), (16, 16),
+                          (CANVAS_WIDTH - 175, 13), (24, 24))
+
+        canvas.draw_text("P2 Lives:", (CANVAS_WIDTH - 115, 18), 20, 'White', 'sans-serif')
+        canvas.draw_image(simplegui.load_image('https://imgur.com/cm7EMiu.png'), (8, 8), (16, 16),
+                          (CANVAS_WIDTH - 35, 13), (24, 24))
+
 
 #class Game:
 
