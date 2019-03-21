@@ -15,12 +15,10 @@ except ImportError:
     import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 
 # IMPORTS #
-import cts
-from VectorHandler import Vector
 from PlayerHandler import *
 from FrameRate import FPS
-import math
-import random
+from Sprite import Sprite
+import math, random
 
 # ENEMY CONSTANTS #
 ENEMY_SPEED = 10
@@ -56,6 +54,7 @@ t = 0
 counter = 0
 counter2 = 0
 bullets = []
+sprites = []
 rows = 3
 columns = 6
 BULLET_SPEED = 15
@@ -75,11 +74,69 @@ class Enemy:
         self.frameSize = [26, 26]
         self.frameCenter = [13, 13]
 
-    def draw(self, canvas, iteration):
+    def draw(self, canvas):
+
+        #for sprite in sprites:
+        #    sprite.draw(canvas)
 
         canvas.draw_image(self.image, (self.frameCenter[0], self.frameCenter[1]),
-                          (self.frameSize[0], self.frameSize[1]), self.pos.getP(),
-                            (self.frameSize[0], self.frameSize[1]), 0)
+                         (self.frameSize[0], self.frameSize[1]), self.pos.getP(),
+                         (self.frameSize[0], self.frameSize[1]), 0)
+
+        '''if sCount == 1:
+            self.frameSize = [26, 26]
+            self.frameCenter = [13, 13]
+        else:
+            self.frameSize = [26 * iteration, 26]
+            self.frameCenter = [13 * iteration, 13]
+
+        print (self.frameSize)
+
+        canvas.draw_image(spritesheet, (self.frameCenter),
+                         (self.frameSize), self.pos.getP(),
+                         (self.frameSize), 0)'''
+
+        '''self.frameCenter[0] += 13
+        self.frameSize[0] += 26
+        sCount += 1
+        if sCount == (rows * columns):
+            self.frameCenter[0] = 13
+            self.frameSize[0] = 26
+            sCount = 1'''
+
+    '''def draw2(self, canvas):
+        canvas.draw_image(self.image, (self.frameCenter[0] + 13, self.frameCenter[1]),
+                          (self.frameSize[0] + 26, self.frameSize[1]), self.pos.getP(),
+                          (self.frameSize[0] + 26, self.frameSize[1]), 0)'''
+
+    '''def cur_sprite(self, canvas):
+        global sCount
+        print(sCount)
+        if sCount <= (rows * columns):
+            canvas.draw_image(self.image, (self.frameCenter[0], self.frameCenter[1]),
+                              (self.frameSize[0], self.frameSize[1]), self.pos.getP(),
+                              (self.frameSize[0], self.frameSize[1]), 0)
+
+            print("center:", self.frameCenter[0])
+            print("size:", self.frameSize[0])
+
+            self.frameCenter[0] += 13
+            self.frameSize[0] += 26
+            sCount += 1
+        else:
+            #canvas.draw_image(self.image, (self.frameCenter[0], self.frameCenter[1]),
+             #                 (self.frameSize[0], self.frameSize[1]), self.pos.getP(),
+              #                (self.frameSize[0], self.frameSize[1]), 0)
+            self.frameCenter[0] = 0
+            self.frameSize[0] = 0
+            sCount = 1'''
+
+    def make_sprites(self):
+        for row in range(rows):
+            for col in range(columns):
+                sprite = Sprite([self.pos.x, self.pos.y], 1, 1)
+                sprites.append(sprite)
+
 
     def kill(self):
         if (random.randint(1, (500))) == 13:
@@ -124,6 +181,7 @@ class Bullet:
         # self.vel = Vector(0, 0)
 
     def draw(self, canvas):
+        #canvas.draw_line((self.pos.x, self.pos.y), (self.pos.x, self.pos.y + 10), 3, 'Red')
         canvas.draw_image(bullet, BULLET_IMG_CENTER, BULLET_IMG_SIZE, self.pos.getP(), BULLET_IMG_SIZE, 0)
 
     def move(self):
@@ -131,6 +189,7 @@ class Bullet:
 
 
 def make_enemies():
+
     for row in range(rows):
         for col in range(columns):
             posv = Vector(ENEMY_START_X + (col * ENEMIES_GAP), ENEMY_START_Y + (row * ENEMIES_GAP))
@@ -171,9 +230,10 @@ def draw(canvas):
     global sCount
     player.animate(canvas)
     keyboard.update()
+    #s.make_sprites()
 
     for enemy in eList:
-        enemy.draw(canvas, sCount)
+        enemy.draw(canvas)
         # enemy.kill()
         # Kill currently in testing. Need to work with collisions from player bullets.
 
@@ -193,6 +253,10 @@ def draw(canvas):
 
 make_enemies()
 fps = FPS()
+#s = Sprite()
+print(ENEMY_MAX_MOVES)
+
+#sprite1 = Sprite([WIN_WIDTH/2, (WIN_HEIGHT / 2) / 2], 1.5, 0.6)
 
 # Frame creation
 frame = simplegui.create_frame("Main", WIN_WIDTH, WIN_HEIGHT)

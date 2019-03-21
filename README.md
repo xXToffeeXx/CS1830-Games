@@ -1,12 +1,8 @@
 # CS1830-Games
 ## Callum's branch
 
-Main is the main file currently focusing on enemies, enemies as a group and enemies shooting bullets.
+game.py is this branch's current main file. It contains classes for the Player, Keyboard/Controls, Bullets, Enemies and Enemy Bullets.
 
-PlayerHandler is a file consisting of a Player class and Keyboard class, with very minimal features as they purely exist for testing purposes currently.
+The folder Old Files contains the files and code I had before I refactored my main file.
 
-cts is a file I am using for when I need constants in a number of different files, mainly between main and PlayerHandler.
-
-FrameRate contains a SimpleGUI lib program to calculate and display ongoing FPS during the game, useful for testing.
-
-VectorHandler just contains the default Vector class.
+The folder New Main (Separate) contains my new main file, before merging with Sarah's game file. 
