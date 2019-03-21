@@ -260,8 +260,8 @@ def make_enemies():
 def draw(canvas):
     global counter
     counter += 1
-    inter.update()
     controls.update()
+    inter.update()
     playerOne.update()
     playerTwo.update()
     for bullet in BULLETS:
