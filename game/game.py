@@ -220,12 +220,12 @@ class Interaction:
                             KILLED = KILLED + 1
 
             for bullet in E_BULLETS:
-                if bullet.pos.y > playerOne.pos.y - 60:
-                    if bullet.pos.x > playerOne.pos.x and bullet.pos.x < playerOne.pos.x + 75:
+                if bullet.pos.y > playerOne.pos.y - 40:
+                    if bullet.pos.x > playerOne.pos.x and bullet.pos.x < playerOne.pos.x + 65:
                         if playerOne.LIVES > 0:
                             playerOne.LIVES = playerOne.LIVES - 1
                         E_BULLETS.remove(bullet)
-                    elif bullet.pos.x > playerTwo.pos.x and bullet.pos.x < playerTwo.pos.x + 75:
+                    elif bullet.pos.x > playerTwo.pos.x and bullet.pos.x < playerTwo.pos.x + 65:
                         if playerTwo.LIVES > 0:
                             playerTwo.LIVES = playerTwo.LIVES - 1
                         E_BULLETS.remove(bullet)
