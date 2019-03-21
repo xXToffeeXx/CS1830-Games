@@ -19,7 +19,8 @@ import cts
 from VectorHandler import Vector
 from PlayerHandler import *
 from FrameRate import FPS
-import math, random
+import math
+import random
 
 # ENEMY CONSTANTS #
 ENEMY_SPEED = 10
@@ -80,54 +81,6 @@ class Enemy:
                           (self.frameSize[0], self.frameSize[1]), self.pos.getP(),
                             (self.frameSize[0], self.frameSize[1]), 0)
 
-        '''if sCount == 1:
-            self.frameSize = [26, 26]
-            self.frameCenter = [13, 13]
-        else:
-            self.frameSize = [26 * iteration, 26]
-            self.frameCenter = [13 * iteration, 13]
-
-        print (self.frameSize)
-
-        canvas.draw_image(spritesheet, (self.frameCenter),
-                         (self.frameSize), self.pos.getP(),
-                         (self.frameSize), 0)'''
-
-        '''self.frameCenter[0] += 13
-        self.frameSize[0] += 26
-        sCount += 1
-        if sCount == (rows * columns):
-            self.frameCenter[0] = 13
-            self.frameSize[0] = 26
-            sCount = 1'''
-
-    '''def draw2(self, canvas):
-        canvas.draw_image(self.image, (self.frameCenter[0] + 13, self.frameCenter[1]),
-                          (self.frameSize[0] + 26, self.frameSize[1]), self.pos.getP(),
-                          (self.frameSize[0] + 26, self.frameSize[1]), 0)'''
-
-    '''def cur_sprite(self, canvas):
-        global sCount
-        print(sCount)
-        if sCount <= (rows * columns):
-            canvas.draw_image(self.image, (self.frameCenter[0], self.frameCenter[1]),
-                              (self.frameSize[0], self.frameSize[1]), self.pos.getP(),
-                              (self.frameSize[0], self.frameSize[1]), 0)
-
-            print("center:", self.frameCenter[0])
-            print("size:", self.frameSize[0])
-
-            self.frameCenter[0] += 13
-            self.frameSize[0] += 26
-            sCount += 1
-        else:
-            #canvas.draw_image(self.image, (self.frameCenter[0], self.frameCenter[1]),
-             #                 (self.frameSize[0], self.frameSize[1]), self.pos.getP(),
-              #                (self.frameSize[0], self.frameSize[1]), 0)
-            self.frameCenter[0] = 0
-            self.frameSize[0] = 0
-            sCount = 1'''
-
     def kill(self):
         if (random.randint(1, (500))) == 13:
             eList.remove(self)
@@ -171,7 +124,6 @@ class Bullet:
         # self.vel = Vector(0, 0)
 
     def draw(self, canvas):
-        #canvas.draw_line((self.pos.x, self.pos.y), (self.pos.x, self.pos.y + 10), 3, 'Red')
         canvas.draw_image(bullet, BULLET_IMG_CENTER, BULLET_IMG_SIZE, self.pos.getP(), BULLET_IMG_SIZE, 0)
 
     def move(self):
