@@ -35,6 +35,7 @@ if ENEMY_MAX_MOVES > int(ENEMY_MAX_MOVES):
     ENEMY_MAX_MOVES = math.ceil(ENEMY_MAX_MOVES * 1.1)
 else:
     ENEMY_MAX_MOVES = int(ENEMY_MAX_MOVES)
+BLOCKERS = []
 ###
 
 
@@ -63,6 +64,7 @@ class Controls:
         self.p2_left = False
         self.p1 = p1
         self.p2 = p2
+        self.quit = False
 
     def keyDown(self, key):
         if key == simplegui.KEY_MAP['d']:
@@ -73,6 +75,8 @@ class Controls:
             self.p2_right = True
         if key == simplegui.KEY_MAP['j']:
             self.p2_left = True
+        if key == simplegui.KEY_MAP['q']:
+            self.quit = True
 
     def keyUp(self, key):
         if key == simplegui.KEY_MAP['d']:
@@ -97,6 +101,8 @@ class Controls:
             self.p2.vel.add(Vector(1, 0))
         if self.p2_left:
             self.p2.vel.add(Vector(-1, 0))
+        if self.quit:
+            sys.exit()
 
 
 class Player(Sprite):
@@ -191,11 +197,19 @@ class EnemyBullet(Sprite):
         super(EnemyBullet, self).__init__('https://i.imgur.com/9t4g4Ey.png', 16, 16, self.pos)
         self.speed = BULLET_SPEED
 
-    def move(self):
+    def update(self):
         self.pos.y += self.speed
         if self.pos.y > CANVAS_HEIGHT - 10:
             E_BULLETS.remove(self)
 
+
+class Blocker:
+    def __init(self, pos):
+        self.pos = pos
+        #super(Blocker, self).__init__(image, 16, 16, self.pos)
+
+    def update(self):
+        pass
 
 class Interaction:
 
@@ -270,11 +284,18 @@ controls = Controls(playerOne, playerTwo)
 info = Info()
 
 
+def make_blockers():
+    for row in range(3):
+        for col in range(3):
+            blocker = Blocker(440 + (col * 5), 440 + (row * 5))
+            BLOCKERS.append(blocker)
+
+
 def make_enemies():
     for row in range(E_ROWS):
         for col in range(E_COLS):
-            pos_v = Vector(ESX + (col * ENEMY_GAP), ESY + (row * ENEMY_GAP))
-            ENEMIES.append(Enemy(pos_v))
+            enemy = Vector(ESX + (col * ENEMY_GAP), ESY + (row * ENEMY_GAP))
+            ENEMIES.append(Enemy(enemy))
 
 
 def draw(canvas):
@@ -297,10 +318,14 @@ def draw(canvas):
         enemy.shoot()
 
     for bullet in E_BULLETS:
+        bullet.update()
         bullet.draw(canvas)
-        bullet.move()
 
     info.draw(canvas)
+
+    for blocker in BLOCKERS:
+        blocker.draw(canvas)
+
 
 make_enemies()
 
