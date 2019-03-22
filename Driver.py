@@ -464,6 +464,9 @@ twoplayerbutton_image = simplegui.load_image("https://commondatastorage.googleap
 extrasbutton_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/Extras.png")
 exitbutton_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/Exit.png")
 
+#IMPORTING CONTROLS
+arrowKeys_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/ArrowKeys.png")
+
 #IMPORTING SELECTED HOME MENU BUTTONS
 startgamebutton_image_selected = simplegui.load_image\
     ("https://commondatastorage.googleapis.com/cs1830/StartGameSelected.png")
@@ -542,6 +545,8 @@ BUTTONTHREE_CENTER = [295,630]
 BUTTONFOUR_CENTER = [295, 730]
 BUTTONFIVE_CENTER = [295, 830]
 GENBUTTON_CENTER = [200, 75]
+
+CONTROLS_CENTER = [455, 1100]
 
 TITLE_CENTER = [350, 230]
 
@@ -698,8 +703,10 @@ def draw(canvas):
         #DRAW IN THE BUTTONS and the MENU SCREEN
         if rainOrNo <= 1:
             canvas.draw_image(homemenubackground_image, BACKGROUND_CENTER, BACKGROUND_SIZE, BACKGROUND_CENTER, BACKGROUND_SIZE)
+            canvas.draw_image(arrowKeys_image, GENBUTTON_CENTER, BUTTON_WIDTH, CONTROLS_CENTER, BUTTON_WIDTH)
         elif rainOrNo == 2:
             canvas.draw_image(homebackground_raining, BACKGROUND_CENTER, BACKGROUND_SIZE, BACKGROUND_CENTER, BACKGROUND_SIZE)
+            canvas.draw_image(arrowKeys_image, GENBUTTON_CENTER, BUTTON_WIDTH, CONTROLS_CENTER, BUTTON_WIDTH)
             '''
             Sprite Work in the menus for some rain!
             '''
