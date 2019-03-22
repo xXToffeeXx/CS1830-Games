@@ -455,6 +455,7 @@ genericbackground_raining = simplegui.load_image\
     ("https://commondatastorage.googleapis.com/cs1830/GameBackgroundRaining.png")
 homebackground_raining = simplegui.load_image\
     ("https://commondatastorage.googleapis.com/cs1830/GameBackgroundMenuRaining.png")
+gameBackground_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/PlainBackground.png")
 
 #IMPORTING HOME MENU BUTTONS
 startgamebutton_image = simplegui.load_image("https://commondatastorage.googleapis.com/cs1830/StartGame.png")
@@ -886,24 +887,13 @@ def draw(canvas):
             canvas.draw_image(BacktoMenu_image_selected, GENBUTTON_CENTER, BUTTON_WIDTH, BUTTONTHREE_CENTER,
                               BUTTON_WIDTH)
     elif gamePlay:
-        if rainOrNo <= 1:
-            canvas.draw_image(genricbackground_image, BACKGROUND_CENTER, BACKGROUND_SIZE, BACKGROUND_CENTER,
+        canvas.draw_image(gameBackground_image, BACKGROUND_CENTER, BACKGROUND_SIZE, BACKGROUND_CENTER,
                               BACKGROUND_SIZE)
-
-        elif rainOrNo == 2:
-            canvas.draw_image(genericbackground_raining, BACKGROUND_CENTER, BACKGROUND_SIZE, BACKGROUND_CENTER,
-                              BACKGROUND_SIZE)
-
         # TODO: DRAW IN GAME PLAY ASSETS
 
     elif multiGamePlay:
-        if rainOrNo <= 1:
-            canvas.draw_image(genricbackground_image, BACKGROUND_CENTER, BACKGROUND_SIZE, BACKGROUND_CENTER,
-                              BACKGROUND_SIZE)
-
-        elif rainOrNo == 2:
-            canvas.draw_image(genericbackground_raining, BACKGROUND_CENTER, BACKGROUND_SIZE, BACKGROUND_CENTER,
-                              BACKGROUND_SIZE)
+        canvas.draw_image(gameBackground_image, BACKGROUND_CENTER, BACKGROUND_SIZE, BACKGROUND_CENTER,
+                          BACKGROUND_SIZE)
         #TODO: DRAW IN GAME PLAY ASSETS
 
 
