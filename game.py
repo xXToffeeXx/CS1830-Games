@@ -3,9 +3,10 @@ try:
 except ImportError:
     import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 
+import math, random, sys
+
 from vector import Vector
-import math, random
-    
+
 CANVAS_WIDTH = 540
 CANVAS_HEIGHT = 540
 GAME_STARTED = False
@@ -18,7 +19,7 @@ BULLETS = []
 
 ### ENEMY CONSTANTS ###
 ENEMIES = []
-ENEMY_SPEED = 30
+ENEMY_SPEED = 20
 ENEMY_GAP = 40
 ENEMY_JUMP = 30
 ESX = 50
@@ -49,9 +50,10 @@ class Sprite:
 
     def draw(self, canvas):
         canvas.draw_image(self.image, self.source_center, self.source_size, self.pos.getP(), self.display_size)
-    
+
     def update(self):
         pass
+
 
 class Controls:
     def __init__(self, p1, p2):
@@ -97,16 +99,15 @@ class Controls:
             self.p2.vel.add(Vector(-1, 0))
 
 
-
 class Player(Sprite):
     # Specific player CONSTANTS
-    #LIVES = 3
+    LIVES = 3
     velocity = 0.75
-    startpos = Vector(CANVAS_WIDTH/2, CANVAS_HEIGHT-50)
-    
+    startpos = Vector(CANVAS_WIDTH / 2, CANVAS_HEIGHT - 50)
+
     def __init__(self):
-        super(Player,self).__init__('https://i.imgur.com/9e6rcxM.png', 75, 75, self.startpos)
-        
+        super(Player, self).__init__('https://i.imgur.com/9e6rcxM.png', 75, 75, self.startpos)
+
     def update(self):
         new_pos = self.pos.copy()
         new_pos.add(self.vel)
@@ -122,16 +123,16 @@ class Player(Sprite):
 
 class Bullet(Sprite):
     direction = None
-    startpos = Vector(CANVAS_WIDTH/2, CANVAS_HEIGHT-50)
-    
+    startpos = Vector(CANVAS_WIDTH / 2, CANVAS_HEIGHT - 50)
+
     def __init__(self, pos, direction):
-        super(Bullet,self).__init__('https://i.imgur.com/alE94NY.png', 10, 3, self.startpos)
+        super(Bullet, self).__init__('https://i.imgur.com/alE94NY.png', 10, 3, self.startpos)
         self.pos = pos
         if direction == "UP":
-            self.direction = Vector(0,-2)
+            self.direction = Vector(0, -2)
         else:
-            self.direction = Vector(0,2)
-        
+            self.direction = Vector(0, 2)
+
     def update(self):
         self.pos.add(self.direction)
 
@@ -164,7 +165,7 @@ class Enemy(Sprite):
                 self.downleft = ENEMY_MAX_MOVES
 
     def move_down(self):
-        self.pos.y += 35
+        self.pos.y += 25
         if self.right:
             self.pos.x += -25
             self.right = False
@@ -195,6 +196,51 @@ class EnemyBullet(Sprite):
         if self.pos.y > CANVAS_HEIGHT - 10:
             E_BULLETS.remove(self)
 
+
+class Interaction:
+
+    def __init__(self, EBULLETS, BULLETS, playerOne, playerTwo, eList):
+        self.E_BULLETS = EBULLETS
+        self.BULLETS = BULLETS
+        self.playerOne = playerOne
+        self.playerTwo = playerTwo
+        self.eList = eList
+
+    def update(self):
+            global KILLED
+            for bullet in BULLETS:
+                for enemy in self.eList:
+                    if bullet.pos.y > enemy.pos.y - 26 and bullet.pos.y < enemy.pos.y:
+                        if bullet.pos.x > enemy.pos.x and bullet.pos.x < enemy.pos.x + 26:
+                            self.eList.remove(enemy)  # remove or lower health?
+                            BULLETS.remove(bullet)
+                            #increase score
+                            KILLED = KILLED + 1
+
+            for bullet in E_BULLETS:
+                if bullet.pos.y > playerOne.pos.y - 60:
+                    if bullet.pos.x > playerOne.pos.x and bullet.pos.x < playerOne.pos.x + 75:
+                        if playerOne.LIVES > 0:
+                            playerOne.LIVES = playerOne.LIVES - 1
+                        E_BULLETS.remove(bullet)
+                    elif bullet.pos.x > playerTwo.pos.x and bullet.pos.x < playerTwo.pos.x + 75:
+                        if playerTwo.LIVES > 0:
+                            playerTwo.LIVES = playerTwo.LIVES - 1
+                        E_BULLETS.remove(bullet)
+
+                    if playerOne.LIVES == 0 and playerTwo.LIVES == 0:
+                        # Game over screen
+                        sys.exit('Both players ran out of lives')
+                    elif playerOne.LIVES == 0:
+                        # Disable playerOne
+                        pass
+                    elif playerTwo.LIVES == 0:
+                        # Disable playerTwo
+                        pass
+                print('Player One lives: ' + str(playerOne.LIVES))
+                print('Player Two lives: ' + str(playerTwo.LIVES))
+
+
 class Info:
     def __init__(self):
         self.pos = 0
@@ -202,22 +248,27 @@ class Info:
     def draw(self, canvas):
         canvas.draw_line((0, 10), (CANVAS_HEIGHT, 10), 30, 'Black')
         canvas.draw_text("Score:", (35, 17), 20, 'White', 'sans-serif')
+        canvas.draw_text(str(KILLED), (85, 17), 20, 'White', 'sans-serif')
 
         canvas.draw_text("P1 Lives:", (CANVAS_WIDTH - 255, 18), 20, 'White', 'sans-serif')
-        canvas.draw_image(simplegui.load_image('https://imgur.com/cm7EMiu.png'), (8, 8), (16, 16),
-                          (CANVAS_WIDTH - 175, 13), (24, 24))
+        canvas.draw_image(simplegui.load_image('https://i.imgur.com/JH6xdz6.png'), (7.5, 7.5), (15, 15),
+                          (CANVAS_WIDTH - 175, 13), (15, 15))
 
         canvas.draw_text("P2 Lives:", (CANVAS_WIDTH - 115, 18), 20, 'White', 'sans-serif')
-        canvas.draw_image(simplegui.load_image('https://imgur.com/cm7EMiu.png'), (8, 8), (16, 16),
-                          (CANVAS_WIDTH - 35, 13), (24, 24))
+        canvas.draw_image(simplegui.load_image('https://i.imgur.com/JH6xdz6.png'), (7.5, 7.5), (15, 15),
+                          (CANVAS_WIDTH - 35, 13), (15, 15))
+
+        if KILLED == (E_ROWS * E_COLS):
+            canvas.draw_text("You Win!", (CANVAS_WIDTH/2.75, CANVAS_HEIGHT/2), 50, 'White', 'sans-serif')
 
 
-#class Game:
+# class Game:
 
 playerOne = Player()
 playerTwo = Player()
 controls = Controls(playerOne, playerTwo)
 info = Info()
+
 
 def make_enemies():
     for row in range(E_ROWS):
@@ -225,10 +276,11 @@ def make_enemies():
             pos_v = Vector(ESX + (col * ENEMY_GAP), ESY + (row * ENEMY_GAP))
             ENEMIES.append(Enemy(pos_v))
 
+
 def draw(canvas):
     global counter
     counter += 1
-
+    inter.update()
     controls.update()
     playerOne.update()
     playerTwo.update()
@@ -250,14 +302,13 @@ def draw(canvas):
 
     info.draw(canvas)
 
-
 make_enemies()
 
-print(ENEMY_MAX_MOVES)
+inter = Interaction(E_BULLETS, BULLETS, playerOne, playerTwo, ENEMIES)
 
 frame = simplegui.create_frame('Interactions', CANVAS_WIDTH, CANVAS_HEIGHT)
 frame.set_canvas_background('#2C6A6A')
 frame.set_draw_handler(draw)
 frame.set_keydown_handler(controls.keyDown)
 frame.set_keyup_handler(controls.keyUp)
-frame.start()    
+frame.start()
