@@ -4,11 +4,12 @@ except ImportError:
     import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 
 import math, random, sys
+import time
 
 from vector import Vector
 
-CANVAS_WIDTH = 540
-CANVAS_HEIGHT = 540
+CANVAS_WIDTH = 800
+CANVAS_HEIGHT = 600
 GAME_STARTED = False
 GAME_ENDED = False
 LEVEL = 1
@@ -19,15 +20,16 @@ BULLETS = []
 
 ### ENEMY CONSTANTS ###
 ENEMIES = []
-ENEMY_SPEED = 20
-ENEMY_GAP = 40
-ENEMY_JUMP = 30
+ENEMY_SPEED = 40
+ENEMY_GAP = 35
+ENEMY_JUMP = 21
+ENEMY_JUMP_DOWN = 30
 ESX = 50
-ESY = 50
-E_ROWS = 3
-E_COLS = 6
+ESY = 75
+E_ROWS = 4
+E_COLS = 9
 E_BULLETS = []
-BULLET_SPEED = 2
+BULLET_SPEED = 5
 counter = 0
 # Calculate number of moves enemies should make before moving down the screen
 ENEMY_MAX_MOVES = ((CANVAS_WIDTH / ENEMY_JUMP) / 2)
@@ -56,6 +58,7 @@ class Sprite:
 
 
 class Controls:
+
     def __init__(self, p1, p2):
         self.p1_right = False
         self.p1_left = False
@@ -63,6 +66,9 @@ class Controls:
         self.p2_left = False
         self.p1 = p1
         self.p2 = p2
+        self.p1_last = counter
+        self.p2_last = counter
+        self.cooldown = 40
 
     def keyDown(self, key):
         if key == simplegui.KEY_MAP['d']:
@@ -84,9 +90,15 @@ class Controls:
         if key == simplegui.KEY_MAP['j']:
             self.p2_left = False
         if key == simplegui.KEY_MAP['s']:
-            BULLETS.append(Bullet(self.p1.getPosition(), "UP"))
+            now = counter
+            if now - self.p1_last >= self.cooldown:
+                BULLETS.append(Bullet(self.p1.getPosition(), "UP"))
+                self.p1_last = counter
         if key == simplegui.KEY_MAP['k']:
-            BULLETS.append(Bullet(self.p2.getPosition(), "UP"))
+            now = counter
+            if now - self.p2_last >= self.cooldown:
+                BULLETS.append(Bullet(self.p2.getPosition(), "UP"))
+                self.p2_last = counter
 
     def update(self):
         if self.p1_right:
@@ -105,17 +117,26 @@ class Player(Sprite):
     velocity = 0.75
     startpos = Vector(CANVAS_WIDTH / 2, CANVAS_HEIGHT - 50)
 
-    def __init__(self):
-        super(Player, self).__init__('https://i.imgur.com/9e6rcxM.png', 75, 75, self.startpos)
+    def __init__(self, image):
+        # https://i.imgur.com/9e6rcxM.png original sprite
+        self.image = image
+        super(Player, self).__init__(image, 75, 75, self.startpos)
+        self.disable = False
 
     def update(self):
         new_pos = self.pos.copy()
         new_pos.add(self.vel)
-        if (new_pos.x > self.margin) and (new_pos.x < (CANVAS_WIDTH - self.margin)):
-            self.pos = new_pos.copy()
-            self.vel.multiply(self.velocity)
-        else:
+        if not self.disable:
+            if (new_pos.x > self.margin) and (new_pos.x < (CANVAS_WIDTH - self.margin)):
+                self.pos = new_pos.copy()
+                self.vel.multiply(self.velocity)
+            else:
+                self.vel.multiply(0)
+        elif self.disable:
             self.vel.multiply(0)
+
+    def stop(self):
+        self.disable = True
 
     def getPosition(self):
         return self.pos
@@ -124,14 +145,16 @@ class Player(Sprite):
 class Bullet(Sprite):
     direction = None
     startpos = Vector(CANVAS_WIDTH / 2, CANVAS_HEIGHT - 50)
+    # https://i.imgur.com/alE94NY.png original bullet
 
     def __init__(self, pos, direction):
-        super(Bullet, self).__init__('https://i.imgur.com/alE94NY.png', 10, 3, self.startpos)
+        super(Bullet, self).__init__('https://i.imgur.com/n08NeaE.png', 10, 10, self.startpos)
         self.pos = pos
+
         if direction == "UP":
-            self.direction = Vector(0, -2)
+            self.direction = Vector(0, -3.5)
         else:
-            self.direction = Vector(0, 2)
+            self.direction = Vector(0, 3.5)
 
     def update(self):
         self.pos.add(self.direction)
@@ -140,7 +163,7 @@ class Bullet(Sprite):
 class Enemy(Sprite):
     def __init__(self, pos):
         self.pos = pos
-        super(Enemy, self).__init__('https://i.imgur.com/2e24IN1.png', 26, 26, self.pos)
+        super(Enemy, self).__init__('https://i.imgur.com/2e24IN1.png', 34, 34, self.pos)
         self.right = True
         self.downright = 0
         self.downleft = ENEMY_MAX_MOVES
@@ -164,17 +187,23 @@ class Enemy(Sprite):
                 self.move_down()
                 self.downleft = ENEMY_MAX_MOVES
 
+        if self.pos.y >= playerOne.pos.y - 30:
+            # TODO: initiate a game over as players have died
+            playerOne.stop()
+            playerTwo.stop()
+
     def move_down(self):
-        self.pos.y += 25
+        self.pos.y += ENEMY_JUMP_DOWN
         if self.right:
-            self.pos.x += -25
+            self.pos.x += -ENEMY_JUMP_DOWN + 10
             self.right = False
         elif not self.right:
-            self.pos.x += 25
+            self.pos.x += ENEMY_JUMP_DOWN - 10
             self.right = True
 
+
     def shoot(self):
-        if (random.randint(1, 750)) == 1:
+        if (random.randint(1, 2500)) == 1:
             b = Vector(self.pos.x, self.pos.y)
             E_BULLETS.append(EnemyBullet(b))
 
@@ -198,7 +227,6 @@ class EnemyBullet(Sprite):
 
 
 class Interaction:
-
     def __init__(self, EBULLETS, BULLETS, playerOne, playerTwo, eList):
         self.E_BULLETS = EBULLETS
         self.BULLETS = BULLETS
@@ -232,13 +260,12 @@ class Interaction:
                         # Game over screen
                         sys.exit('Both players ran out of lives')
                     elif playerOne.LIVES == 0:
-                        # Disable playerOne
-                        pass
+                        playerOne.stop()
                     elif playerTwo.LIVES == 0:
-                        # Disable playerTwo
-                        pass
-                print('Player One lives: ' + str(playerOne.LIVES))
-                print('Player Two lives: ' + str(playerTwo.LIVES))
+                        playerTwo.stop()
+
+                #print('Player One lives: ' + str(playerOne.LIVES))
+                #print('Player Two lives: ' + str(playerTwo.LIVES))
 
 
 class Info:
@@ -246,26 +273,30 @@ class Info:
         self.pos = 0
 
     def draw(self, canvas):
-        canvas.draw_line((0, 10), (CANVAS_HEIGHT, 10), 30, 'Black')
-        canvas.draw_text("Score:", (35, 17), 20, 'White', 'sans-serif')
-        canvas.draw_text(str(KILLED), (85, 17), 20, 'White', 'sans-serif')
+        canvas.draw_line((0, 10), (CANVAS_WIDTH, 10), 30, 'Black')
+        canvas.draw_text("Score:", (75, 18), 20, 'White', 'sans-serif')
+        canvas.draw_text(str(KILLED), (125, 18), 20, 'Yellow', 'sans-serif')
 
-        canvas.draw_text("P1 Lives:", (CANVAS_WIDTH - 255, 18), 20, 'White', 'sans-serif')
-        canvas.draw_image(simplegui.load_image('https://i.imgur.com/JH6xdz6.png'), (7.5, 7.5), (15, 15),
-                          (CANVAS_WIDTH - 175, 13), (15, 15))
+        canvas.draw_text("P1 Lives:", (CANVAS_WIDTH - (CANVAS_WIDTH / 3), 18), 20, 'White', 'sans-serif')
+        canvas.draw_text(str(playerOne.LIVES), (CANVAS_WIDTH - (CANVAS_WIDTH / 4.2), 18), 20, 'Red', 'sans-serif')
+        #canvas.draw_image(simplegui.load_image('https://i.imgur.com/JH6xdz6.png'), (7.5, 7.5), (15, 15),
+        #                  (CANVAS_WIDTH - 175, 13), (15, 15))
 
-        canvas.draw_text("P2 Lives:", (CANVAS_WIDTH - 115, 18), 20, 'White', 'sans-serif')
-        canvas.draw_image(simplegui.load_image('https://i.imgur.com/JH6xdz6.png'), (7.5, 7.5), (15, 15),
-                          (CANVAS_WIDTH - 35, 13), (15, 15))
+        canvas.draw_text("P2 Lives:", (CANVAS_WIDTH - (CANVAS_WIDTH / 5), 18), 20, 'White', 'sans-serif')
+        canvas.draw_text(str(playerTwo.LIVES), (CANVAS_WIDTH - (CANVAS_WIDTH / 9.2), 18), 20, 'Red', 'sans-serif')
+        #canvas.draw_image(simplegui.load_image('https://i.imgur.com/JH6xdz6.png'), (7.5, 7.5), (15, 15),
+        #                  (CANVAS_WIDTH - 35, 13), (15, 15))
 
         if KILLED == (E_ROWS * E_COLS):
             canvas.draw_text("You Win!", (CANVAS_WIDTH/2.75, CANVAS_HEIGHT/2), 50, 'White', 'sans-serif')
-
+            playerOne.stop()
+            playerTwo.stop()
 
 # class Game:
 
-playerOne = Player()
-playerTwo = Player()
+
+playerOne = Player('https://i.imgur.com/9e6rcxM.png')
+playerTwo = Player('https://i.imgur.com/4QEvDrL.png')
 controls = Controls(playerOne, playerTwo)
 info = Info()
 
@@ -301,6 +332,7 @@ def draw(canvas):
         bullet.move()
 
     info.draw(canvas)
+
 
 make_enemies()
 
