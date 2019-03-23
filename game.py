@@ -29,8 +29,9 @@ ESY = 75
 E_ROWS = 4
 E_COLS = 9
 E_BULLETS = []
-BULLET_SPEED = 5
+BULLET_SPEED = 7
 counter = 0
+WALLS = []
 # Calculate number of moves enemies should make before moving down the screen
 ENEMY_MAX_MOVES = ((CANVAS_WIDTH / ENEMY_JUMP) / 2)
 if ENEMY_MAX_MOVES > int(ENEMY_MAX_MOVES):
@@ -163,7 +164,8 @@ class Bullet(Sprite):
 class Enemy(Sprite):
     def __init__(self, pos):
         self.pos = pos
-        super(Enemy, self).__init__('https://i.imgur.com/2e24IN1.png', 34, 34, self.pos)
+        self.image = 'https://i.imgur.com/2e24IN1.png'
+        super(Enemy, self).__init__(self.image, 34, 34, self.pos)
         self.right = True
         self.downright = 0
         self.downleft = ENEMY_MAX_MOVES
@@ -203,15 +205,35 @@ class Enemy(Sprite):
 
 
     def shoot(self):
-        if (random.randint(1, 2500)) == 1:
+        if (random.randint(1, 2000)) == 1:
             b = Vector(self.pos.x, self.pos.y)
             E_BULLETS.append(EnemyBullet(b))
 
     def die(self):
+        global explo
+        get_pos = (self.pos.x, self.pos.y)
         ENEMIES.remove(self)
+        explo = Explosion(get_pos, True)
 
     def get_pos_x(self):
         return self.pos.x
+
+
+class Explosion:
+    def __init__(self, pos, truth):
+        self.pos = pos
+        self.truth = truth
+        self.cooldown = 40
+        self.now = counter + self.cooldown
+        self.death_img = simplegui.load_image('https://i.imgur.com/YmWrpV5.png')
+
+    def draw(self, canvas):
+        print(self.truth)
+        if self.truth:
+            if (self.now >= counter):
+                canvas.draw_image(self.death_img, (12.5, 12.5), (25, 25), self.pos, (25, 25))
+            else:
+                self.truth = False
 
 
 class EnemyBullet(Sprite):
@@ -224,6 +246,15 @@ class EnemyBullet(Sprite):
         self.pos.y += self.speed
         if self.pos.y > CANVAS_HEIGHT - 10:
             E_BULLETS.remove(self)
+
+
+class Walls(Sprite):
+    def __init__(self, pos):
+        self.pos = pos
+        super(Walls, self).__init__('https://i.imgur.com/zVKPBzx.png', 64, 72, self.pos)
+
+    def update(self):
+        pass
 
 
 class Interaction:
@@ -240,7 +271,8 @@ class Interaction:
                 for enemy in self.eList:
                     if bullet.pos.y > enemy.pos.y - 26 and bullet.pos.y < enemy.pos.y:
                         if bullet.pos.x > enemy.pos.x and bullet.pos.x < enemy.pos.x + 26:
-                            self.eList.remove(enemy)  # remove or lower health?
+                            #self.eList.remove(enemy)  # remove or lower health?
+                            enemy.die()
                             BULLETS.remove(bullet)
                             #increase score
                             KILLED = KILLED + 1
@@ -299,6 +331,15 @@ playerOne = Player('https://i.imgur.com/9e6rcxM.png')
 playerTwo = Player('https://i.imgur.com/4QEvDrL.png')
 controls = Controls(playerOne, playerTwo)
 info = Info()
+explo = Explosion((0, 0), False)
+
+
+def make_walls():
+    x = 200
+    for i in range(3):
+        wall = Vector(x, 475)
+        WALLS.append(Walls(wall))
+        x = x + 200
 
 
 def make_enemies():
@@ -312,6 +353,7 @@ def draw(canvas):
     global counter
     counter += 1
     inter.update()
+    explo.draw(canvas)
     controls.update()
     playerOne.update()
     playerTwo.update()
@@ -331,9 +373,13 @@ def draw(canvas):
         bullet.draw(canvas)
         bullet.move()
 
+    for wall in WALLS:
+        wall.draw(canvas)
+
     info.draw(canvas)
 
 
+make_walls()
 make_enemies()
 
 inter = Interaction(E_BULLETS, BULLETS, playerOne, playerTwo, ENEMIES)
