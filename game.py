@@ -20,7 +20,7 @@ BULLETS = []
 
 ### ENEMY CONSTANTS ###
 ENEMIES = []
-ENEMY_SPEED = 40
+ENEMY_SPEED = 99
 ENEMY_GAP = 35
 ENEMY_JUMP = 21
 ENEMY_JUMP_DOWN = 30
@@ -32,6 +32,7 @@ E_BULLETS = []
 BULLET_SPEED = 7
 counter = 0
 WALLS = []
+gameover = False
 # Calculate number of moves enemies should make before moving down the screen
 ENEMY_MAX_MOVES = ((CANVAS_WIDTH / ENEMY_JUMP) / 2)
 if ENEMY_MAX_MOVES > int(ENEMY_MAX_MOVES):
@@ -189,10 +190,15 @@ class Enemy(Sprite):
                 self.move_down()
                 self.downleft = ENEMY_MAX_MOVES
 
-        if self.pos.y >= playerOne.pos.y - 30:
+        print(self.pos.y)
+
+        if self.pos.y >= CANVAS_HEIGHT - 50:
+            global gameover
             # TODO: initiate a game over as players have died
             playerOne.stop()
             playerTwo.stop()
+            gameover = True
+            print("hi")
 
     def move_down(self):
         self.pos.y += ENEMY_JUMP_DOWN
@@ -228,9 +234,8 @@ class Explosion:
         self.death_img = simplegui.load_image('https://i.imgur.com/YmWrpV5.png')
 
     def draw(self, canvas):
-        print(self.truth)
         if self.truth:
-            if (self.now >= counter):
+            if self.now >= counter:
                 canvas.draw_image(self.death_img, (12.5, 12.5), (25, 25), self.pos, (25, 25))
             else:
                 self.truth = False
@@ -319,10 +324,15 @@ class Info:
         #canvas.draw_image(simplegui.load_image('https://i.imgur.com/JH6xdz6.png'), (7.5, 7.5), (15, 15),
         #                  (CANVAS_WIDTH - 35, 13), (15, 15))
 
-        if KILLED == (E_ROWS * E_COLS):
-            canvas.draw_text("You Win!", (CANVAS_WIDTH/2.75, CANVAS_HEIGHT/2), 50, 'White', 'sans-serif')
+        s = str(ti)
+        canvas.draw_text("Time: " + str(ti), ((CANVAS_WIDTH - 400), 18), 20, 'White', 'sans-serif')
+
+        #if KILLED == (E_ROWS * E_COLS):
+        if KILLED == (1):
             playerOne.stop()
             playerTwo.stop()
+
+            game_over(canvas, 'win')
 
 # class Game:
 
@@ -378,9 +388,42 @@ def draw(canvas):
 
     info.draw(canvas)
 
+    if not ENEMIES:
+        game_over(canvas, 'lose')
+
+    if gameover:
+        game_over(canvas, 'lose')
+
 
 make_walls()
 make_enemies()
+
+ti = 0
+
+
+def game_over(canvas, cond):
+    global counter
+    if gameover:
+        cond = 'lose'
+    if cond == 'win':
+        canvas.draw_text("You Win!", (CANVAS_WIDTH / 2.75, CANVAS_HEIGHT / 2), 50, 'White', 'sans-serif')
+    if cond == 'lose':
+        cooldown = 40
+        now = counter + cooldown
+        if now >= counter:
+            canvas.draw_polygon([[0, 0], [0, CANVAS_HEIGHT], [CANVAS_WIDTH, CANVAS_HEIGHT], [CANVAS_WIDTH, 0]], 12,
+                                'Black', 'Black')
+            canvas.draw_text("You Lose!", (CANVAS_WIDTH / 2.75, CANVAS_HEIGHT / 2), 50, 'White', 'sans-serif')
+        else:
+            sys.exit()
+
+
+def increment():
+    global ti
+    ti += 1
+
+
+t = simplegui.create_timer(100, increment)
 
 inter = Interaction(E_BULLETS, BULLETS, playerOne, playerTwo, ENEMIES)
 
@@ -389,4 +432,5 @@ frame.set_canvas_background('#2C6A6A')
 frame.set_draw_handler(draw)
 frame.set_keydown_handler(controls.keyDown)
 frame.set_keyup_handler(controls.keyUp)
+t.start()
 frame.start()
