@@ -17,21 +17,26 @@ SCORE = 0
 KILLED = 0
 TIME = 0
 BULLETS = []
+BULLET_SPEED = 7
 
 ### ENEMY CONSTANTS ###
 ENEMIES = []
-ENEMY_SPEED = 40
+ENEMY_SPEED = 60
 ENEMY_GAP = 35
 ENEMY_JUMP = 21
-ENEMY_JUMP_DOWN = 30
+ENEMY_JUMP_DOWN = 40
+ENEMY_JUMP_ADJUST = 15
 ESX = 50
 ESY = 75
 E_ROWS = 4
 E_COLS = 9
 E_BULLETS = []
-BULLET_SPEED = 7
+E_BULLET_SPEED = 7
 counter = 0
 WALLS = []
+gameover = False
+magic = 2000
+
 # Calculate number of moves enemies should make before moving down the screen
 ENEMY_MAX_MOVES = ((CANVAS_WIDTH / ENEMY_JUMP) / 2)
 if ENEMY_MAX_MOVES > int(ENEMY_MAX_MOVES):
@@ -90,16 +95,17 @@ class Controls:
             self.p2_right = False
         if key == simplegui.KEY_MAP['j']:
             self.p2_left = False
-        if key == simplegui.KEY_MAP['s']:
+        if key == simplegui.KEY_MAP['s'] and self.p1.disable is False:
             now = counter
             if now - self.p1_last >= self.cooldown:
                 BULLETS.append(Bullet(self.p1.getPosition(), "UP"))
                 self.p1_last = counter
-        if key == simplegui.KEY_MAP['k']:
+        if key == simplegui.KEY_MAP['k'] and self.p2.disable is False:
             now = counter
             if now - self.p2_last >= self.cooldown:
                 BULLETS.append(Bullet(self.p2.getPosition(), "UP"))
                 self.p2_last = counter
+
 
     def update(self):
         if self.p1_right:
@@ -153,9 +159,9 @@ class Bullet(Sprite):
         self.pos = pos
 
         if direction == "UP":
-            self.direction = Vector(0, -3.5)
+            self.direction = Vector(0, -BULLET_SPEED)
         else:
-            self.direction = Vector(0, 3.5)
+            self.direction = Vector(0, BULLET_SPEED)
 
     def update(self):
         self.pos.add(self.direction)
@@ -189,23 +195,33 @@ class Enemy(Sprite):
                 self.move_down()
                 self.downleft = ENEMY_MAX_MOVES
 
-        if self.pos.y >= playerOne.pos.y - 30:
-            # TODO: initiate a game over as players have died
+        #print(self.pos.y)
+
+        if self.pos.y >= CANVAS_HEIGHT - 50:
+            global gameover
             playerOne.stop()
             playerTwo.stop()
+            gameover = True
 
     def move_down(self):
         self.pos.y += ENEMY_JUMP_DOWN
         if self.right:
-            self.pos.x += -ENEMY_JUMP_DOWN + 10
+            self.pos.x += -ENEMY_JUMP_DOWN + ENEMY_JUMP_ADJUST
             self.right = False
         elif not self.right:
-            self.pos.x += ENEMY_JUMP_DOWN - 10
+            self.pos.x += ENEMY_JUMP_DOWN - ENEMY_JUMP_ADJUST
             self.right = True
 
 
     def shoot(self):
-        if (random.randint(1, 2000)) == 1:
+        global magic
+        if len(ENEMIES) <= ((E_ROWS * E_COLS) - E_COLS):
+            magic = 1250
+        if len(ENEMIES) <= ((E_ROWS * E_COLS) - E_COLS * 2):
+            magic = 750
+        if len(ENEMIES) <= ((E_ROWS * E_COLS) - E_COLS * 3):
+            magic = 500
+        if (random.randint(1, magic)) == 1:
             b = Vector(self.pos.x, self.pos.y)
             E_BULLETS.append(EnemyBullet(b))
 
@@ -228,9 +244,8 @@ class Explosion:
         self.death_img = simplegui.load_image('https://i.imgur.com/YmWrpV5.png')
 
     def draw(self, canvas):
-        print(self.truth)
         if self.truth:
-            if (self.now >= counter):
+            if self.now >= counter:
                 canvas.draw_image(self.death_img, (12.5, 12.5), (25, 25), self.pos, (25, 25))
             else:
                 self.truth = False
@@ -240,7 +255,7 @@ class EnemyBullet(Sprite):
     def __init__(self, pos):
         self.pos = pos
         super(EnemyBullet, self).__init__('https://i.imgur.com/9t4g4Ey.png', 16, 16, self.pos)
-        self.speed = BULLET_SPEED
+        self.speed = E_BULLET_SPEED
 
     def move(self):
         self.pos.y += self.speed
@@ -258,12 +273,13 @@ class Walls(Sprite):
 
 
 class Interaction:
-    def __init__(self, EBULLETS, BULLETS, playerOne, playerTwo, eList):
+    def __init__(self, EBULLETS, BULLETS, playerOne, playerTwo, eList, wList):
         self.E_BULLETS = EBULLETS
         self.BULLETS = BULLETS
         self.playerOne = playerOne
         self.playerTwo = playerTwo
         self.eList = eList
+        self.wList = wList
 
     def update(self):
             global KILLED
@@ -289,8 +305,9 @@ class Interaction:
                         E_BULLETS.remove(bullet)
 
                     if playerOne.LIVES == 0 and playerTwo.LIVES == 0:
-                        # Game over screen
-                        sys.exit('Both players ran out of lives')
+                        global gameover
+                        gameover = True
+                        # sys.exit('Both players ran out of lives')
                     elif playerOne.LIVES == 0:
                         playerOne.stop()
                     elif playerTwo.LIVES == 0:
@@ -298,6 +315,12 @@ class Interaction:
 
                 #print('Player One lives: ' + str(playerOne.LIVES))
                 #print('Player Two lives: ' + str(playerTwo.LIVES))
+
+            for bullet in E_BULLETS:
+                for wall in self.wList:
+                    if bullet.pos.y >= wall.pos.y and (bullet.pos.x > wall.pos.x and bullet.pos.x < wall.pos.x + 60):
+                        E_BULLETS.remove(bullet)
+                        WALLS.remove(wall)
 
 
 class Info:
@@ -319,10 +342,14 @@ class Info:
         #canvas.draw_image(simplegui.load_image('https://i.imgur.com/JH6xdz6.png'), (7.5, 7.5), (15, 15),
         #                  (CANVAS_WIDTH - 35, 13), (15, 15))
 
+        #canvas.draw_text("Time: " + str(ti), ((CANVAS_WIDTH - 400), 18), 20, 'White', 'sans-serif')
+
+        #if KILLED == (E_ROWS * E_COLS):
         if KILLED == (E_ROWS * E_COLS):
-            canvas.draw_text("You Win!", (CANVAS_WIDTH/2.75, CANVAS_HEIGHT/2), 50, 'White', 'sans-serif')
             playerOne.stop()
             playerTwo.stop()
+
+            game_over(canvas, 'win')
 
 # class Game:
 
@@ -362,30 +389,63 @@ def draw(canvas):
         bullet.draw(canvas)
     playerOne.draw(canvas)
     playerTwo.draw(canvas)
+    inter.update()
 
     for enemy in ENEMIES:
         enemy.draw(canvas)
         if counter % (100 - ENEMY_SPEED) == 0:
             enemy.update()
         enemy.shoot()
+    inter.update()
 
     for bullet in E_BULLETS:
         bullet.draw(canvas)
         bullet.move()
+    inter.update()
 
     for wall in WALLS:
         wall.draw(canvas)
+    inter.update()
 
     info.draw(canvas)
+
+    #if not ENEMIES:
+    #   game_over(canvas, 'lose')
+
+    if gameover:
+        game_over(canvas, 'lose')
 
 
 make_walls()
 make_enemies()
+incount = 0
 
-inter = Interaction(E_BULLETS, BULLETS, playerOne, playerTwo, ENEMIES)
+
+def game_over(canvas, cond):
+    global incount
+    if gameover:
+        cond = 'lose'
+    if cond == 'win':
+        canvas.draw_text("You Win!", (CANVAS_WIDTH / 2.75, CANVAS_HEIGHT / 2), 50, 'White', 'sans-serif')
+        canvas.draw_text("Score: " + str(KILLED), (CANVAS_WIDTH / 2.55, CANVAS_HEIGHT / 1.75), 40, 'White',
+                         'sans-serif')
+        if incount >= 200:
+            sys.exit()
+        incount += 1
+    if cond == 'lose':
+        canvas.draw_polygon([[0, 0], [0, CANVAS_HEIGHT], [CANVAS_WIDTH, CANVAS_HEIGHT], [CANVAS_WIDTH, 0]], 12,
+                                'Black', 'Black')
+        canvas.draw_text("You Lose!", (CANVAS_WIDTH / 2.75, CANVAS_HEIGHT / 2), 50, 'White', 'sans-serif')
+        canvas.draw_text("Score: " + str(KILLED), (CANVAS_WIDTH / 2.55, CANVAS_HEIGHT / 1.75), 40, 'White', 'sans-serif')
+        if incount >= 200:
+            sys.exit()
+        incount += 1
+
+
+inter = Interaction(E_BULLETS, BULLETS, playerOne, playerTwo, ENEMIES, WALLS)
 
 frame = simplegui.create_frame('Interactions', CANVAS_WIDTH, CANVAS_HEIGHT)
-frame.set_canvas_background('#2C6A6A')
+frame._set_canvas_background_image(simplegui.load_image('https://imgur.com/JW464Qp.png'))
 frame.set_draw_handler(draw)
 frame.set_keydown_handler(controls.keyDown)
 frame.set_keyup_handler(controls.keyUp)
