@@ -75,15 +75,15 @@ else: #RAINFOREST
         ("https://commondatastorage.googleapis.com/cs1830/462774__lg__20180616-tropical-rain-thailand-02.wav")
     music.set_volume(gameVolume)
 
-buttonSoundSplash = simplegui.load_sound\
+#buttonSoundSplash = simplegui.load_sound\
     ("https://commondatastorage.googleapis.com/cs1830/439746__inspectorj__soprano-recorder-staccato-c.wav")
-buttonSoundSplash.set_volume(gameVolume)
+#buttonSoundSplash.set_volume(gameVolume)
 
-buttonOnPress = simplegui.load_sound\
+#buttonOnPress = simplegui.load_sound\
     ("https://commondatastorage.googleapis.com/cs1830/243020__plasterbrain__game-start.ogg")
-buttonOnPress.set_volume(gameVolume)
+#buttonOnPress.set_volume(gameVolume)
 
-musicLibrary = [music, optionsAmbience, extrasAmbience]
+#musicLibrary = [music, optionsAmbience, extrasAmbience]
 
 #TODO:
 #1: Make the credits screen actually display something
@@ -118,9 +118,9 @@ class Keyboard:
                 print(buttonState)
                 easterEggCounter+=1
                 print(easterEggCounter)
-                buttonSoundSplash.pause()
-                buttonSoundSplash.rewind()
-                buttonSoundSplash.play()
+                #buttonSoundSplash.pause()
+                #buttonSoundSplash.rewind()
+                #buttonSoundSplash.play()
                 time.sleep(0.1)
 
             if key == simplegui.KEY_MAP['up']or key == simplegui.KEY_MAP['w']:
@@ -129,9 +129,9 @@ class Keyboard:
                 if buttonState<0:
                     buttonState = 4
                 print(buttonState)
-                buttonSoundSplash.pause()
-                buttonSoundSplash.rewind()
-                buttonSoundSplash.play()
+                #buttonSoundSplash.pause()
+                #buttonSoundSplash.rewind()
+                #buttonSoundSplash.play()
                 easterEggCounter =0
                 time.sleep(0.1)
 
@@ -139,42 +139,42 @@ class Keyboard:
                 if buttonState == 0:
                     print(gameButtonhandler())
                     if rainOrNo <=1:
-                        musicLibrary[0].pause()
-                    buttonOnPress.pause()
-                    buttonOnPress.rewind()
-                    buttonOnPress.play()
-                    easterEgg()
+                        pass#musicLibrary[0].pause()
+                    #buttonOnPress.pause()
+                    #buttonOnPress.rewind()
+                    #buttonOnPress.play()
+                    #easterEgg()
                 if buttonState == 1:
                     print(multigameButtonhandler())
                     if rainOrNo <= 1:
-                        musicLibrary[0].pause()
-                    buttonOnPress.pause()
-                    buttonOnPress.rewind()
-                    buttonOnPress.play()
-                    easterEgg()
+                        pass#musicLibrary[0].pause()
+                    #buttonOnPress.pause()
+                    #buttonOnPress.rewind()
+                    #buttonOnPress.play()
+                    #easterEgg()
                 if buttonState == 2:
                     print(optionsHandler())
                     if rainOrNo <= 1:
-                        musicLibrary[0].pause()
-                    buttonOnPress.pause()
-                    buttonOnPress.rewind()
-                    buttonOnPress.play()
-                    easterEgg()
+                        pass#musicLibrary[0].pause()
+                    #buttonOnPress.pause()
+                    #buttonOnPress.rewind()
+                    #buttonOnPress.play()
+                    #easterEgg()
                 if buttonState == 3:
                     print(extrasHandler())
                     if rainOrNo <= 1:
-                        musicLibrary[0].pause()
-                    buttonOnPress.pause()
-                    buttonOnPress.rewind()
-                    buttonOnPress.play()
-                    easterEgg()
+                        pass#musicLibrary[0].pause()
+                    #buttonOnPress.pause()
+                    #buttonOnPress.rewind()
+                    #buttonOnPress.play()
+                    #easterEgg()
                 if buttonState == MENU_OPTIONS:
                     if rainOrNo <= 1:
-                        musicLibrary[0].pause()
+                        pass#musicLibrary[0].pause()
 
-                    buttonOnPress.pause()
-                    buttonOnPress.rewind()
-                    buttonOnPress.play()
+                    #buttonOnPress.pause()
+                    #buttonOnPress.rewind()
+                    #buttonOnPress.play()
                     sys.exit()
         #KEYMAP FOR OPTIONS
         elif options:
@@ -184,9 +184,9 @@ class Keyboard:
                 if buttonState>2:
                     buttonState = 0
                 print(buttonState)
-                buttonSoundSplash.pause()
-                buttonSoundSplash.rewind()
-                buttonSoundSplash.play()
+                #buttonSoundSplash.pause()
+                #buttonSoundSplash.rewind()
+                #buttonSoundSplash.play()
                 time.sleep(0.1)
 
             if key == simplegui.KEY_MAP['up']or key == simplegui.KEY_MAP['w']:
@@ -195,9 +195,9 @@ class Keyboard:
                 if buttonState<0:
                     buttonState = 2
                 print(buttonState)
-                buttonSoundSplash.pause()
-                buttonSoundSplash.rewind()
-                buttonSoundSplash.play()
+                #buttonSoundSplash.pause()
+                #buttonSoundSplash.rewind()
+                #buttonSoundSplash.play()
                 time.sleep(0.1)
 
             if key == simplegui.KEY_MAP['space'] or key == simplegui.KEY_MAP['e']:
@@ -219,44 +219,46 @@ class Keyboard:
                     else:
                         inversion = True
                     print("Left movements now dictated by: ", wasdLeft, " and ", keybLeft)
-                    buttonOnPress.pause()
-                    buttonOnPress.rewind()
-                    buttonOnPress.play()
+                    #buttonOnPress.pause()
+                    #buttonOnPress.rewind()
+                    #buttonOnPress.play()
                 if buttonState == 2:
                     if rainOrNo <= 1:
-                        musicLibrary[1].pause()
-                        musicLibrary[1].rewind()
+                        #musicLibrary[1].pause()
+                        #musicLibrary[1].rewind()
+                        pass
                     print(mainMenuHandlerFromOptions())
-                    buttonOnPress.pause()
-                    buttonOnPress.rewind()
-                    buttonOnPress.play()
+                    #buttonOnPress.pause()
+                    #buttonOnPress.rewind()
+                    #buttonOnPress.play()
 
             if key == simplegui.KEY_MAP[wasdRight] or key == simplegui.KEY_MAP[keybRight]:
 
                 if buttonState==0:
                     gameVolume = volumeHandler(1, gameVolume)
                     print("Game volume is now: ", (int)(gameVolume * 10))
-                    buttonSoundSplash.pause()
-                    buttonSoundSplash.rewind()
-                    buttonSoundSplash.play()
-                musicLibrary[0].set_volume(gameVolume), musicLibrary[1].set_volume(gameVolume), musicLibrary[2].set_volume(gameVolume),
-                buttonSoundSplash.set_volume(gameVolume ), buttonOnPress.set_volume(gameVolume )
+                    #buttonSoundSplash.pause()
+                    #buttonSoundSplash.rewind()
+                    #buttonSoundSplash.play()
+                #musicLibrary[0].set_volume(gameVolume), #musicLibrary[1].set_volume(gameVolume), #musicLibrary[2].set_volume(gameVolume),
+                #buttonSoundSplash.set_volume(gameVolume ), buttonOnPress.set_volume(gameVolume )
 
             if key == simplegui.KEY_MAP[wasdLeft] or key == simplegui.KEY_MAP[keybLeft]:
                 if buttonState==0:
                     gameVolume = volumeHandler(2, gameVolume)
                     print("Game volume is now: ", (int)(gameVolume * 10))
-                    buttonSoundSplash.pause()
-                    buttonSoundSplash.rewind()
-                    buttonSoundSplash.play()
+                    #buttonSoundSplash.pause()
+                    #buttonSoundSplash.rewind()
+                    #buttonSoundSplash.play()
 
                 if gameVolume >= 0.0:
-                    musicLibrary[0].set_volume(gameVolume), musicLibrary[1].set_volume(gameVolume), musicLibrary[2].set_volume(gameVolume),
-                    buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
+                    #musicLibrary[0].set_volume(gameVolume), #musicLibrary[1].set_volume(gameVolume), #musicLibrary[2].set_volume(gameVolume),
+                    #buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
+                    pass
                 elif gameVolume< 0.0:
-                    musicLibrary[0].set_volume(0.0), musicLibrary[1].set_volume(0.0), musicLibrary[2].set_volume(
-                        0.0),
-                    buttonSoundSplash.set_volume(0.0), buttonOnPress.set_volume(0.0)
+                    #musicLibrary[0].set_volume(0.0), #musicLibrary[1].set_volume(0.0), #musicLibrary[2].set_volume(
+                        #0.0),
+                    #buttonSoundSplash.set_volume(0.0), buttonOnPress.set_volume(0.0)
                     gameVolume = 0.0
 
         elif extras:
@@ -266,9 +268,9 @@ class Keyboard:
                 if buttonState>2:
                     buttonState = 0
                 print(buttonState)
-                buttonSoundSplash.pause()
-                buttonSoundSplash.rewind()
-                buttonSoundSplash.play()
+                #buttonSoundSplash.pause()
+                #buttonSoundSplash.rewind()
+                #buttonSoundSplash.play()
                 time.sleep(0.1)
 
             if key == simplegui.KEY_MAP['up']or key == simplegui.KEY_MAP['w']:
@@ -277,44 +279,48 @@ class Keyboard:
                 if buttonState<0:
                     buttonState = 2
                 print(buttonState)
-                buttonSoundSplash.pause()
-                buttonSoundSplash.rewind()
-                buttonSoundSplash.play()
+                #buttonSoundSplash.pause()
+                #buttonSoundSplash.rewind()
+                #buttonSoundSplash.play()
                 time.sleep(0.1)
 
             if key == simplegui.KEY_MAP['space'] or key == simplegui.KEY_MAP['e']:
                 if buttonState == 0:
-                    musicLibrary[0].pause()
-                    musicLibrary[0].rewind()
-                    musicLibrary[1].pause()
-                    musicLibrary[1].rewind()
-                    musicLibrary[2].pause()
-                    musicLibrary[2].rewind()
-                    if musicDecider >= len(musicLibrary)-1:
-                        musicDecider = 0
-                    else:
-                        musicDecider += 1
+                    #musicLibrary[0].pause()
+                    #musicLibrary[0].rewind()
+                    #musicLibrary[1].pause()
+                    #musicLibrary[1].rewind()
+                    #musicLibrary[2].pause()
+                    #musicLibrary[2].rewind()
+                    #if musicDecider >= len(#musicLibrary)-1:
+                       #musicDecider = 0
+                    #else:
+                        #musicDecider += 1
                     #LIST INDEX OUT OF RANGE
-                    musicLibrary[musicDecider].play()
+                    #musicLibrary[musicDecider].play()
                     print("Song number ", musicDecider ," is being played.")
 
                 if buttonState == 1:
                     print("Credits")
                     if rainOrNo == 2:
-                        musicLibrary[0].play()
+                        pass
+                        #musicLibrary[0].play()
                     else:
-                        musicLibrary[0].pause()
-                        musicLibrary[1].pause()
-                        musicLibrary[2].play()
+                        pass
+                        #musicLibrary[0].pause()
+                        #musicLibrary[1].pause()
+                        #musicLibrary[2].play()
+
 
                 if buttonState == 2:
                     if rainOrNo <= 1:
-                        musicLibrary[2].pause()
-                        musicLibrary[2].rewind()
+                        pass#musicLibrary[2].pause()
+                        #musicLibrary[2].rewind()
+
                     print(mainMenuHandlerFromExtras())
-                buttonOnPress.pause()
-                buttonOnPress.rewind()
-                buttonOnPress.play()
+                #buttonOnPress.pause()
+                #buttonOnPress.rewind()
+                #buttonOnPress.play()
 # The Vector class
 class Vector:
 
@@ -433,17 +439,17 @@ class Vector:
     def rotate(self, theta):
         thetaRad = theta / 180 * math.pi
         return self.rotateRad(thetaRad)
-
+'''
 def easterEgg():
     if easterEggCounter == 100:
-        musicLibrary[0].pause()
+        #musicLibrary[0].pause()
         print("You found an Easter Egg!")
         easterEggSong = simplegui.load_sound("https://commondatastorage.googleapis.com/cs1830/Spazzmatica%20Polka.mp3")
         easterEggSong.set_volume(gameVolume)
         easterEggSong.play()
     else:
         pass
-
+'''
 '''
 LOADING IN ALL ASSETS STORED ON GOOGLE CLOUD SERVICES
 AT SOME POINT I SHALL ORGANISE THIS IN TO LISTS
@@ -596,13 +602,13 @@ def gameButtonhandler():
     mainMenu = False
     gamePlay = True
 
-    musicLibrary[0].pause(), musicLibrary[0].rewind()
-    musicLibrary[1].pause(), musicLibrary[1].rewind()
-    musicLibrary[2].pause(), musicLibrary[2].rewind()
+    #musicLibrary[0].pause(), #musicLibrary[0].rewind()
+    #musicLibrary[1].pause(), #musicLibrary[1].rewind()
+    #musicLibrary[2].pause(), #musicLibrary[2].rewind()
 
 
-    musicLibrary[0].set_volume(gameVolume), musicLibrary[1].set_volume(gameVolume), musicLibrary[2].set_volume(gameVolume),
-    buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
+    #musicLibrary[0].set_volume(gameVolume), #musicLibrary[1].set_volume(gameVolume), #musicLibrary[2].set_volume(gameVolume),
+    #buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
 
 def multigameButtonhandler():
     global mainMenu
@@ -613,8 +619,8 @@ def multigameButtonhandler():
     mainMenu = False
     multiGamePlay = True
 
-    musicLibrary[0].set_volume(gameVolume), musicLibrary[1].set_volume(gameVolume), musicLibrary[2].set_volume(gameVolume),
-    buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
+    #musicLibrary[0].set_volume(gameVolume), #musicLibrary[1].set_volume(gameVolume), #musicLibrary[2].set_volume(gameVolume),
+    #buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
 
 def optionsHandler():
     global mainMenu, buttonState, rainOrNo, options
@@ -627,12 +633,13 @@ def optionsHandler():
     if rainOrNo == 2:
         pass
     elif rainOrNo <= 1:
-        musicLibrary[0].pause()
-        musicLibrary[0].rewind()
-        musicLibrary[1].play()
+        pass
+        #musicLibrary[0].pause()
+        #musicLibrary[0].rewind()
+        #musicLibrary[1].play()
 
-    musicLibrary[0].set_volume(gameVolume), musicLibrary[1].set_volume(gameVolume), musicLibrary[2].set_volume(gameVolume),
-    buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
+    #musicLibrary[0].set_volume(gameVolume), #musicLibrary[1].set_volume(gameVolume), #musicLibrary[2].set_volume(gameVolume),
+    #buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
 
 def extrasHandler():
     global mainMenu
@@ -650,12 +657,13 @@ def extrasHandler():
     if rainOrNo == 2:
         pass
     elif rainOrNo <= 1:
-        musicLibrary[0].pause()
-        musicLibrary[0].rewind()
-        musicLibrary[2].play()
+        pass
+        #musicLibrary[0].pause()
+        #musicLibrary[0].rewind()
+        #musicLibrary[2].play()
 
-    musicLibrary[0].set_volume(gameVolume), musicLibrary[1].set_volume(gameVolume), musicLibrary[2].set_volume(gameVolume),
-    buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
+    #musicLibrary[0].set_volume(gameVolume), #musicLibrary[1].set_volume(gameVolume), #musicLibrary[2].set_volume(gameVolume),
+    #buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
 
 def mainMenuHandlerFromOptions():
     global mainMenu ,buttonState ,rainOrNo\
@@ -671,10 +679,11 @@ def mainMenuHandlerFromOptions():
     if rainOrNo == 2:
         pass
     elif rainOrNo <= 1:
-        musicLibrary[0].play()
+        pass
+        #musicLibrary[0].play()
 
-    musicLibrary[0].set_volume(gameVolume), musicLibrary[1].set_volume(gameVolume), musicLibrary[2].set_volume(gameVolume),
-    buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
+    #musicLibrary[0].set_volume(gameVolume), #musicLibrary[1].set_volume(gameVolume), #musicLibrary[2].set_volume(gameVolume),
+    #buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
 
 def mainMenuHandlerFromExtras():
     global mainMenu, buttonState, rainOrNo \
@@ -689,10 +698,11 @@ def mainMenuHandlerFromExtras():
     if rainOrNo == 2:
         pass
     elif rainOrNo <= 1:
-        musicLibrary[0].play()
+        pass
+        #musicLibrary[0].play()
 
-    musicLibrary[0].set_volume(gameVolume), musicLibrary[1].set_volume(gameVolume), musicLibrary[2].set_volume(gameVolume),
-    buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
+    #musicLibrary[0].set_volume(gameVolume), #musicLibrary[1].set_volume(gameVolume), #musicLibrary[2].set_volume(gameVolume),
+    #buttonSoundSplash.set_volume(gameVolume), buttonOnPress.set_volume(gameVolume)
 
 #code for drawing onto canvas
 def draw(canvas):
@@ -920,4 +930,4 @@ countera = 2
 counterb = 3
 
 frame.start()
-musicLibrary[0].play()
+#musicLibrary[0].play()
