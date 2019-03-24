@@ -491,6 +491,7 @@ def game_over(canvas, cond):
         canvas.draw_text("You Win!", (CANVAS_WIDTH / 2.75, CANVAS_HEIGHT / 2), 50, 'White', 'sans-serif')
         canvas.draw_text("Score: " + str(KILLED), (CANVAS_WIDTH / 2.55, CANVAS_HEIGHT / 1.75), 40, 'White',
                          'sans-serif')
+        time.sleep(10)
         set_up()
         '''if incount >= 200:
             sys.exit()
