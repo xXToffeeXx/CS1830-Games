@@ -3,8 +3,7 @@ try:
 except ImportError:
     import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 
-import math, random, sys
-import time
+import math, random, sys, time
 
 from vector import Vector
 
@@ -18,6 +17,8 @@ KILLED = 0
 TIME = 0
 BULLETS = []
 BULLET_SPEED = 7
+POWER_UPS = []
+POWER_UP_SPEED = 7
 
 ### ENEMY CONSTANTS ###
 ENEMIES = []
@@ -31,7 +32,7 @@ ESY = 75
 E_ROWS = 4
 E_COLS = 9
 E_BULLETS = []
-E_BULLET_SPEED = 7
+E_BULLET_SPEED = 5
 counter = 0
 WALLS = []
 gameover = False
@@ -61,10 +62,25 @@ class Sprite:
 
     def update(self):
         pass
+    
+    def get_height(self):
+        return self.display_size[1]
 
+    def get_width(self):
+        return self.display_size[0]
+
+    def is_overlapping(self, other):
+        if (self.pos.y + self.get_height() // 2 + 2 > other.pos.y - other.get_height() // 2) and (
+                    self.pos.y - self.get_height() // 2 - 2 < other.pos.y + other.get_height() // 2):
+            if (self.pos.x + self.get_width() // 2 + 2 > other.pos.x - other.get_width() // 2) and (
+                        self.pos.x - self.get_width() // 2 - 2 < other.pos.x + other.get_width() // 2):
+                return True
+            else:
+                return False
+        else:
+            return False
 
 class Controls:
-
     def __init__(self, p1, p2):
         self.p1_right = False
         self.p1_left = False
@@ -106,7 +122,6 @@ class Controls:
                 BULLETS.append(Bullet(self.p2.getPosition(), "UP"))
                 self.p2_last = counter
 
-
     def update(self):
         if self.p1_right:
             self.p1.vel.add(Vector(1, 0))
@@ -117,7 +132,6 @@ class Controls:
         if self.p2_left:
             self.p2.vel.add(Vector(-1, 0))
 
-
 class Player(Sprite):
     # Specific player CONSTANTS
     LIVES = 3
@@ -125,9 +139,9 @@ class Player(Sprite):
     startpos = Vector(CANVAS_WIDTH / 2, CANVAS_HEIGHT - 50)
 
     def __init__(self, image):
-        # https://i.imgur.com/9e6rcxM.png original sprite
         self.image = image
-        super(Player, self).__init__(image, 75, 75, self.startpos)
+        super(Player, self).__init__(image, 40, 40, self.startpos)
+        self.display_size = (40, self.source_size[1] * (self.display_size[0] / self.source_size[0]))
         self.disable = False
 
     def update(self):
@@ -148,11 +162,9 @@ class Player(Sprite):
     def getPosition(self):
         return self.pos
 
-
 class Bullet(Sprite):
     direction = None
     startpos = Vector(CANVAS_WIDTH / 2, CANVAS_HEIGHT - 50)
-    # https://i.imgur.com/alE94NY.png original bullet
 
     def __init__(self, pos, direction):
         super(Bullet, self).__init__('https://i.imgur.com/n08NeaE.png', 10, 10, self.startpos)
@@ -165,7 +177,6 @@ class Bullet(Sprite):
 
     def update(self):
         self.pos.add(self.direction)
-
 
 class Enemy(Sprite):
     def __init__(self, pos):
@@ -212,7 +223,6 @@ class Enemy(Sprite):
             self.pos.x += ENEMY_JUMP_DOWN - ENEMY_JUMP_ADJUST
             self.right = True
 
-
     def shoot(self):
         global magic
         if len(ENEMIES) <= ((E_ROWS * E_COLS) - E_COLS):
@@ -230,10 +240,16 @@ class Enemy(Sprite):
         get_pos = (self.pos.x, self.pos.y)
         ENEMIES.remove(self)
         explo = Explosion(get_pos, True)
+        #power_up = random.choice(['BULLETS'] * 5 + ['LIFE'] * 5 + ['NONE'] * 90)
+        power_up = random.choice(['BULLETS'] * 50 + ['LIFE'] * 50 + ['NONE'] * 0)
+        if power_up == 'BULLETS':
+            POWER_UPS.append(FasterBullets(self.pos))
+        if power_up == 'LIFE':
+            POWER_UPS.append(ExtraLife(self.pos))
+
 
     def get_pos_x(self):
         return self.pos.x
-
 
 class Explosion:
     def __init__(self, pos, truth):
@@ -250,7 +266,6 @@ class Explosion:
             else:
                 self.truth = False
 
-
 class EnemyBullet(Sprite):
     def __init__(self, pos):
         self.pos = pos
@@ -262,6 +277,37 @@ class EnemyBullet(Sprite):
         if self.pos.y > CANVAS_HEIGHT - 10:
             E_BULLETS.remove(self)
 
+class PowerUp(Sprite):
+    def __init__(self, image_url, pos):
+        self.pos = pos
+        super(PowerUp, self).__init__(image_url, 20, 20, self.pos)
+        self.display_size = (20, self.source_size[1] * (self.display_size[0] / self.source_size[0]))
+        self.speed = POWER_UP_SPEED
+
+    def move(self):
+        self.pos.y += self.speed
+        if self.pos.y > CANVAS_HEIGHT + 50:
+            POWER_UPS.remove(self)
+    
+    def trigger(self, player):
+        pass
+
+class ExtraLife(PowerUp):
+    def __init__(self, pos):
+        self.pos = pos
+        super(ExtraLife, self).__init__("https://i.imgur.com/L36Lvzl.png", self.pos)
+    
+    def trigger(self, player):
+        player.LIVES += 1
+
+class FasterBullets(PowerUp):
+    def __init__(self, pos):
+        self.pos = pos
+        super(FasterBullets, self).__init__("https://i.imgur.com/04UFt8J.png", self.pos)
+    
+    def trigger(self, player):
+        global BULLET_SPEED
+        BULLET_SPEED += 1
 
 class Walls(Sprite):
     def __init__(self, pos):
@@ -270,7 +316,6 @@ class Walls(Sprite):
 
     def update(self):
         pass
-
 
 class Interaction:
     def __init__(self, EBULLETS, BULLETS, playerOne, playerTwo, eList, wList):
@@ -285,41 +330,47 @@ class Interaction:
             global KILLED
             for bullet in BULLETS:
                 for enemy in self.eList:
-                    if bullet.pos.y > enemy.pos.y - 26 and bullet.pos.y < enemy.pos.y:
-                        if bullet.pos.x > enemy.pos.x and bullet.pos.x < enemy.pos.x + 26:
-                            #self.eList.remove(enemy)  # remove or lower health?
-                            enemy.die()
-                            BULLETS.remove(bullet)
-                            #increase score
-                            KILLED = KILLED + 1
+                    if bullet.is_overlapping(enemy):
+                        #self.eList.remove(enemy)  # remove or lower health?
+                        enemy.die()
+                        if bullet in BULLETS: BULLETS.remove(bullet)
+                        #increase score
+                        KILLED = KILLED + 1
 
             for bullet in E_BULLETS:
-                if bullet.pos.y > playerOne.pos.y - 60:
-                    if bullet.pos.x > playerOne.pos.x and bullet.pos.x < playerOne.pos.x + 75:
-                        if playerOne.LIVES > 0:
-                            playerOne.LIVES = playerOne.LIVES - 1
-                        E_BULLETS.remove(bullet)
-                    elif bullet.pos.x > playerTwo.pos.x and bullet.pos.x < playerTwo.pos.x + 75:
-                        if playerTwo.LIVES > 0:
-                            playerTwo.LIVES = playerTwo.LIVES - 1
-                        E_BULLETS.remove(bullet)
+                if bullet.is_overlapping(playerOne):
+                    if playerOne.LIVES > 0:
+                        playerOne.LIVES = playerOne.LIVES - 1
+                    if bullet in E_BULLETS: E_BULLETS.remove(bullet)
+                if bullet.is_overlapping(playerTwo):
+                    if playerTwo.LIVES > 0:
+                        playerTwo.LIVES = playerTwo.LIVES - 1
+                    if bullet in E_BULLETS: E_BULLETS.remove(bullet)
 
-                    if playerOne.LIVES == 0 and playerTwo.LIVES == 0:
-                        global gameover
-                        gameover = True
-                        # sys.exit('Both players ran out of lives')
-                    elif playerOne.LIVES == 0:
-                        playerOne.stop()
-                    elif playerTwo.LIVES == 0:
-                        playerTwo.stop()
+                if playerOne.LIVES == 0 and playerTwo.LIVES == 0:
+                    global gameover
+                    gameover = True
+                    # sys.exit('Both players ran out of lives')
+                elif playerOne.LIVES == 0:
+                    playerOne.stop()
+                elif playerTwo.LIVES == 0:
+                    playerTwo.stop()
 
                 #print('Player One lives: ' + str(playerOne.LIVES))
                 #print('Player Two lives: ' + str(playerTwo.LIVES))
+            
+            for power_up in POWER_UPS:
+                if power_up.is_overlapping(playerOne):
+                    power_up.trigger(playerOne)
+                    if power_up in POWER_UPS: POWER_UPS.remove(power_up)
+                if power_up.is_overlapping(playerTwo):
+                    power_up.trigger(playerTwo)
+                    if power_up in POWER_UPS: POWER_UPS.remove(power_up)
 
             for bullet in E_BULLETS:
                 for wall in self.wList:
-                    if bullet.pos.y >= wall.pos.y and (bullet.pos.x > wall.pos.x and bullet.pos.x < wall.pos.x + 60):
-                        E_BULLETS.remove(bullet)
+                    if bullet.is_overlapping(wall):
+                        if bullet in E_BULLETS: E_BULLETS.remove(bullet)
                         WALLS.remove(wall)
 
 
@@ -351,15 +402,11 @@ class Info:
 
             game_over(canvas, 'win')
 
-# class Game:
-
-
-playerOne = Player('https://i.imgur.com/9e6rcxM.png')
-playerTwo = Player('https://i.imgur.com/4QEvDrL.png')
+playerOne = Player('https://i.imgur.com/XEhhit6.png')
+playerTwo = Player('https://i.imgur.com/JSEeuYR.png')
 controls = Controls(playerOne, playerTwo)
 info = Info()
 explo = Explosion((0, 0), False)
-
 
 def make_walls():
     x = 200
@@ -368,13 +415,11 @@ def make_walls():
         WALLS.append(Walls(wall))
         x = x + 200
 
-
 def make_enemies():
     for row in range(E_ROWS):
         for col in range(E_COLS):
             pos_v = Vector(ESX + (col * ENEMY_GAP), ESY + (row * ENEMY_GAP))
             ENEMIES.append(Enemy(pos_v))
-
 
 def draw(canvas):
     global counter
@@ -401,6 +446,11 @@ def draw(canvas):
     for bullet in E_BULLETS:
         bullet.draw(canvas)
         bullet.move()
+    inter.update()
+
+    for power_up in POWER_UPS:
+        power_up.draw(canvas)
+        power_up.move()
     inter.update()
 
     for wall in WALLS:
