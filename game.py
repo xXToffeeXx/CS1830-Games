@@ -11,7 +11,7 @@ CANVAS_WIDTH = 800
 CANVAS_HEIGHT = 600
 GAME_STARTED = False
 GAME_ENDED = False
-LEVEL = 1
+LEVEL = 0
 SCORE = 0
 KILLED = 0
 TIME = 0
@@ -29,10 +29,10 @@ ENEMY_JUMP_DOWN = 40
 ENEMY_JUMP_ADJUST = 15
 ESX = 50
 ESY = 75
-E_ROWS = 4
-E_COLS = 9
+E_ROWS = 1
+E_COLS = 1
 E_BULLETS = []
-E_BULLET_SPEED = 5
+E_BULLET_SPEED = 7
 counter = 0
 WALLS = []
 gameover = False
@@ -79,6 +79,7 @@ class Sprite:
                 return False
         else:
             return False
+
 
 class Controls:
     def __init__(self, p1, p2):
@@ -132,15 +133,16 @@ class Controls:
         if self.p2_left:
             self.p2.vel.add(Vector(-1, 0))
 
+
 class Player(Sprite):
     # Specific player CONSTANTS
     LIVES = 3
     velocity = 0.75
-    startpos = Vector(CANVAS_WIDTH / 2, CANVAS_HEIGHT - 50)
+    start_pos = Vector(CANVAS_WIDTH / 2, CANVAS_HEIGHT - 50)
 
     def __init__(self, image):
         self.image = image
-        super(Player, self).__init__(image, 40, 40, self.startpos)
+        super(Player, self).__init__(image, 40, 40, self.start_pos)
         self.display_size = (40, self.source_size[1] * (self.display_size[0] / self.source_size[0]))
         self.disable = False
 
@@ -162,12 +164,13 @@ class Player(Sprite):
     def getPosition(self):
         return self.pos
 
+
 class Bullet(Sprite):
     direction = None
-    startpos = Vector(CANVAS_WIDTH / 2, CANVAS_HEIGHT - 50)
+    start_pos = Vector(CANVAS_WIDTH / 2, CANVAS_HEIGHT - 50)
 
     def __init__(self, pos, direction):
-        super(Bullet, self).__init__('https://i.imgur.com/n08NeaE.png', 10, 10, self.startpos)
+        super(Bullet, self).__init__('https://i.imgur.com/n08NeaE.png', 10, 10, self.start_pos)
         self.pos = pos
 
         if direction == "UP":
@@ -177,6 +180,7 @@ class Bullet(Sprite):
 
     def update(self):
         self.pos.add(self.direction)
+
 
 class Enemy(Sprite):
     def __init__(self, pos):
@@ -205,8 +209,6 @@ class Enemy(Sprite):
             if self.downleft == 0:
                 self.move_down()
                 self.downleft = ENEMY_MAX_MOVES
-
-        #print(self.pos.y)
 
         if self.pos.y >= CANVAS_HEIGHT - 50:
             global gameover
@@ -240,16 +242,14 @@ class Enemy(Sprite):
         get_pos = (self.pos.x, self.pos.y)
         ENEMIES.remove(self)
         explo = Explosion(get_pos, True)
-        #power_up = random.choice(['BULLETS'] * 5 + ['LIFE'] * 5 + ['NONE'] * 90)
-        power_up = random.choice(['BULLETS'] * 50 + ['LIFE'] * 50 + ['NONE'] * 0)
-        if power_up == 'BULLETS':
-            POWER_UPS.append(FasterBullets(self.pos))
-        if power_up == 'LIFE':
-            POWER_UPS.append(ExtraLife(self.pos))
+        # power_up = random.choice(['BULLETS'] * 5 + ['LIFE'] * 5 + ['NONE'] * 90)
+        if (random.randint(1, 10)) == 1:
+            power_up = random.choice(['BULLETS'] * 50 + ['LIFE'] * 50 + ['NONE'] * 0)
+            if power_up == 'BULLETS':
+                POWER_UPS.append(FasterBullets(self.pos))
+            if power_up == 'LIFE':
+                POWER_UPS.append(ExtraLife(self.pos))
 
-
-    def get_pos_x(self):
-        return self.pos.x
 
 class Explosion:
     def __init__(self, pos, truth):
@@ -266,6 +266,7 @@ class Explosion:
             else:
                 self.truth = False
 
+
 class EnemyBullet(Sprite):
     def __init__(self, pos):
         self.pos = pos
@@ -276,6 +277,7 @@ class EnemyBullet(Sprite):
         self.pos.y += self.speed
         if self.pos.y > CANVAS_HEIGHT - 10:
             E_BULLETS.remove(self)
+
 
 class PowerUp(Sprite):
     def __init__(self, image_url, pos):
@@ -292,6 +294,7 @@ class PowerUp(Sprite):
     def trigger(self, player):
         pass
 
+
 class ExtraLife(PowerUp):
     def __init__(self, pos):
         self.pos = pos
@@ -299,6 +302,7 @@ class ExtraLife(PowerUp):
     
     def trigger(self, player):
         player.LIVES += 1
+
 
 class FasterBullets(PowerUp):
     def __init__(self, pos):
@@ -309,13 +313,27 @@ class FasterBullets(PowerUp):
         global BULLET_SPEED
         BULLET_SPEED += 1
 
+
 class Walls(Sprite):
-    def __init__(self, pos):
+    def __init__(self, pos, image, health):
         self.pos = pos
-        super(Walls, self).__init__('https://i.imgur.com/zVKPBzx.png', 64, 72, self.pos)
+        super(Walls, self).__init__(image, 25, 60, self.pos)
+        self.health = health
 
     def update(self):
-        pass
+        if self.health == 3:
+            temp = self.pos
+            temp_health = self.health
+            WALLS.remove(self)
+            WALLS.append(Walls(temp, 'https://imgur.com/stHhfix.png', temp_health))
+        if self.health == 1:
+            temp = self.pos
+            temp_health = self.health
+            WALLS.remove(self)
+            WALLS.append(Walls(temp, 'https://imgur.com/sWpz8vX.png', temp_health))
+        if self.health <= 0:
+            WALLS.remove(self)
+
 
 class Interaction:
     def __init__(self, EBULLETS, BULLETS, playerOne, playerTwo, eList, wList):
@@ -331,10 +349,10 @@ class Interaction:
             for bullet in BULLETS:
                 for enemy in self.eList:
                     if bullet.is_overlapping(enemy):
-                        #self.eList.remove(enemy)  # remove or lower health?
+                        # self.eList.remove(enemy)  # remove or lower health?
                         enemy.die()
                         if bullet in BULLETS: BULLETS.remove(bullet)
-                        #increase score
+                        # increase score
                         KILLED = KILLED + 1
 
             for bullet in E_BULLETS:
@@ -355,9 +373,6 @@ class Interaction:
                     playerOne.stop()
                 elif playerTwo.LIVES == 0:
                     playerTwo.stop()
-
-                #print('Player One lives: ' + str(playerOne.LIVES))
-                #print('Player Two lives: ' + str(playerTwo.LIVES))
             
             for power_up in POWER_UPS:
                 if power_up.is_overlapping(playerOne):
@@ -370,8 +385,28 @@ class Interaction:
             for bullet in E_BULLETS:
                 for wall in self.wList:
                     if bullet.is_overlapping(wall):
-                        if bullet in E_BULLETS: E_BULLETS.remove(bullet)
-                        WALLS.remove(wall)
+                        if bullet in E_BULLETS:
+                            E_BULLETS.remove(bullet)
+                            wall.health -= 1
+                            if wall.health == 3:
+                                temp = wall.pos
+                                temp_health = wall.health
+                                WALLS.remove(wall)
+                                WALLS.append(Walls(temp, 'https://imgur.com/stHhfix.png', temp_health))
+                            if wall.health == 1:
+                                temp = wall.pos
+                                temp_health = wall.health
+                                WALLS.remove(wall)
+                                WALLS.append(Walls(temp, 'https://imgur.com/sWpz8vX.png', temp_health))
+                            if wall.health <= 0:
+                                WALLS.remove(wall)
+
+            for bullet in BULLETS:
+                for wall in self.wList:
+                    if bullet.is_overlapping(wall):
+                        if bullet in BULLETS:
+                            BULLETS.remove(bullet)
+                            wall.health -= 1
 
 
 class Info:
@@ -385,22 +420,25 @@ class Info:
 
         canvas.draw_text("P1 Lives:", (CANVAS_WIDTH - (CANVAS_WIDTH / 3), 18), 20, 'White', 'sans-serif')
         canvas.draw_text(str(playerOne.LIVES), (CANVAS_WIDTH - (CANVAS_WIDTH / 4.2), 18), 20, 'Red', 'sans-serif')
-        #canvas.draw_image(simplegui.load_image('https://i.imgur.com/JH6xdz6.png'), (7.5, 7.5), (15, 15),
+        # canvas.draw_image(simplegui.load_image('https://i.imgur.com/JH6xdz6.png'), (7.5, 7.5), (15, 15),
         #                  (CANVAS_WIDTH - 175, 13), (15, 15))
 
         canvas.draw_text("P2 Lives:", (CANVAS_WIDTH - (CANVAS_WIDTH / 5), 18), 20, 'White', 'sans-serif')
         canvas.draw_text(str(playerTwo.LIVES), (CANVAS_WIDTH - (CANVAS_WIDTH / 9.2), 18), 20, 'Red', 'sans-serif')
-        #canvas.draw_image(simplegui.load_image('https://i.imgur.com/JH6xdz6.png'), (7.5, 7.5), (15, 15),
+        # canvas.draw_image(simplegui.load_image('https://i.imgur.com/JH6xdz6.png'), (7.5, 7.5), (15, 15),
         #                  (CANVAS_WIDTH - 35, 13), (15, 15))
 
-        #canvas.draw_text("Time: " + str(ti), ((CANVAS_WIDTH - 400), 18), 20, 'White', 'sans-serif')
+        # canvas.draw_text("Time: " + str(ti), ((CANVAS_WIDTH - 400), 18), 20, 'White', 'sans-serif')
 
-        #if KILLED == (E_ROWS * E_COLS):
-        if KILLED == (E_ROWS * E_COLS):
+        # if KILLED == (E_ROWS * E_COLS):
+        if not ENEMIES:  # if ENEMIES is empty
             playerOne.stop()
             playerTwo.stop()
 
             game_over(canvas, 'win')
+
+# class Game:
+
 
 playerOne = Player('https://i.imgur.com/XEhhit6.png')
 playerTwo = Player('https://i.imgur.com/JSEeuYR.png')
@@ -408,18 +446,22 @@ controls = Controls(playerOne, playerTwo)
 info = Info()
 explo = Explosion((0, 0), False)
 
+
 def make_walls():
-    x = 200
+    x = 150
     for i in range(3):
         wall = Vector(x, 475)
-        WALLS.append(Walls(wall))
-        x = x + 200
+        WALLS.append(Walls(wall, 'https://imgur.com/XxwRdFl.png', 5))
+        x = x + 250
+
 
 def make_enemies():
+    ENEMIES.clear()
     for row in range(E_ROWS):
         for col in range(E_COLS):
             pos_v = Vector(ESX + (col * ENEMY_GAP), ESY + (row * ENEMY_GAP))
             ENEMIES.append(Enemy(pos_v))
+
 
 def draw(canvas):
     global counter
@@ -434,33 +476,26 @@ def draw(canvas):
         bullet.draw(canvas)
     playerOne.draw(canvas)
     playerTwo.draw(canvas)
-    inter.update()
 
     for enemy in ENEMIES:
         enemy.draw(canvas)
         if counter % (100 - ENEMY_SPEED) == 0:
             enemy.update()
         enemy.shoot()
-    inter.update()
 
     for bullet in E_BULLETS:
         bullet.draw(canvas)
         bullet.move()
-    inter.update()
 
     for power_up in POWER_UPS:
         power_up.draw(canvas)
         power_up.move()
-    inter.update()
 
     for wall in WALLS:
         wall.draw(canvas)
-    inter.update()
+        # wall.update()
 
     info.draw(canvas)
-
-    #if not ENEMIES:
-    #   game_over(canvas, 'lose')
 
     if gameover:
         game_over(canvas, 'lose')
@@ -476,23 +511,54 @@ def game_over(canvas, cond):
     if gameover:
         cond = 'lose'
     if cond == 'win':
-        canvas.draw_text("You Win!", (CANVAS_WIDTH / 2.75, CANVAS_HEIGHT / 2), 50, 'White', 'sans-serif')
+        canvas.draw_text("Level " + str(LEVEL) + " cleared!", (CANVAS_WIDTH / 2.75, CANVAS_HEIGHT / 2), 50, 'White', 'sans-serif')
+        canvas.draw_text("Score: " + str(KILLED), (CANVAS_WIDTH / 2.55, CANVAS_HEIGHT / 1.75), 40, 'White',
+                         'sans-serif')
+        if incount >= 200:
+            set_up()
+        incount += 1
+    if cond == 'lose':
+        canvas.draw_polygon([[0, 0], [0, CANVAS_HEIGHT], [CANVAS_WIDTH, CANVAS_HEIGHT], [CANVAS_WIDTH, 0]], 12,
+                            'Black', 'Black')
+        canvas.draw_text("You Lose!", (CANVAS_WIDTH / 2.75, CANVAS_HEIGHT / 2), 50, 'White', 'sans-serif')
         canvas.draw_text("Score: " + str(KILLED), (CANVAS_WIDTH / 2.55, CANVAS_HEIGHT / 1.75), 40, 'White',
                          'sans-serif')
         if incount >= 200:
             sys.exit()
         incount += 1
-    if cond == 'lose':
-        canvas.draw_polygon([[0, 0], [0, CANVAS_HEIGHT], [CANVAS_WIDTH, CANVAS_HEIGHT], [CANVAS_WIDTH, 0]], 12,
-                                'Black', 'Black')
-        canvas.draw_text("You Lose!", (CANVAS_WIDTH / 2.75, CANVAS_HEIGHT / 2), 50, 'White', 'sans-serif')
-        canvas.draw_text("Score: " + str(KILLED), (CANVAS_WIDTH / 2.55, CANVAS_HEIGHT / 1.75), 40, 'White', 'sans-serif')
-        if incount >= 200:
-            sys.exit()
-        incount += 1
+
+
+def set_up():
+    global LEVEL
+    LEVEL = LEVEL + 1
+    reset()
+    make_enemies()
+    make_walls()
+
+
+def reset():
+    global E_ROWS
+    global E_COLS
+    global ENEMY_SPEED
+    global incount
+    playerOne.LIVES = 3
+    playerTwo.LIVES = 3
+    playerOne.disable = False
+    playerTwo.disable = False
+    BULLETS.clear()
+    E_BULLETS.clear()
+    ENEMIES.clear()
+    WALLS.clear()
+    E_ROWS = 4
+    E_COLS = 4 + LEVEL
+    ENEMY_SPEED = 50 + (LEVEL * 5)
+    incount = 0
 
 
 inter = Interaction(E_BULLETS, BULLETS, playerOne, playerTwo, ENEMIES, WALLS)
+
+set_up()
+make_walls()
 
 frame = simplegui.create_frame('Interactions', CANVAS_WIDTH, CANVAS_HEIGHT)
 frame._set_canvas_background_image(simplegui.load_image('https://imgur.com/JW464Qp.png'))
