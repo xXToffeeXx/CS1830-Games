@@ -137,8 +137,7 @@ class Controls:
 
 
 class Player(Sprite):
-    # Specific player CONSTANTS
-    LIVES = 3
+    lives = 3
     velocity = 0.75
     start_pos = Vector(CANVAS_WIDTH / 2, CANVAS_HEIGHT - 50)
 
@@ -190,27 +189,27 @@ class Enemy(Sprite):
         self.image = 'https://i.imgur.com/2e24IN1.png'
         super(Enemy, self).__init__(self.image, 34, 34, self.pos)
         self.right = True
-        self.downright = 0
-        self.downleft = ENEMY_MAX_MOVES
+        self.down_right = 0
+        self.down_left = ENEMY_MAX_MOVES
 
     def update(self):
         global ENEMY_MAX_MOVES
 
         if self.right:
             self.pos.add(Vector(ENEMY_JUMP, 0))
-            self.downright += 1
+            self.down_right += 1
 
-            if self.downright == ENEMY_MAX_MOVES:
+            if self.down_right == ENEMY_MAX_MOVES:
                 self.move_down()
-                self.downright = 0
+                self.down_right = 0
 
         elif not self.right:
             self.pos.subtract(Vector(ENEMY_JUMP, 0))
-            self.downleft -= 1
+            self.down_left -= 1
 
-            if self.downleft == 0:
+            if self.down_left == 0:
                 self.move_down()
-                self.downleft = ENEMY_MAX_MOVES
+                self.down_left = ENEMY_MAX_MOVES
 
         if self.pos.y >= CANVAS_HEIGHT - 50:
             global gameover
@@ -244,13 +243,11 @@ class Enemy(Sprite):
         get_pos = (self.pos.x, self.pos.y)
         ENEMIES.remove(self)
         explo = Explosion(get_pos, True)
-        # power_up = random.choice(['BULLETS'] * 5 + ['LIFE'] * 5 + ['NONE'] * 90)
-        if (random.randint(1, 10)) == 1:
-            power_up = random.choice(['BULLETS'] * 50 + ['LIFE'] * 50 + ['NONE'] * 0)
-            if power_up == 'BULLETS':
-                POWER_UPS.append(FasterBullets(self.pos))
-            if power_up == 'LIFE':
-                POWER_UPS.append(ExtraLife(self.pos))
+        power_up = random.choice(['BULLETS'] * 5 + ['LIFE'] * 5 + ['NONE'] * 90)
+        if power_up == 'BULLETS':
+            POWER_UPS.append(FasterBullets(self.pos))
+        if power_up == 'LIFE':
+            POWER_UPS.append(ExtraLife(self.pos))
 
 
 class Explosion:
@@ -303,7 +300,7 @@ class ExtraLife(PowerUp):
         super(ExtraLife, self).__init__("https://i.imgur.com/L36Lvzl.png", self.pos)
 
     def trigger(self, player):
-        player.LIVES += 1
+        player.lives += 1
 
 
 class FasterBullets(PowerUp):
@@ -313,7 +310,7 @@ class FasterBullets(PowerUp):
 
     def trigger(self, player):
         global BULLET_SPEED
-        BULLET_SPEED += 1
+        BULLET_SPEED += 3
 
 
 class Walls(Sprite):
@@ -351,29 +348,26 @@ class Interaction:
         for bullet in BULLETS:
             for enemy in self.eList:
                 if bullet.is_overlapping(enemy):
-                    # self.eList.remove(enemy)  # remove or lower health?
                     enemy.die()
                     if bullet in BULLETS: BULLETS.remove(bullet)
-                    # increase score
                     KILLED = KILLED + 1
 
         for bullet in E_BULLETS:
             if bullet.is_overlapping(playerOne):
-                if playerOne.LIVES > 0:
-                    playerOne.LIVES = playerOne.LIVES - 1
+                if playerOne.lives > 0:
+                    playerOne.lives = playerOne.lives - 1
                 if bullet in E_BULLETS: E_BULLETS.remove(bullet)
             if bullet.is_overlapping(playerTwo):
-                if playerTwo.LIVES > 0:
-                    playerTwo.LIVES = playerTwo.LIVES - 1
+                if playerTwo.lives > 0:
+                    playerTwo.lives = playerTwo.lives - 1
                 if bullet in E_BULLETS: E_BULLETS.remove(bullet)
 
-            if playerOne.LIVES == 0 and playerTwo.LIVES == 0:
+            if playerOne.lives == 0 and playerTwo.lives == 0:
                 global gameover
                 gameover = True
-                # sys.exit('Both players ran out of lives')
-            elif playerOne.LIVES == 0:
+            elif playerOne.lives == 0:
                 playerOne.stop()
-            elif playerTwo.LIVES == 0:
+            elif playerTwo.lives == 0:
                 playerTwo.stop()
 
         for power_up in POWER_UPS:
@@ -421,12 +415,12 @@ class Info:
         canvas.draw_text(str(KILLED), (125, 18), 20, 'Yellow', 'sans-serif')
 
         canvas.draw_text("P1 Lives:", (CANVAS_WIDTH - (CANVAS_WIDTH / 3), 18), 20, 'White', 'sans-serif')
-        canvas.draw_text(str(playerOne.LIVES), (CANVAS_WIDTH - (CANVAS_WIDTH / 4.2), 18), 20, 'Red', 'sans-serif')
+        canvas.draw_text(str(playerOne.lives), (CANVAS_WIDTH - (CANVAS_WIDTH / 4.2), 18), 20, 'Red', 'sans-serif')
         # canvas.draw_image(simplegui.load_image('https://i.imgur.com/JH6xdz6.png'), (7.5, 7.5), (15, 15),
         #                  (CANVAS_WIDTH - 175, 13), (15, 15))
 
         canvas.draw_text("P2 Lives:", (CANVAS_WIDTH - (CANVAS_WIDTH / 5), 18), 20, 'White', 'sans-serif')
-        canvas.draw_text(str(playerTwo.LIVES), (CANVAS_WIDTH - (CANVAS_WIDTH / 9.2), 18), 20, 'Red', 'sans-serif')
+        canvas.draw_text(str(playerTwo.lives), (CANVAS_WIDTH - (CANVAS_WIDTH / 9.2), 18), 20, 'Red', 'sans-serif')
         # canvas.draw_image(simplegui.load_image('https://i.imgur.com/JH6xdz6.png'), (7.5, 7.5), (15, 15),
         #                  (CANVAS_WIDTH - 35, 13), (15, 15))
 
@@ -438,9 +432,6 @@ class Info:
             playerTwo.stop()
 
             game_over(canvas, 'win')
-
-
-# class Game:
 
 
 playerOne = Player('https://i.imgur.com/XEhhit6.png')
@@ -545,8 +536,8 @@ def reset():
     global E_COLS
     global ENEMY_SPEED
     global incount
-    playerOne.LIVES = 3
-    playerTwo.LIVES = 3
+    playerOne.lives = 3
+    playerTwo.lives = 3
     playerOne.disable = False
     playerTwo.disable = False
     BULLETS.clear()
