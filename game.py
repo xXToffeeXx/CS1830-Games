@@ -44,6 +44,8 @@ if ENEMY_MAX_MOVES > int(ENEMY_MAX_MOVES):
     ENEMY_MAX_MOVES = math.ceil(ENEMY_MAX_MOVES * 1.1)
 else:
     ENEMY_MAX_MOVES = int(ENEMY_MAX_MOVES)
+
+
 ###
 
 
@@ -62,7 +64,7 @@ class Sprite:
 
     def update(self):
         pass
-    
+
     def get_height(self):
         return self.display_size[1]
 
@@ -71,9 +73,9 @@ class Sprite:
 
     def is_overlapping(self, other):
         if (self.pos.y + self.get_height() // 2 + 2 > other.pos.y - other.get_height() // 2) and (
-                    self.pos.y - self.get_height() // 2 - 2 < other.pos.y + other.get_height() // 2):
+                self.pos.y - self.get_height() // 2 - 2 < other.pos.y + other.get_height() // 2):
             if (self.pos.x + self.get_width() // 2 + 2 > other.pos.x - other.get_width() // 2) and (
-                        self.pos.x - self.get_width() // 2 - 2 < other.pos.x + other.get_width() // 2):
+                    self.pos.x - self.get_width() // 2 - 2 < other.pos.x + other.get_width() // 2):
                 return True
             else:
                 return False
@@ -290,7 +292,7 @@ class PowerUp(Sprite):
         self.pos.y += self.speed
         if self.pos.y > CANVAS_HEIGHT + 50:
             POWER_UPS.remove(self)
-    
+
     def trigger(self, player):
         pass
 
@@ -299,7 +301,7 @@ class ExtraLife(PowerUp):
     def __init__(self, pos):
         self.pos = pos
         super(ExtraLife, self).__init__("https://i.imgur.com/L36Lvzl.png", self.pos)
-    
+
     def trigger(self, player):
         player.LIVES += 1
 
@@ -308,7 +310,7 @@ class FasterBullets(PowerUp):
     def __init__(self, pos):
         self.pos = pos
         super(FasterBullets, self).__init__("https://i.imgur.com/04UFt8J.png", self.pos)
-    
+
     def trigger(self, player):
         global BULLET_SPEED
         BULLET_SPEED += 1
@@ -345,68 +347,68 @@ class Interaction:
         self.wList = wList
 
     def update(self):
-            global KILLED
-            for bullet in BULLETS:
-                for enemy in self.eList:
-                    if bullet.is_overlapping(enemy):
-                        # self.eList.remove(enemy)  # remove or lower health?
-                        enemy.die()
-                        if bullet in BULLETS: BULLETS.remove(bullet)
-                        # increase score
-                        KILLED = KILLED + 1
+        global KILLED
+        for bullet in BULLETS:
+            for enemy in self.eList:
+                if bullet.is_overlapping(enemy):
+                    # self.eList.remove(enemy)  # remove or lower health?
+                    enemy.die()
+                    if bullet in BULLETS: BULLETS.remove(bullet)
+                    # increase score
+                    KILLED = KILLED + 1
 
-            for bullet in E_BULLETS:
-                if bullet.is_overlapping(playerOne):
-                    if playerOne.LIVES > 0:
-                        playerOne.LIVES = playerOne.LIVES - 1
-                    if bullet in E_BULLETS: E_BULLETS.remove(bullet)
-                if bullet.is_overlapping(playerTwo):
-                    if playerTwo.LIVES > 0:
-                        playerTwo.LIVES = playerTwo.LIVES - 1
-                    if bullet in E_BULLETS: E_BULLETS.remove(bullet)
+        for bullet in E_BULLETS:
+            if bullet.is_overlapping(playerOne):
+                if playerOne.LIVES > 0:
+                    playerOne.LIVES = playerOne.LIVES - 1
+                if bullet in E_BULLETS: E_BULLETS.remove(bullet)
+            if bullet.is_overlapping(playerTwo):
+                if playerTwo.LIVES > 0:
+                    playerTwo.LIVES = playerTwo.LIVES - 1
+                if bullet in E_BULLETS: E_BULLETS.remove(bullet)
 
-                if playerOne.LIVES == 0 and playerTwo.LIVES == 0:
-                    global gameover
-                    gameover = True
-                    # sys.exit('Both players ran out of lives')
-                elif playerOne.LIVES == 0:
-                    playerOne.stop()
-                elif playerTwo.LIVES == 0:
-                    playerTwo.stop()
-            
-            for power_up in POWER_UPS:
-                if power_up.is_overlapping(playerOne):
-                    power_up.trigger(playerOne)
-                    if power_up in POWER_UPS: POWER_UPS.remove(power_up)
-                if power_up.is_overlapping(playerTwo):
-                    power_up.trigger(playerTwo)
-                    if power_up in POWER_UPS: POWER_UPS.remove(power_up)
+            if playerOne.LIVES == 0 and playerTwo.LIVES == 0:
+                global gameover
+                gameover = True
+                # sys.exit('Both players ran out of lives')
+            elif playerOne.LIVES == 0:
+                playerOne.stop()
+            elif playerTwo.LIVES == 0:
+                playerTwo.stop()
 
-            for bullet in E_BULLETS:
-                for wall in self.wList:
-                    if bullet.is_overlapping(wall):
-                        if bullet in E_BULLETS:
-                            E_BULLETS.remove(bullet)
-                            wall.health -= 1
-                            if wall.health == 3:
-                                temp = wall.pos
-                                temp_health = wall.health
-                                WALLS.remove(wall)
-                                WALLS.append(Walls(temp, 'https://imgur.com/stHhfix.png', temp_health))
-                            if wall.health == 1:
-                                temp = wall.pos
-                                temp_health = wall.health
-                                WALLS.remove(wall)
-                                WALLS.append(Walls(temp, 'https://imgur.com/sWpz8vX.png', temp_health))
-                            if wall.health <= 0:
-                                WALLS.remove(wall)
+        for power_up in POWER_UPS:
+            if power_up.is_overlapping(playerOne):
+                power_up.trigger(playerOne)
+                if power_up in POWER_UPS: POWER_UPS.remove(power_up)
+            if power_up.is_overlapping(playerTwo):
+                power_up.trigger(playerTwo)
+                if power_up in POWER_UPS: POWER_UPS.remove(power_up)
 
-            for bullet in BULLETS:
-                for wall in self.wList:
-                    if bullet.is_overlapping(wall):
-                        if bullet in BULLETS:
-                            BULLETS.remove(bullet)
-                            wall.health -= 1
+        for bullet in E_BULLETS:
+            for wall in self.wList:
+                if bullet.is_overlapping(wall):
+                    if bullet in E_BULLETS:
+                        E_BULLETS.remove(bullet)
+                        wall.health -= 1
+                        if wall.health == 3:
+                            temp = wall.pos
+                            temp_health = wall.health
+                            WALLS.remove(wall)
+                            WALLS.append(Walls(temp, 'https://imgur.com/stHhfix.png', temp_health))
+                        if wall.health == 1:
+                            temp = wall.pos
+                            temp_health = wall.health
+                            WALLS.remove(wall)
+                            WALLS.append(Walls(temp, 'https://imgur.com/sWpz8vX.png', temp_health))
+                        if wall.health <= 0:
+                            WALLS.remove(wall)
+
+        for bullet in BULLETS:
+            for wall in self.wList:
+                if bullet.is_overlapping(wall):
+                    if bullet in BULLETS:
+                        BULLETS.remove(bullet)
+                        wall.health -= 1
 
 
 class Info:
@@ -436,6 +438,7 @@ class Info:
             playerTwo.stop()
 
             game_over(canvas, 'win')
+
 
 # class Game:
 
@@ -511,7 +514,8 @@ def game_over(canvas, cond):
     if gameover:
         cond = 'lose'
     if cond == 'win':
-        canvas.draw_text("Level " + str(LEVEL) + " cleared!", (CANVAS_WIDTH / 2.75, CANVAS_HEIGHT / 2), 50, 'White', 'sans-serif')
+        canvas.draw_text("Level " + str(LEVEL) + " cleared!", (CANVAS_WIDTH / 2.75, CANVAS_HEIGHT / 2), 50, 'White',
+                         'sans-serif')
         canvas.draw_text("Score: " + str(KILLED), (CANVAS_WIDTH / 2.55, CANVAS_HEIGHT / 1.75), 40, 'White',
                          'sans-serif')
         if incount >= 200:
