@@ -1435,6 +1435,9 @@ frame.set_keydown_handler(kbd.keyDown)
 frame.set_keyup_handler(kbd.keyUp)
 
 
+set_up()
+make_walls()
+
 # initialize counter for animation and start frame
 counter = 0
 countera = 2
