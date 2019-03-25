@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/Driver.py" line="533" mnemonic="2" />
+    <bookmark url="file://$PROJECT_DIR$/Driver.py" line="530" mnemonic="2" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4b21a36d-17da-47e3-ae44-a61d849f176e" name="Default Changelist" comment="bo">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Driver.py" beforeDir="false" afterPath="$PROJECT_DIR$/Driver.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -22,8 +21,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Driver.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="174" column="26" selection-start-line="174" selection-start-column="26" selection-end-line="174" selection-end-column="26" />
+            <state relative-caret-position="262">
+              <caret line="405" column="7" selection-start-line="405" selection-start-column="7" selection-end-line="405" selection-end-column="7" />
               <folding>
                 <element signature="e#109#120#0" expanded="true" />
                 <element signature="e#38856#39318#0" />
@@ -47,8 +46,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>mainMenu</find>
-      <find>volumeHandler</find>
       <find>+0.1</find>
       <find>+ 0.1</find>
       <find>optionsHand</find>
@@ -77,6 +74,8 @@
       <find>left</find>
       <find>CANVAS_HEIGHT</find>
       <find>keyBoa</find>
+      <find>controls</find>
+      <find>keyboard</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -197,14 +196,14 @@
       <window_info id="Favorites" order="2" weight="0.3295302" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3286119" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.4899329" visible="true" weight="0.34844193" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.48926175" visible="true" weight="0.34844193" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49932885" weight="0.398017" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32719547" />
       <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.49798658" weight="0.3286119" />
-      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49127516" weight="0.2549575" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5100671" side_tool="true" visible="true" weight="0.34844193" />
+      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.490604" weight="0.2549575" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.51073825" side_tool="true" visible="true" weight="0.34844193" />
       <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.49731544" weight="0.32577905" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -288,8 +287,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Driver.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="174" column="26" selection-start-line="174" selection-start-column="26" selection-end-line="174" selection-end-column="26" />
+        <state relative-caret-position="262">
+          <caret line="405" column="7" selection-start-line="405" selection-start-column="7" selection-end-line="405" selection-end-column="7" />
           <folding>
             <element signature="e#109#120#0" expanded="true" />
             <element signature="e#38856#39318#0" />

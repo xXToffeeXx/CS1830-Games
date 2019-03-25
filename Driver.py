@@ -122,18 +122,21 @@ else: #RAINFOREST
 #1: Make the credits screen actually display something
 #2: Make all of this code below a lot neater by placing it into lists n shit
 class Keyboard:
-    if gamePlay:
-        def __init__(self, p1, p2):
-            self.p1_right = False
-            self.p1_left = False
-            self.p2_right = False
-            self.p2_left = False
-            self.p1 = p1
-            self.p2 = p2
-            self.p1_last = counter
-            self.p2_last = counter
-            self.cooldown = 40
+    def __init__(self, p1, p2):
+        self.down = False
+        self.up = False
+        self.enter = False
+        self.p1_right = False
+        self.p1_left = False
+        self.p2_right = False
+        self.p2_left = False
+        self.p1 = p1
+        self.p2 = p2
+        self.p1_last = counter
+        self.p2_last = counter
+        self.cooldown = 40
 
+    if gamePlay:
         def keyDown(self, key):
             if key == simplegui.KEY_MAP['d']:
                 self.p1_right = True
@@ -164,22 +167,7 @@ class Keyboard:
                     BULLETS.append(Bullet(self.p2.getPosition(), "UP"))
                     self.p2_last = counter
 
-        def update(self):
-            if self.p1_right:
-                self.p1.vel.add(Vector(1, 0))
-            if self.p1_left:
-                self.p1.vel.add(Vector(-1, 0))
-            if self.p2_right:
-                self.p2.vel.add(Vector(1, 0))
-            if self.p2_left:
-                self.p2.vel.add(Vector(-1, 0))
-
     else:
-        def __init__(self):
-            self.down = False
-            self.up = False
-            self.enter = False
-
         def keyDown(self, key):
             if key == simplegui.KEY_MAP['down'] or key == simplegui.KEY_MAP['s']:
                 self.down = True
@@ -407,6 +395,15 @@ class Keyboard:
                     # buttonOnPress.rewind()
                     # buttonOnPress.play()
 
+    def update(self):
+        if self.p1_right:
+            self.p1.vel.add(Vector(1, 0))
+        if self.p1_left:
+            self.p1.vel.add(Vector(-1, 0))
+        if self.p2_right:
+            self.p2.vel.add(Vector(1, 0))
+        if self.p2_left:
+            self.p2.vel.add(Vector(-1, 0))
 
 # The Vector class
 class Vector:
@@ -690,59 +687,6 @@ class Sprite:
             return False
 
 
-class Controls:
-    def __init__(self, p1, p2):
-        self.p1_right = False
-        self.p1_left = False
-        self.p2_right = False
-        self.p2_left = False
-        self.p1 = p1
-        self.p2 = p2
-        self.p1_last = counter
-        self.p2_last = counter
-        self.cooldown = 40
-
-    def keyDown(self, key):
-        if key == simplegui.KEY_MAP['d']:
-            self.p1_right = True
-        if key == simplegui.KEY_MAP['a']:
-            self.p1_left = True
-        if key == simplegui.KEY_MAP['l']:
-            self.p2_right = True
-        if key == simplegui.KEY_MAP['j']:
-            self.p2_left = True
-
-    def keyUp(self, key):
-        if key == simplegui.KEY_MAP['d']:
-            self.p1_right = False
-        if key == simplegui.KEY_MAP['a']:
-            self.p1_left = False
-        if key == simplegui.KEY_MAP['l']:
-            self.p2_right = False
-        if key == simplegui.KEY_MAP['j']:
-            self.p2_left = False
-        if key == simplegui.KEY_MAP['s'] and self.p1.disable is False:
-            now = counter
-            if now - self.p1_last >= self.cooldown:
-                BULLETS.append(Bullet(self.p1.getPosition(), "UP"))
-                self.p1_last = counter
-        if key == simplegui.KEY_MAP['k'] and self.p2.disable is False:
-            now = counter
-            if now - self.p2_last >= self.cooldown:
-                BULLETS.append(Bullet(self.p2.getPosition(), "UP"))
-                self.p2_last = counter
-
-    def update(self):
-        if self.p1_right:
-            self.p1.vel.add(Vector(1, 0))
-        if self.p1_left:
-            self.p1.vel.add(Vector(-1, 0))
-        if self.p2_right:
-            self.p2.vel.add(Vector(1, 0))
-        if self.p2_left:
-            self.p2.vel.add(Vector(-1, 0))
-
-
 class Player(Sprite):
     # Specific player CONSTANTS
     LIVES = 3
@@ -1024,7 +968,6 @@ class Info:
 
 playerOne = Player('https://i.imgur.com/XEhhit6.png')
 playerTwo = Player('https://i.imgur.com/JSEeuYR.png')
-controls = Controls(playerOne, playerTwo)
 info = Info()
 explo = Explosion((0, 0), False)
 
@@ -1406,7 +1349,7 @@ def draw(canvas):
         counter += 1
         inter.update()
         explo.draw(canvas)
-        controls.update()
+        kbd.update()
         playerOne.update()
         playerTwo.update()
         for bullet in BULLETS:
@@ -1484,7 +1427,7 @@ def reset():
 
 # create frame
 frame = simplegui.create_frame("This Game Has Bugs!", BACKGROUND_SIZE[0], BACKGROUND_SIZE[1])
-kbd = Keyboard()
+kbd = Keyboard(playerOne, playerTwo)
 # set draw handler and canvas background using custom HTML color
 frame.set_draw_handler(draw)
 frame.set_canvas_background("Black")
